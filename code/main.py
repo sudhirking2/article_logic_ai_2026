@@ -112,9 +112,17 @@ def parse_args():
 
 def main():
     """
-    Main entry point.
-
-    Parses command line arguments and runs the appropriate command.
+    # 1. Parse arguments
+    args = parse_args()
+    
+    # 2. Route to appropriate function
+    if args.mode == "from_text_to_logic":
+        structure = from_text_to_logic(args.text)
+        print("Structure created successfully.")
+        
+    elif args.mode == "query":
+        answer = query(args.query, args.text)  # args.text may be None
+        print(answer)
     """
     pass
 
