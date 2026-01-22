@@ -9,10 +9,11 @@ using OpenIE preprocessing followed by an LLM call with a specialized system pro
 import json
 import os
 import argparse
+import re
 import time
 from typing import Dict, Any, List, Tuple, Optional
 from openai import OpenAI
-from openie import StanfordOpenIE
+import spacy
 
 
 class LogifyConverter2:
@@ -30,10 +31,15 @@ class LogifyConverter2:
         self.model = model
         self.system_prompt = self._load_system_prompt()
 
-        # Initialize Stanford OpenIE
-        print("Initializing Stanford OpenIE...")
-        self.openie = StanfordOpenIE()
-        print("OpenIE initialization complete.")
+        # Initialize spaCy for simple OpenIE-style extraction
+        print("Initializing spaCy for relation extraction...")
+        try:
+            self.nlp = spacy.load("en_core_web_sm")
+            print("spaCy initialization complete.")
+        except OSError:
+            print("Warning: spaCy model not found. Downloading...")
+            os.system("python3 -m spacy download en_core_web_sm")
+            self.nlp = spacy.load("en_core_web_sm")
 
     def _load_system_prompt(self) -> str:
         """Load the system prompt from the prompt file."""
@@ -53,7 +59,7 @@ class LogifyConverter2:
 
     def extract_openie_triples(self, text: str) -> List[Dict[str, Any]]:
         """
-        Extract OpenIE relation triples from the input text.
+        Extract OpenIE-style relation triples from the input text using spaCy.
 
         Args:
             text (str): Input text to extract relations from
@@ -61,47 +67,219 @@ class LogifyConverter2:
         Returns:
             List[Dict[str, Any]]: List of relation triples with confidence scores
         """
-        print("Extracting OpenIE triples...")
+        print("Extracting relation triples using spaCy...")
         try:
-            # Use Stanford OpenIE to extract triples
-            triples_raw = self.openie.annotate(text)
-
+            doc = self.nlp(text)
             triples = []
-            for triple in triples_raw:
-                # Parse the triple format - Stanford OpenIE returns structured data
-                if isinstance(triple, dict):
-                    triples.append({
-                        'subject': triple.get('subject', ''),
-                        'predicate': triple.get('relation', ''),
-                        'object': triple.get('object', ''),
-                        'confidence': triple.get('confidence', 1.0)
-                    })
-                elif isinstance(triple, tuple) and len(triple) >= 3:
-                    # Handle tuple format (subject, relation, object)
-                    triples.append({
-                        'subject': str(triple[0]).strip(),
-                        'predicate': str(triple[1]).strip(),
-                        'object': str(triple[2]).strip(),
-                        'confidence': 1.0  # Default confidence if not provided
-                    })
-                else:
-                    # Handle string format if returned
-                    parts = str(triple).split('\t')
-                    if len(parts) >= 3:
-                        triples.append({
-                            'subject': parts[0].strip(),
-                            'predicate': parts[1].strip(),
-                            'object': parts[2].strip(),
-                            'confidence': float(parts[3]) if len(parts) > 3 else 1.0
-                        })
 
-            print(f"Extracted {len(triples)} OpenIE triples")
+            # Build coreference resolution map (simple approach)
+            coref_map = self._build_simple_coref_map(doc)
+
+            for sent in doc.sents:
+                # Extract triples based on dependency parsing
+                for token in sent:
+                    # Look for verbs as predicates (including auxiliary and copula)
+                    if token.pos_ in ["VERB", "AUX"] and token.dep_ in ["ROOT", "ccomp", "xcomp", "conj"]:
+                        predicate = token.lemma_
+
+                        # Handle copula (is, am, are, was, were)
+                        if token.lemma_ in ["be", "become", "seem", "appear"]:
+                            # Find the predicate complement
+                            for child in token.children:
+                                if child.dep_ in ["attr", "acomp"]:
+                                    predicate = f"is {child.text}"
+                                    break
+
+                        # Find subject
+                        subject = None
+                        subject_token = None
+                        for child in token.children:
+                            if child.dep_ in ["nsubj", "nsubjpass", "csubj"]:
+                                subject_token = child
+                                subject = self._get_noun_phrase(child)
+                                # Apply coreference resolution
+                                subject = coref_map.get(subject.lower(), subject)
+                                break
+
+                        # Find direct object
+                        obj = None
+                        obj_found = False
+                        for child in token.children:
+                            if child.dep_ in ["dobj", "attr", "acomp"]:
+                                obj = self._get_noun_phrase(child)
+                                obj_found = True
+                                break
+
+                        # Find prepositional objects
+                        if not obj_found:
+                            for child in token.children:
+                                if child.dep_ == "prep" and child.pos_ == "ADP":
+                                    prep_text = child.text
+                                    for prep_child in child.children:
+                                        if prep_child.dep_ == "pobj":
+                                            obj = self._get_noun_phrase(prep_child)
+                                            predicate = f"{predicate} {prep_text}"
+                                            break
+                                    if obj:
+                                        break
+
+                        # If we found a complete triple, add it
+                        if subject and obj and predicate:
+                            triples.append({
+                                'subject': subject.strip(),
+                                'predicate': predicate.strip(),
+                                'object': obj.strip(),
+                                'confidence': 0.8
+                            })
+
+                        # Handle complement clauses for conditional statements
+                        for child in token.children:
+                            if child.dep_ in ["ccomp", "xcomp"] and child.pos_ == "VERB":
+                                comp_pred = child.lemma_
+                                comp_subj = subject if subject else "it"
+
+                                # Find object of complement
+                                comp_obj = None
+                                for comp_child in child.children:
+                                    if comp_child.dep_ in ["dobj", "attr", "acomp"]:
+                                        comp_obj = self._get_noun_phrase(comp_child)
+                                        break
+
+                                # Look for prepositional complements
+                                if not comp_obj:
+                                    for comp_child in child.children:
+                                        if comp_child.dep_ == "prep":
+                                            for prep_child in comp_child.children:
+                                                if prep_child.dep_ == "pobj":
+                                                    comp_obj = self._get_noun_phrase(prep_child)
+                                                    comp_pred = f"{comp_pred} {comp_child.text}"
+                                                    break
+                                            if comp_obj:
+                                                break
+
+                                if comp_obj:
+                                    triples.append({
+                                        'subject': comp_subj.strip(),
+                                        'predicate': comp_pred.strip(),
+                                        'object': comp_obj.strip(),
+                                        'confidence': 0.7
+                                    })
+
+            # Additional pattern-based extraction for common constructions
+            self._extract_additional_patterns(doc, triples, coref_map)
+
+            print(f"Extracted {len(triples)} relation triples")
             return triples
 
         except Exception as e:
-            print(f"Warning: OpenIE extraction failed: {e}")
+            print(f"Warning: Relation extraction failed: {e}")
             print("Continuing without OpenIE preprocessing...")
             return []
+
+    def _build_simple_coref_map(self, doc):
+        """Build a simple coreference resolution map."""
+        coref_map = {}
+
+        # Find proper nouns (potential entities)
+        entities = []
+        for ent in doc.ents:
+            if ent.label_ in ["PERSON", "ORG", "GPE"]:
+                entities.append(ent.text)
+
+        # Also look for capitalized words that might be names
+        for token in doc:
+            if token.text[0].isupper() and token.pos_ in ["PROPN", "NOUN"] and len(token.text) > 1:
+                if token.text not in entities:
+                    entities.append(token.text)
+
+        # Map pronouns to most recent appropriate entity
+        current_person = None
+        for token in doc:
+            if token.text in entities:
+                if any(char.isupper() for char in token.text):  # Likely a proper noun
+                    current_person = token.text
+            elif token.text.lower() in ["she", "he", "they"] and current_person:
+                coref_map[token.text.lower()] = current_person
+
+        return coref_map
+
+    def _extract_additional_patterns(self, doc, triples, coref_map):
+        """Extract additional patterns like relative clauses and appositives."""
+
+        # Pattern: "X who/that Y" -> Extract Y relationship
+        for token in doc:
+            if token.text.lower() in ["who", "that"] and token.dep_ == "nsubj":
+                # Find the head of the relative clause
+                rel_head = token.head
+                if rel_head.pos_ == "VERB":
+                    # Find the antecedent (what "who/that" refers to)
+                    antecedent = None
+                    for ancestor in token.ancestors:
+                        if ancestor.dep_ in ["nsubj", "dobj", "pobj"]:
+                            antecedent = self._get_noun_phrase(ancestor)
+                            break
+
+                    if antecedent:
+                        # Find the object of the relative clause verb
+                        rel_obj = None
+                        for child in rel_head.children:
+                            if child.dep_ in ["dobj", "attr", "acomp"]:
+                                rel_obj = self._get_noun_phrase(child)
+                                break
+
+                        if rel_obj:
+                            antecedent = coref_map.get(antecedent.lower(), antecedent)
+                            triples.append({
+                                'subject': antecedent.strip(),
+                                'predicate': rel_head.lemma_.strip(),
+                                'object': rel_obj.strip(),
+                                'confidence': 0.75
+                            })
+
+        # Pattern: "X is a Y" -> Extract type relationship
+        for token in doc:
+            if token.lemma_ == "be" and token.pos_ == "AUX":
+                subj = None
+                obj = None
+
+                for child in token.children:
+                    if child.dep_ == "nsubj":
+                        subj = self._get_noun_phrase(child)
+                        subj = coref_map.get(subj.lower(), subj)
+                    elif child.dep_ in ["attr", "acomp"]:
+                        obj = self._get_noun_phrase(child)
+
+                if subj and obj:
+                    triples.append({
+                        'subject': subj.strip(),
+                        'predicate': 'is',
+                        'object': obj.strip(),
+                        'confidence': 0.85
+                    })
+
+    def _get_noun_phrase(self, token):
+        """Get the full noun phrase for a token."""
+        # Start with the token itself
+        phrase_tokens = [token]
+
+        # Add determiners, adjectives, and compounds to the left
+        for child in token.children:
+            if child.dep_ in ["det", "amod", "compound", "nummod"] and child.i < token.i:
+                phrase_tokens.insert(0, child)
+
+        # Add prepositional phrases and relative clauses to the right
+        for child in token.children:
+            if child.dep_ in ["prep", "relcl"] and child.i > token.i:
+                phrase_tokens.append(child)
+                # Add children of prepositions
+                if child.dep_ == "prep":
+                    for prep_child in child.children:
+                        if prep_child.dep_ == "pobj":
+                            phrase_tokens.append(prep_child)
+
+        # Sort by position in sentence and join
+        phrase_tokens.sort(key=lambda x: x.i)
+        return " ".join([t.text for t in phrase_tokens])
 
     def format_triples_for_prompt(self, triples: List[Dict[str, Any]]) -> str:
         """
@@ -195,12 +373,9 @@ OPENIE TRIPLES:
         print(f"Output saved to {output_path}")
 
     def __del__(self):
-        """Clean up OpenIE resources."""
-        if hasattr(self, 'openie'):
-            try:
-                self.openie.close()
-            except:
-                pass
+        """Clean up resources."""
+        # spaCy doesn't require explicit cleanup
+        pass
 
 
 def main():
