@@ -1,0 +1,138 @@
+{
+  "primitive_props": [
+    {
+      "id": "P_1",
+      "translation": "Alice is a student",
+      "evidence": "Beginning of text: 'Alice is a student'",
+      "explanation": "Atomic statement about Alice's status as a student",
+      "openie_support": "('Alice'; 'is'; 'a student') from triple #7"
+    },
+    {
+      "id": "P_2",
+      "translation": "Alice loves mathematics",
+      "evidence": "First sentence: 'Alice is a student who loves mathematics'",
+      "explanation": "Atomic statement about Alice's preference for mathematics",
+      "openie_support": "Inferred from relative clause structure in original text"
+    },
+    {
+      "id": "P_3",
+      "translation": "Alice studies hard",
+      "evidence": "Second sentence: 'If Alice studies hard' and 'Alice usually studies hard'",
+      "explanation": "Atomic statement about Alice's study behavior",
+      "openie_support": "Referenced in conditional statements"
+    },
+    {
+      "id": "P_4",
+      "translation": "Alice passes the exam",
+      "evidence": "Second sentence: 'she will pass the exam'",
+      "explanation": "Atomic statement about exam outcome",
+      "openie_support": "('Alice'; 'pass'; 'the exam') from triple #2"
+    },
+    {
+      "id": "P_5",
+      "translation": "Alice gets distracted by social media",
+      "evidence": "Third sentence: 'sometimes she gets distracted by social media'",
+      "explanation": "Atomic statement about distraction behavior",
+      "openie_support": "Extracted from text analysis"
+    },
+    {
+      "id": "P_6",
+      "translation": "Alice is focused",
+      "evidence": "Fourth sentence: 'When Alice is focused'",
+      "explanation": "Atomic statement about Alice's mental state",
+      "openie_support": "('Alice'; 'is'; 'focused') from triple #8"
+    },
+    {
+      "id": "P_7",
+      "translation": "Alice completes her homework",
+      "evidence": "Fourth sentence: 'she always completes her homework'",
+      "explanation": "Atomic statement about homework completion",
+      "openie_support": "('Alice'; 'complete'; 'homework') from triple #3"
+    },
+    {
+      "id": "P_8",
+      "translation": "Students attend office hours",
+      "evidence": "Fifth sentence: 'students attend office hours'",
+      "explanation": "Atomic statement about student behavior recommendation",
+      "openie_support": "('students'; 'attend'; 'office hours') from triple #5"
+    },
+    {
+      "id": "P_9",
+      "translation": "Alice studies in the library",
+      "evidence": "Last sentence: 'Alice prefers studying in the library'",
+      "explanation": "Atomic statement about Alice's preferred study location",
+      "openie_support": "('Alice'; 'study in'; 'the library') from triple #6"
+    },
+    {
+      "id": "P_10",
+      "translation": "The library is quiet",
+      "evidence": "Last sentence: 'because it is quiet there'",
+      "explanation": "Atomic statement about library environment",
+      "openie_support": "('it'; 'is'; 'quiet') from triple #9"
+    }
+  ],
+  "hard_constraints": [
+    {
+      "id": "H_1",
+      "formula": "P_3 \u27f9 P_4",
+      "translation": "If Alice studies hard, then she passes the exam",
+      "evidence": "Second sentence: 'If Alice studies hard, she will pass the exam'",
+      "reasoning": "Explicit conditional statement establishing logical implication",
+      "openie_support": "Derived from conditional structure with triples #2"
+    },
+    {
+      "id": "H_2",
+      "formula": "P_6 \u27f9 P_7",
+      "translation": "If Alice is focused, then she completes her homework",
+      "evidence": "Fourth sentence: 'When Alice is focused, she always completes her homework'",
+      "reasoning": "Universal quantifier 'always' indicates hard constraint",
+      "openie_support": "Derived from conditional with triples #8 and #3"
+    },
+    {
+      "id": "H_3",
+      "formula": "P_9 \u27f9 P_10",
+      "translation": "Alice's preference for library study is because it is quiet",
+      "evidence": "Last sentence: 'Alice prefers studying in the library because it is quiet there'",
+      "reasoning": "Causal relationship indicated by 'because'",
+      "openie_support": "Causal link between triples #6 and #9"
+    }
+  ],
+  "soft_constraints": [
+    {
+      "id": "S_1",
+      "formula": "P_3",
+      "translation": "Alice usually studies hard",
+      "evidence": "Third sentence: 'Alice usually studies hard'",
+      "reasoning": "Frequency adverb 'usually' indicates high probability but not certainty",
+      "weight": 0.8,
+      "openie_support": "Qualified frequency statement about study behavior"
+    },
+    {
+      "id": "S_2",
+      "formula": "P_5",
+      "translation": "Alice sometimes gets distracted by social media",
+      "evidence": "Third sentence: 'but sometimes she gets distracted by social media'",
+      "reasoning": "Frequency adverb 'sometimes' indicates moderate probability",
+      "weight": 0.3,
+      "openie_support": "Qualified frequency statement about distraction"
+    },
+    {
+      "id": "S_3",
+      "formula": "P_8",
+      "translation": "Students should attend office hours to excel",
+      "evidence": "Fifth sentence: 'Alice's professor recommends that students attend office hours if they want to excel'",
+      "reasoning": "Recommendation indicates desirable but not mandatory behavior",
+      "weight": 0.7,
+      "openie_support": "Derived from recommendation with triple #5"
+    },
+    {
+      "id": "S_4",
+      "formula": "P_9",
+      "translation": "Alice prefers studying in the library",
+      "evidence": "Last sentence: 'Alice prefers studying in the library'",
+      "reasoning": "Preference indicates likely but not absolute behavior",
+      "weight": 0.75,
+      "openie_support": "Direct from triple #6 with preference indicator"
+    }
+  ]
+}

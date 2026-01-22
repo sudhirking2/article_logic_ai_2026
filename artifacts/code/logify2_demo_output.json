@@ -1,0 +1,62 @@
+{
+  "demo_note": "This is a demo without actual LLM call",
+  "original_text": "Alice is a student who loves mathematics. If Alice studies hard, she will pass the exam. Alice usually studies hard, but sometimes she gets distracted by social media. When Alice is focused, she always completes her homework. Alice's professor recommends that students attend office hours if they want to excel. Alice prefers studying in the library because it is quiet there.",
+  "extracted_triples": [
+    {
+      "subject": "Alice",
+      "predicate": "is student",
+      "object": "a student loves",
+      "confidence": 0.8
+    },
+    {
+      "subject": "Alice",
+      "predicate": "pass",
+      "object": "the exam",
+      "confidence": 0.8
+    },
+    {
+      "subject": "Alice",
+      "predicate": "complete",
+      "object": "homework",
+      "confidence": 0.8
+    },
+    {
+      "subject": "professor",
+      "predicate": "attend",
+      "object": "office hours",
+      "confidence": 0.7
+    },
+    {
+      "subject": "students",
+      "predicate": "attend",
+      "object": "office hours",
+      "confidence": 0.8
+    },
+    {
+      "subject": "Alice",
+      "predicate": "study in",
+      "object": "the library",
+      "confidence": 0.7
+    },
+    {
+      "subject": "Alice",
+      "predicate": "is",
+      "object": "a student loves",
+      "confidence": 0.85
+    },
+    {
+      "subject": "Alice",
+      "predicate": "is",
+      "object": "focused",
+      "confidence": 0.85
+    },
+    {
+      "subject": "it",
+      "predicate": "is",
+      "object": "quiet",
+      "confidence": 0.85
+    }
+  ],
+  "formatted_input": "ORIGINAL TEXT:\n<<<\nAlice is a student who loves mathematics. If Alice studies hard, she will pass the exam. Alice usually studies hard, but sometimes she gets distracted by social media. When Alice is focused, she always completes her homework. Alice's professor recommends that students attend office hours if they want to excel. Alice prefers studying in the library because it is quiet there.\n>>>\n\nOPENIE TRIPLES:\n<<<\nAlice\tis student\ta student loves\t0.8000\nAlice\tpass\tthe exam\t0.8000\nAlice\tcomplete\thomework\t0.8000\nprofessor\tattend\toffice hours\t0.7000\nstudents\tattend\toffice hours\t0.8000\nAlice\tstudy in\tthe library\t0.7000\nAlice\tis\ta student loves\t0.8500\nAlice\tis\tfocused\t0.8500\nit\tis\tquiet\t0.8500\n>>>",
+  "system_prompt_preview": "You are a neuro-symbolic reasoning assistant and expert logician that translates natural language text into structured zeroth-order propositional logic, with the assistance of preprocessed OpenIE relation triples.\n\nINTENDED TASK\nGiven a natural language text T and its corresponding OpenIE relation triples, extract:\n\n1. Atomic, primitive propositions denoted P_1, P_2, . . . , P_n for some large enough number n.\nEach of these primitive propositional variables should be independent, contain no logi..."
+}
