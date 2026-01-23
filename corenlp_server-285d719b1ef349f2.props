@@ -1,6 +1,0 @@
-openie.resolve_coref = true
-
-annotators = tokenize,ssplit,pos,lemma,ner,depparse,coref,natlog,openie
-
-outputFormat = serialized
-
