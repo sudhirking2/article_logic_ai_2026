@@ -5,23 +5,41 @@ openie_extractor.py - OpenIE Relation Triple Extractor
 This module handles Stage 1 of the text-to-logic pipeline:
 extracting relation triples from natural language text using Stanford CoreNLP OpenIE.
 
-Uses CoreNLPClient directly for proper coreference resolution support.
+Uses Stanza's CoreNLPClient (the official, actively maintained library) for proper
+coreference resolution and OpenIE support.
+
+Key features:
+- Coreference resolution to replace pronouns with their antecedents
+- Dependency-parse fallback for sentences where OpenIE fails to extract triples
+- Configurable extraction modes
 """
 
 import os
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Set, Tuple
 
-# Set CORENLP_HOME before importing CoreNLPClient
+# Set CORENLP_HOME before importing
 CORENLP_HOME = os.environ.get('CORENLP_HOME', '/workspace/.stanfordnlp_resources/stanford-corenlp-4.5.3')
 os.environ['CORENLP_HOME'] = CORENLP_HOME
 
-from stanfordnlp.server import CoreNLPClient
+from stanza.server import CoreNLPClient
 
 
 class OpenIEExtractor:
-    """Extracts relation triples from text using Stanford CoreNLP OpenIE with coreference resolution."""
+    """
+    Extracts relation triples from text using Stanford CoreNLP OpenIE with coreference resolution.
 
-    def __init__(self, memory: str = '8G', timeout: int = 60000, enable_coref: bool = True):
+    Uses Stanza's CoreNLPClient (official Stanford NLP Python library) for reliable access
+    to CoreNLP's OpenIE and coreference resolution capabilities.
+    """
+
+    def __init__(
+        self,
+        memory: str = '8G',
+        timeout: int = 60000,
+        enable_coref: bool = True,
+        use_depparse_fallback: bool = True,
+        port: int = 9000
+    ):
         """
         Initialize the Stanford CoreNLP client with OpenIE and coreference resolution.
 
@@ -29,54 +47,170 @@ class OpenIEExtractor:
             memory: JVM memory allocation (default: '8G')
             timeout: Server timeout in milliseconds (default: 60000)
             enable_coref: Whether to enable coreference resolution (default: True)
+            use_depparse_fallback: Extract triples from dependency parse for sentences
+                                   where OpenIE fails (default: True)
+            port: Port for CoreNLP server (default: 9000)
         """
-        print("Initializing Stanford CoreNLP with OpenIE and coreference resolution...")
+        print("Initializing Stanford CoreNLP with OpenIE via Stanza...")
 
         self.coref_enabled = enable_coref
+        self.use_depparse_fallback = use_depparse_fallback
         self.memory = memory
         self.timeout = timeout
+        self.port = port
         self.client: Optional[CoreNLPClient] = None
 
         # Define annotators - include coref if enabled
+        # Required for OpenIE: tokenize, ssplit, pos, lemma, depparse, natlog, openie
+        # Required for coref: ner, coref
+        base_annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'depparse', 'natlog', 'openie']
+
         if enable_coref:
-            self.annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'depparse', 'coref', 'openie']
-            self.properties = {'openie.resolve_coref': 'true'}
+            # Insert coref before openie
+            self.annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'depparse', 'coref', 'natlog', 'openie']
+            self.properties = {
+                'openie.resolve_coref': 'true',
+                'openie.triple.strict': 'false',  # Extract more triples
+                'openie.triple.all_nominals': 'true',  # Include nominal relations
+            }
         else:
-            self.annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'depparse', 'openie']
-            self.properties = {}
+            self.annotators = base_annotators
+            self.properties = {
+                'openie.triple.strict': 'false',
+                'openie.triple.all_nominals': 'true',
+            }
 
         try:
             self._start_client()
-            print(f"Stanford CoreNLP initialization complete. Coref enabled: {self.coref_enabled}")
+            print(f"Stanford CoreNLP initialization complete.")
+            print(f"  - Coref enabled: {self.coref_enabled}")
+            print(f"  - Depparse fallback: {self.use_depparse_fallback}")
+            print(f"  - Port: {self.port}")
         except Exception as e:
             print(f"Error initializing Stanford CoreNLP: {e}")
             raise RuntimeError(f"Failed to initialize Stanford CoreNLP: {e}")
 
     def _start_client(self):
-        """Start the CoreNLP client."""
+        """Start the CoreNLP client using Stanza."""
         self.client = CoreNLPClient(
             annotators=self.annotators,
             timeout=self.timeout,
             memory=self.memory,
             properties=self.properties,
-            be_quiet=True
+            be_quiet=True,
+            endpoint=f'http://localhost:{self.port}'
         )
         # Enter the context to start the server
         self.client.__enter__()
+
+    def _extract_depparse_triples(
+        self,
+        sentence,
+        sentence_idx: int,
+        existing_subjects: Set[str]
+    ) -> List[Dict[str, Any]]:
+        """
+        Extract triples from dependency parse for sentences where OpenIE fails.
+
+        This is a fallback mechanism to capture relations that OpenIE misses,
+        particularly for intransitive verbs and certain sentence structures.
+
+        Args:
+            sentence: CoreNLP sentence object
+            sentence_idx: Index of the sentence
+            existing_subjects: Set of subjects already extracted by OpenIE (to avoid duplicates)
+
+        Returns:
+            List of extracted triples
+        """
+        triples = []
+        tokens = {token.tokenEndIndex: token for token in sentence.token}
+
+        # Build dependency graph
+        deps = {}
+        for edge in sentence.basicDependencies.edge:
+            target_idx = edge.target
+            if target_idx not in deps:
+                deps[target_idx] = []
+            deps[target_idx].append({
+                'source': edge.source,
+                'dep': edge.dep
+            })
+
+        # Find the root (main verb)
+        root_idx = sentence.basicDependencies.root[0] if sentence.basicDependencies.root else None
+        if root_idx is None:
+            return triples
+
+        root_token = tokens.get(root_idx)
+        if root_token is None:
+            return triples
+
+        # Only process if this is a verb
+        if not root_token.pos.startswith('VB'):
+            return triples
+
+        verb = root_token.word
+        subject = None
+        obj = None
+        advmod = None
+
+        # Find subject and object from dependencies
+        for dep_info in deps.get(root_idx, []):
+            dep_type = dep_info['dep']
+            source_token = tokens.get(dep_info['source'])
+            if source_token is None:
+                continue
+
+            if dep_type in ['nsubj', 'nsubjpass']:
+                subject = source_token.word
+            elif dep_type in ['dobj', 'obj', 'iobj']:
+                obj = source_token.word
+            elif dep_type == 'advmod':
+                advmod = source_token.word
+
+        # Skip if we already have this subject from OpenIE
+        if subject and subject.lower() in {s.lower() for s in existing_subjects}:
+            return triples
+
+        # Create triple if we have subject and (object or adverb modifier)
+        if subject:
+            if obj:
+                triples.append({
+                    'subject': subject,
+                    'predicate': verb,
+                    'object': obj,
+                    'confidence': 0.8,  # Lower confidence for fallback
+                    'sentence_index': sentence_idx,
+                    'source': 'depparse_fallback'
+                })
+            elif advmod:
+                # For intransitive verbs with adverbs like "studies hard"
+                triples.append({
+                    'subject': subject,
+                    'predicate': f'{verb}',
+                    'object': advmod,
+                    'confidence': 0.7,  # Even lower for adverb-based triples
+                    'sentence_index': sentence_idx,
+                    'source': 'depparse_fallback_advmod'
+                })
+
+        return triples
 
     def extract_triples(self, text: str) -> List[Dict[str, Any]]:
         """
         Extract OpenIE relation triples from the input text using Stanford CoreNLP.
 
         Performs coreference resolution to replace pronouns with their antecedents,
-        then extracts relation triples using OpenIE.
+        then extracts relation triples using OpenIE. Uses dependency parse fallback
+        for sentences where OpenIE fails to extract triples.
 
         Args:
             text (str): Input text to extract relations from
 
         Returns:
             List[Dict[str, Any]]: List of relation triples with confidence scores
-                Each triple contains: subject, predicate, object, confidence, sentence_index
+                Each triple contains: subject, predicate, object, confidence, sentence_index, source
         """
         print("Extracting relation triples using Stanford CoreNLP OpenIE...")
 
@@ -88,9 +222,13 @@ class OpenIEExtractor:
             annotation = self.client.annotate(text)
 
             triples = []
+            sentences_with_triples = set()
 
             # Extract OpenIE triples from each sentence
             for sent_idx, sentence in enumerate(annotation.sentence):
+                sentence_triples = []
+                existing_subjects = set()
+
                 if hasattr(sentence, 'openieTriple') and sentence.openieTriple:
                     for triple in sentence.openieTriple:
                         subject = triple.subject.strip()
@@ -98,23 +236,40 @@ class OpenIEExtractor:
                         obj = triple.object.strip()
                         confidence = triple.confidence if hasattr(triple, 'confidence') else 1.0
 
-                        # Filter out empty or very short components
+                        # Filter out empty components
                         if len(subject) > 0 and len(predicate) > 0 and len(obj) > 0:
-                            triples.append({
+                            sentence_triples.append({
                                 'subject': subject,
                                 'predicate': predicate,
                                 'object': obj,
                                 'confidence': float(confidence),
-                                'sentence_index': sent_idx
+                                'sentence_index': sent_idx,
+                                'source': 'openie'
                             })
+                            existing_subjects.add(subject)
+                            sentences_with_triples.add(sent_idx)
 
-            print(f"Extracted {len(triples)} relation triples from Stanford CoreNLP OpenIE")
+                triples.extend(sentence_triples)
+
+                # Use dependency parse fallback if no triples were extracted
+                if self.use_depparse_fallback and not sentence_triples:
+                    fallback_triples = self._extract_depparse_triples(
+                        sentence, sent_idx, existing_subjects
+                    )
+                    triples.extend(fallback_triples)
+                    if fallback_triples:
+                        sentences_with_triples.add(sent_idx)
+
+            print(f"Extracted {len(triples)} relation triples")
+            print(f"  - From OpenIE: {sum(1 for t in triples if t.get('source') == 'openie')}")
+            print(f"  - From fallback: {sum(1 for t in triples if 'fallback' in t.get('source', ''))}")
 
             # Log some examples for debugging
             if triples:
                 print("Sample triples:")
                 for i, triple in enumerate(triples[:5]):
-                    print(f"  {i+1}. ({triple['subject']}; {triple['predicate']}; {triple['object']}) [conf: {triple['confidence']:.3f}]")
+                    src = f"[{triple.get('source', 'unknown')}]"
+                    print(f"  {i+1}. ({triple['subject']}; {triple['predicate']}; {triple['object']}) {src}")
 
             return triples
 
@@ -187,8 +342,38 @@ class OpenIEExtractor:
                         'mentions': chain_mentions
                     })
 
-            # Extract triples
-            triples = self.extract_triples(text)
+            # Extract triples (reuse the main method to include fallback)
+            triples = []
+            for sent_idx, sentence in enumerate(annotation.sentence):
+                sentence_triples = []
+                existing_subjects = set()
+
+                if hasattr(sentence, 'openieTriple') and sentence.openieTriple:
+                    for triple in sentence.openieTriple:
+                        subject = triple.subject.strip()
+                        predicate = triple.relation.strip()
+                        obj = triple.object.strip()
+                        confidence = triple.confidence if hasattr(triple, 'confidence') else 1.0
+
+                        if len(subject) > 0 and len(predicate) > 0 and len(obj) > 0:
+                            sentence_triples.append({
+                                'subject': subject,
+                                'predicate': predicate,
+                                'object': obj,
+                                'confidence': float(confidence),
+                                'sentence_index': sent_idx,
+                                'source': 'openie'
+                            })
+                            existing_subjects.add(subject)
+
+                triples.extend(sentence_triples)
+
+                # Use fallback if enabled and no triples extracted
+                if self.use_depparse_fallback and not sentence_triples:
+                    fallback_triples = self._extract_depparse_triples(
+                        sentence, sent_idx, existing_subjects
+                    )
+                    triples.extend(fallback_triples)
 
             return {
                 'triples': triples,
@@ -237,9 +422,10 @@ class OpenIEExtractor:
 
         lines = []
         for i, triple in enumerate(triples, 1):
-            lines.append(f"{i}. ({triple['subject']}) --[{triple['predicate']}]--> ({triple['object']})")
-            if 'confidence' in triple:
-                lines[-1] += f"  [conf: {triple['confidence']:.3f}]"
+            source = triple.get('source', 'unknown')
+            line = f"{i}. ({triple['subject']}) --[{triple['predicate']}]--> ({triple['object']})"
+            line += f"  [conf: {triple['confidence']:.2f}, src: {source}]"
+            lines.append(line)
 
         return "\n".join(lines)
 
@@ -264,4 +450,7 @@ class OpenIEExtractor:
 
     def __del__(self):
         """Destructor to ensure cleanup."""
-        self.close()
+        try:
+            self.close()
+        except:
+            pass
