@@ -128,8 +128,12 @@ class OpenIEExtractor:
         """
         triples = []
 
-        # Build token lookup by index
-        tokens = {token.tokenEndIndex: token for token in sentence.token}
+        # Build token lookup by SENTENCE-LOCAL index (1-based)
+        # Dependency edges use sentence-local indices, not document-level tokenEndIndex
+        tokens = {}
+        for i, token in enumerate(sentence.token):
+            local_idx = i + 1  # 1-based index
+            tokens[local_idx] = token
 
         # Build dependency graph
         # In CoreNLP, edges go from HEAD (source) to DEPENDENT (target)
@@ -146,7 +150,7 @@ class OpenIEExtractor:
                 'dep': edge.dep
             })
 
-        # Find the root
+        # Find the root (uses sentence-local 1-based index)
         root_idx = sentence.basicDependencies.root[0] if sentence.basicDependencies.root else None
         if root_idx is None:
             return triples
