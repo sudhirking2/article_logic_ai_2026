@@ -289,7 +289,15 @@ We now describe the system that implements our framework. The architecture follo
 \subsection{From Text to Logic}
 \label{sec:from_text_to_logic}
 
-This module implements the extraction pipeline $\Pi$ (Definition~\ref{def:pipeline}), transforming natural language text into a logified structure.
+This module implements the extraction pipeline $\Pi$ (Definition~\ref{def:pipeline}), transforming natural language text into a logified structure. The pipeline operates in two stages.
+
+\subsubsection{Two-Stage Extraction Pipeline}
+
+\paragraph{Stage 1: Relation Triple Extraction.}
+We use Stanford CoreNLP's OpenIE system \cite{angeli2015openie} via the Stanza Python interface \cite{qi2020stanza} to extract subject-predicate-object triples from the text. This provides structured relational information that guides proposition identification. Critically, we enable coreference resolution to handle pronominal references, ensuring that triples consistently refer to canonical entities rather than pronouns. Implementation details are provided in Appendix~\ref{sec:openie}.
+
+\paragraph{Stage 2: LLM-Based Logic Conversion.}
+The original text $T$ and the extracted triples are jointly provided to a large language model (GPT-4), which performs the semantic analysis required to identify atomic propositions $\mathcal{P}(T)$, hard constraints $\mathcal{C}(T)$, and soft constraints $\mathcal{S}(T)$. The OpenIE triples serve as structural scaffolding, helping the LLM identify key entities and relationships while ensuring faithful grounding in the source text. The prompt includes few-shot examples demonstrating the expected extraction format (Appendices~\ref{sec:prompt} and \ref{sec:exemplar}).
 
 \subsubsection{Proposition Extraction}
 Given text $T$, we extract atomic propositions $\mathcal{P}(T) = \{P_1, \ldots, P_n\}$. Each proposition is paired with its natural language meaning, forming a \emph{schema}:
@@ -302,29 +310,35 @@ This schema serves as the interface between the symbolic solver and the LLM: the
 From the text, we extract:
 \begin{itemize}
     \item Hard constraints $\mathcal{C}(T)$: encoded as mandatory clauses
-    \item Soft constraints $\mathcal{S}(T)$: encoded as weighted clauses with confidences $w_k \in (0,1)$
+    \item Soft constraints $\mathcal{S}(T)$: identified by linguistic cues but extracted without weights
 \end{itemize}
 The classification into hard versus soft is based on linguistic cues: definite language (``is,'' ``must,'' ``always'') yields hard constraints; hedged language (``typically,'' ``may,'' ``is intended to'') yields soft constraints.
 
 \subsubsection{Weight Assignment}
-For soft constraints, we assign confidence weights as discussed in Appendix \ref{sec:weights}. For example:
-\begin{itemize}
-    \item ``almost always'' $\rightarrow w \approx 0.9$
-    \item ``typically'' $\rightarrow w \approx 0.7$
-    \item ``sometimes'' $\rightarrow w \approx 0.5$
-    \item ``rarely'' $\rightarrow w \approx 0.2$
-\end{itemize}
-These heuristics can be refined via calibration on domain-specific data.
+Soft constraints are extracted \emph{without} weights during the initial logification. Weight assignment is performed as a separate stage using an evidence-based retrieval and inference pipeline. Specifically, for each soft constraint $Q$, we:
+\begin{enumerate}
+    \item Retrieve relevant text segments using SBERT embeddings \cite{reimers2019sbert}
+    \item Score each segment using an NLI cross-encoder for entailment vs.\ contradiction
+    \item Aggregate evidence using log-sum-exp pooling and apply a sigmoid transform
+\end{enumerate}
+This produces a weight $w(Q) \in (0,1)$ reflecting how strongly the document supports $Q$. The full algorithm is detailed in Appendix~\ref{sec:weights}. This separation is deliberate: the LLM identifies \emph{which} constraints are defeasible based on linguistic cues (e.g., ``sometimes,'' ``typically''), while the weight assignment module quantifies \emph{how strongly} the text supports each constraint.
 
 \subsubsection{Output: The Logified Structure}
-The module outputs a JSON structure:
+The module outputs a JSON structure with rich provenance metadata:
 \begin{verbatim}
-{"propositions": ["P1", "P2"],
- "schema": {"P1": "...", "P2": "..."},
- "hard_constraints": ["P1 -> P2"],
- "soft_constraints": [["P4", 0.75]]}
+{"primitive_props": [
+   {"id": "P_1", "translation": "...",
+    "evidence": "...", "explanation": "..."}],
+ "hard_constraints": [
+   {"id": "H_1", "formula": "P_1 -> P_2",
+    "translation": "...", "evidence": "...",
+    "reasoning": "..."}],
+ "soft_constraints": [
+   {"id": "S_1", "formula": "P_3 -> P_4",
+    "translation": "...", "evidence": "...",
+    "reasoning": "..."}]}
 \end{verbatim}
-This structure is saved and reused for all subsequent queries.
+Note that soft constraints are extracted without weights; weight assignment is a separate stage (Appendix~\ref{sec:weights}). The full extraction prompt and a worked example are provided in Appendices~\ref{sec:prompt} and \ref{sec:exemplar}.
 
 \subsubsection{Incremental Updates}
 The module supports incremental updates via an \texttt{update} function. Given new text $T'$ or user-provided constraints, the system:

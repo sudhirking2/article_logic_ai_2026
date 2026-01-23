@@ -118,8 +118,9 @@ We complete the following steps
     \item Paraphrases: $r=5$ (or $r=1$ if cost-sensitive).
     \item SBERT retrieval: $K=20$ per paraphrase.
     \item Deduplicated budget: $K_{\text{total}}=50$.
-    \item NLI model: any 3-way entailment/contradiction/neutral cross
-
+    \item NLI model: any 3-way entailment/contradiction/neutral cross-encoder (e.g., \texttt{cross-encoder/nli-deberta-v3-base} \cite{he2021deberta}).
+    \item Temperature: $\tau = 2$.
+\end{itemize}
 
 
 \subsection{Comparing proposition versus FOL logic}
@@ -159,3 +160,275 @@ python main.py query --query "Is X true?" --text "additional_text.txt"
 \end{verbatim}
 
 In query mode with additional text, the system first updates the logified structure (Section~\ref{sec:from_text_to_logic}), then processes the query.
+
+
+\subsection{OpenIE Extraction with Stanford CoreNLP}
+\label{sec:openie}
+
+The first stage of our extraction pipeline uses Stanford CoreNLP's Open Information Extraction (OpenIE) system \cite{angeli2015openie} to extract relation triples from natural language text. We access CoreNLP through the Stanza Python interface \cite{qi2020stanza}, which provides the official Python bindings maintained by the Stanford NLP Group.
+
+\subsubsection{Pipeline Configuration}
+
+Our OpenIE extraction pipeline is configured with the following annotators, applied in sequence:
+\begin{enumerate}
+    \item \texttt{tokenize}: Tokenization into words
+    \item \texttt{ssplit}: Sentence splitting
+    \item \texttt{pos}: Part-of-speech tagging
+    \item \texttt{lemma}: Lemmatization
+    \item \texttt{ner}: Named entity recognition
+    \item \texttt{depparse}: Dependency parsing
+    \item \texttt{coref}: Coreference resolution
+    \item \texttt{natlog}: Natural logic annotations
+    \item \texttt{openie}: Open information extraction
+\end{enumerate}
+
+\subsubsection{Coreference Resolution}
+
+A key feature of our pipeline is the integration of coreference resolution \cite{lee2017coref} \emph{before} OpenIE extraction. This ensures that relation triples refer to canonical entity mentions rather than pronouns. For example, given the text:
+\begin{quote}
+``Dr.\ Martinez reviewed the patient's chart. She noted elevated blood pressure.''
+\end{quote}
+Without coreference resolution, OpenIE might extract:
+\begin{center}
+\texttt{(She; noted; elevated blood pressure)}
+\end{center}
+With coreference resolution enabled (\texttt{openie.resolve\_coref=true}), the triple becomes:
+\begin{center}
+\texttt{(Dr.\ Martinez; noted; elevated blood pressure)}
+\end{center}
+This resolution is critical for downstream logic conversion, as it ensures propositions are grounded to specific entities.
+
+\subsubsection{Dependency Parse Fallback}
+
+OpenIE may fail to extract triples from certain sentence structures, particularly:
+\begin{itemize}
+    \item Intransitive verbs with adverbial modifiers (e.g., ``Alice studies hard'')
+    \item Sentences where the POS tagger misclassifies verbs as nouns
+    \item Complex subordinate clause structures
+\end{itemize}
+
+To address this, we implement a dependency parse fallback mechanism. When OpenIE produces no triples for a sentence, we analyze the dependency parse to extract subject-verb-object or subject-verb-adverb relations. For example, from the dependency structure of ``Alice studies hard,'' we extract:
+\begin{center}
+\texttt{(Alice; studies; hard)}
+\end{center}
+These fallback triples are marked with lower confidence (0.7--0.8) compared to OpenIE triples (typically 0.9--1.0).
+
+\subsubsection{Output Format}
+
+The OpenIE stage outputs a list of relation triples in tab-separated format:
+\begin{verbatim}
+Subject    Predicate    Object    Confidence
+Dr. Martinez    reviewed    patient's chart    0.95
+Dr. Martinez    noted    elevated blood pressure    0.92
+\end{verbatim}
+
+These triples, along with the original text, are passed to Stage 2 (LLM-based logic conversion) as structured input.
+
+
+\subsection{Logic Conversion Prompt}
+\label{sec:prompt}
+
+The second stage of our pipeline uses a large language model (GPT-4) to convert the original text and OpenIE triples into structured propositional logic. Below we provide the complete system prompt used for this conversion.
+
+\subsubsection{Design Principles}
+
+The prompt is designed with the following principles:
+\begin{enumerate}
+    \item \textbf{Faithfulness}: Prioritize accurate representation of the source text over completeness.
+    \item \textbf{Atomicity}: Ensure primitive propositions cannot be further decomposed.
+    \item \textbf{Independence}: Propositions should be logically independent (no redundancy).
+    \item \textbf{Provenance}: Every extracted element must include textual evidence.
+    \item \textbf{No weight extraction}: Soft constraints are identified but weights are assigned separately (Appendix~\ref{sec:weights}).
+\end{enumerate}
+
+\subsubsection{System Prompt}
+
+The following is the system prompt provided to the LLM:
+
+\begin{quote}
+\small
+\textbf{ROLE:} You are a neuro-symbolic reasoning assistant and expert logician that translates natural language text into structured zeroth-order propositional logic, with the assistance of preprocessed OpenIE relation triples.
+
+\textbf{TASK:} Given a natural language text $T$ and its corresponding OpenIE relation triples, extract:
+
+\begin{enumerate}
+    \item \textbf{Atomic, primitive propositions} denoted $P_1, P_2, \ldots, P_n$. Each primitive propositional variable should be independent, contain no logical connectives, and be equipped with its natural language meaning along with short evidence from the text. Leverage the OpenIE triples to identify key relations and entities, but ensure propositions are atomic.
+
+    \item \textbf{Hard constraints} which are zeroth-order propositional formulas over the variables $P_1, P_2, \ldots, P_n$ that must hold. These should include their meaning from the text, and evidence for why it is a required constraint. Use the OpenIE triples to identify explicit relationships and logical dependencies.
+
+    \item \textbf{Soft constraints} which are also zeroth-order propositional formulas over the variables $P_1, P_2, \ldots, P_n$ that might hold. These are equipped with their meaning and evidence for why it is a soft constraint. Soft constraints reflect hedged or probabilistic language in the text (e.g., ``typically,'' ``sometimes,'' ``may'').
+\end{enumerate}
+
+\textbf{METHODOLOGY:}
+\begin{itemize}
+    \item \textbf{Step 1:} Analyze OpenIE triples to understand extracted entities and relationships.
+    \item \textbf{Step 2:} Define primitive propositions---atomic, truth-evaluable statements.
+    \item \textbf{Step 3:} Extract hard constraints---formulas that must hold per the text.
+    \item \textbf{Step 4:} Extract soft constraints---formulas that may hold (defeasible statements).
+\end{itemize}
+
+\textbf{GUIDELINES:}
+\begin{itemize}
+    \item Use zeroth-order (propositional) logic only.
+    \item Flatten first-order-like expressions: e.g., \texttt{Study(Alice, Tuesday)} becomes ``Alice studies on Tuesday.''
+    \item Be faithful to the spirit of the text; do not add artificial primitives or constraints.
+    \item When OpenIE triples conflict with the text, prioritize the original text.
+\end{itemize}
+
+\textbf{GRAMMAR:} Given a set $P$ of propositional variables, formulas are defined inductively:
+\begin{enumerate}
+    \item Every propositional variable is a formula.
+    \item If $p$ is a formula, then $\neg p$ is a formula.
+    \item If $p$ and $q$ are formulas, then $p \land q$, $p \lor q$, $p \Rightarrow q$, and $p \Leftrightarrow q$ are formulas.
+\end{enumerate}
+Use parentheses for grouping. Standard precedence and right-associativity apply.
+
+\textbf{OUTPUT FORMAT:} Return valid JSON with the following structure:
+\begin{verbatim}
+{
+  "primitive_props": [
+    {"id": "P_1", "translation": "...",
+     "evidence": "...", "explanation": "..."}
+  ],
+  "hard_constraints": [
+    {"id": "H_1", "formula": "...",
+     "translation": "...", "evidence": "...",
+     "reasoning": "..."}
+  ],
+  "soft_constraints": [
+    {"id": "S_1", "formula": "...",
+     "translation": "...", "evidence": "...",
+     "reasoning": "..."}
+  ]
+}
+\end{verbatim}
+\end{quote}
+
+\subsubsection{Input Format}
+
+The LLM receives input in the following format:
+\begin{verbatim}
+ORIGINAL TEXT:
+<<<
+[Natural language text T]
+>>>
+
+OPENIE TRIPLES:
+<<<
+[Tab-separated triples: subject  predicate  object  confidence]
+>>>
+\end{verbatim}
+
+\subsubsection{Few-Shot Examples}
+
+To improve extraction quality, the prompt includes few-shot examples demonstrating the expected input-output mapping. These examples illustrate:
+\begin{itemize}
+    \item How to identify atomic propositions from complex sentences
+    \item The distinction between hard constraints (definite language) and soft constraints (hedged language)
+    \item Proper use of logical connectives and formula structure
+    \item How to provide evidence and reasoning for each extracted element
+\end{itemize}
+
+A complete example is provided in Appendix~\ref{sec:exemplar}.
+
+
+\subsection{Extraction Exemplar}
+\label{sec:exemplar}
+
+This section provides a complete worked example demonstrating the logic conversion process. This example is included in the few-shot prompt to guide the LLM.
+
+\subsubsection{Input Text}
+
+\begin{quote}
+The hospital's emergency triage protocol requires immediate attention for patients presenting with chest pain, unless the pain is clearly musculoskeletal in origin and the patient is under 40 years old. Dr.\ Martinez, who has been working double shifts this week, believes that patients over 65 should always receive an ECG regardless of symptoms, although Dr.\ Yang only sometimes believes this. The official guidelines only mandate this when cardiac history is documented.
+\end{quote}
+
+\subsubsection{Expected Output}
+
+\paragraph{Primitive Propositions:}
+
+\begin{itemize}
+    \item[$P_1$:] ``The patient requires immediate attention under the hospital's emergency triage protocol.'' \\
+    \textit{Evidence:} Sentence 1, ``The hospital's emergency triage protocol requires immediate attention for patients presenting with chest pain.'' \\
+    \textit{Explanation:} Cannot be further broken down; it is an unambiguous, complete, and specific statement which is true/false evaluable.
+
+    \item[$P_2$:] ``The patient presents with chest pain that is not clearly musculoskeletal in origin.'' \\
+    \textit{Evidence:} Sentence 1, compound statement involving chest pain presentation. \\
+    \textit{Explanation:} Note that ``not'' coming before ``clearly'' is important. This proposition is independent from $P_3$. The simpler ``The patient presents with chest pain'' is captured by $P_2 \lor P_3$.
+
+    \item[$P_3$:] ``The patient presents with chest pain that is clearly musculoskeletal in origin.'' \\
+    \textit{Evidence:} Sentence 1, ``unless the pain is clearly musculoskeletal in origin.'' \\
+    \textit{Explanation:} A specific statement that is independent of the other $P_i$.
+
+    \item[$P_4$:] ``The patient is under 40 years old.'' \\
+    \textit{Evidence:} Sentence 1, ``the patient is under 40 years old.'' \\
+    \textit{Explanation:} A specific statement that cannot be further broken down.
+
+    \item[$P_5$:] ``Dr.\ Martinez works double shifts this week.'' \\
+    \textit{Evidence:} Sentence 2, ``who has been working double shifts this week.''
+
+    \item[$P_6$:] ``The patient is over 65 years old.'' \\
+    \textit{Evidence:} Sentence 2, ``patients over 65.''
+
+    \item[$P_7$:] ``Dr.\ Martinez makes sure the patient receives an ECG.'' \\
+    \textit{Evidence:} Sentence 2, Dr.\ Martinez's belief about ECGs.
+
+    \item[$P_8$:] ``Dr.\ Martinez follows the official guidelines.'' \\
+    \textit{Evidence:} Sentence 3, ``The official guidelines only mandate this...'' \\
+    \textit{Explanation:} Inferred from common sense that doctors follow guidelines. Needed for the constraint $H_4$.
+
+    \item[$P_9$:] ``Dr.\ Yang follows the official guidelines.'' \\
+    \textit{Evidence:} Similar to $P_8$.
+
+    \item[$P_{10}$:] ``Dr.\ Yang makes sure the patient receives an ECG.'' \\
+    \textit{Evidence:} Sentence 2, Dr.\ Yang's belief about ECGs.
+
+    \item[$P_{11}$:] ``The patient has a documented cardiac history.'' \\
+    \textit{Evidence:} Sentence 3, ``when cardiac history is documented.''
+\end{itemize}
+
+\paragraph{Hard Constraints:}
+
+\begin{itemize}
+    \item[$H_1$:] $(P_2 \land \neg(P_3 \land P_4)) \Rightarrow P_1$ \\
+    \textit{Translation:} ``If the patient presents with chest pain and it is not true that both the pain is musculoskeletal in origin and the patient is under 40 years old, then the patient requires immediate attention.'' \\
+    \textit{Evidence:} Sentence 1. \\
+    \textit{Reasoning:} The word ``unless'' suggests an additional hypothesis, namely $\neg(P_3 \land P_4)$. We prefer not to rewrite this as $\neg P_3 \lor \neg P_4$ to remain faithful to the text structure.
+
+    \item[$H_2$:] $P_5$ \\
+    \textit{Translation:} ``Dr.\ Martinez works double shifts this week.'' \\
+    \textit{Reasoning:} Stated as fact in the text.
+
+    \item[$H_3$:] $P_6 \Rightarrow P_7$ \\
+    \textit{Translation:} ``If the patient is over 65 years old, then Dr.\ Martinez makes sure the patient receives an ECG.'' \\
+    \textit{Evidence:} Sentence 2, ``believes that patients over 65 should always receive an ECG.'' \\
+    \textit{Reasoning:} Although stated as a belief, the text intends to describe Dr.\ Martinez's actions. The word ``always'' indicates this is a hard constraint.
+
+    \item[$H_4$:] $((P_8 \land P_{11}) \Rightarrow P_7) \land ((P_9 \land P_{11}) \Rightarrow P_{10})$ \\
+    \textit{Translation:} ``If Dr.\ Martinez follows the guidelines and the patient has documented cardiac history, then Dr.\ Martinez ensures an ECG. And similarly for Dr.\ Yang.'' \\
+    \textit{Evidence:} Sentence 3, ``The official guidelines only mandate this when cardiac history is documented.'' \\
+    \textit{Reasoning:} Because this constraint applies to all doctors, we flatten to propositional logic by instantiating for each doctor mentioned.
+\end{itemize}
+
+\paragraph{Soft Constraints:}
+
+\begin{itemize}
+    \item[$S_1$:] $P_6 \Rightarrow P_{10}$ \\
+    \textit{Translation:} ``If the patient is over 65 years old, then Dr.\ Yang makes sure the patient receives an ECG.'' \\
+    \textit{Evidence:} Sentence 2, ``although Dr.\ Yang only sometimes believes this.'' \\
+    \textit{Reasoning:} Although stated as a belief, the text intends to describe Dr.\ Yang's actions. The word ``sometimes'' indicates this is a soft constraint, not a hard constraint.
+\end{itemize}
+
+\subsubsection{Key Observations}
+
+This example illustrates several important aspects of the extraction process:
+
+\begin{enumerate}
+    \item \textbf{Linguistic cues for hard vs.\ soft}: The word ``always'' (Dr.\ Martinez) yields a hard constraint, while ``sometimes'' (Dr.\ Yang) yields a soft constraint for the same logical structure.
+
+    \item \textbf{Flattening universal quantification}: The guideline ``applies to all doctors'' is flattened to propositional logic by creating separate propositions and constraints for each doctor mentioned in the text.
+
+    \item \textbf{Preserving text structure}: The ``unless'' clause is represented as $\neg(P_3 \land P_4)$ rather than the logically equivalent $\neg P_3 \lor \neg P_4$, maintaining fidelity to the source text.
+
+    \item \textbf{No weights in output}: Soft constraints are identified but do not include weight values. Weights are assigned separately by the evidence-based pipeline (Appendix~\ref{sec:weights}).
+\end{enumerate}
