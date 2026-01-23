@@ -1,0 +1,105 @@
+{
+  "primitive_props": [
+    {
+      "id": "P_1",
+      "translation": "The patient presents with chest pain.",
+      "evidence": "A patient, Mr. Chen, arrived at 3 AM complaining of chest discomfort...",
+      "explanation": "This is an atomic proposition representing the occurrence of a specific symptom."
+    },
+    {
+      "id": "P_2",
+      "translation": "The chest pain is clearly musculoskeletal in origin.",
+      "evidence": "A patient, Mr. Chen, arrived at 3 AM complaining of chest discomfort that started after lifting heavy furniture.",
+      "explanation": "This is an atomic proposition representing the cause of the chest pain."
+    },
+    {
+      "id": "P_3",
+      "translation": "The patient is under 40 years old.",
+      "evidence": "He is 38 years old...",
+      "explanation": "This is an atomic proposition representing the age of the patient."
+    },
+    {
+      "id": "P_4",
+      "translation": "The patient is over 65 years old.",
+      "evidence": "Dr. Martinez, who has been working double shifts this week, believes that patients over 65 should always receive an ECG regardless of symptoms...",
+      "explanation": "This is an atomic proposition representing the age of the patient."
+    },
+    {
+      "id": "P_5",
+      "translation": "The patient has a documented cardiac history.",
+      "evidence": "He has no prior cardiac history...",
+      "explanation": "This is an atomic proposition representing the patient's medical history."
+    },
+    {
+      "id": "P_6",
+      "translation": "The patient's symptoms resolve within 30 minutes without intervention.",
+      "evidence": "If Mr. Chen's symptoms resolve within 30 minutes without intervention...",
+      "explanation": "This is an atomic proposition representing the progression of the patient's symptoms."
+    },
+    {
+      "id": "P_7",
+      "translation": "The patient reports radiating pain to his left arm.",
+      "evidence": "However, if the sweating continues or if he reports any radiating pain to his left arm...",
+      "explanation": "This is an atomic proposition representing the occurrence of a specific symptom."
+    },
+    {
+      "id": "P_8",
+      "translation": "The patient is sweating.",
+      "evidence": "The attending nurse noted that Mr. Chen appeared anxious and was sweating...",
+      "explanation": "This is an atomic proposition representing the occurrence of a specific symptom."
+    },
+    {
+      "id": "P_9",
+      "translation": "Dr. Martinez is on duty.",
+      "evidence": "Dr. Martinez was not on duty...",
+      "explanation": "This is an atomic proposition representing the presence of a specific doctor."
+    },
+    {
+      "id": "P_10",
+      "translation": "The patient has a family history of cardiac issues.",
+      "evidence": "He has no prior cardiac history, but his father died of a heart attack at 52.",
+      "explanation": "This is an atomic proposition representing the patient's family medical history."
+    }
+  ],
+  "hard_constraints": [
+    {
+      "id": "H_1",
+      "formula": "(P_1 ∧ ¬P_2 ∧ ¬P_3) ⟹ ¬P_6",
+      "translation": "If the patient presents with chest pain that is not clearly musculoskeletal in origin and the patient is not under 40 years old, then the patient's symptoms do not resolve within 30 minutes without intervention.",
+      "evidence": "The hospital's emergency triage protocol requires immediate attention for patients presenting with chest pain, unless the pain is clearly musculoskeletal in origin and the patient is under 40 years old.",
+      "reasoning": "This is a hard constraint because it is a requirement of the hospital's emergency triage protocol."
+    },
+    {
+      "id": "H_2",
+      "formula": "(P_4 ∧ P_9) ⟹ ¬P_6",
+      "translation": "If the patient is over 65 years old and Dr. Martinez is on duty, then the patient's symptoms do not resolve within 30 minutes without intervention.",
+      "evidence": "Dr. Martinez, who has been working double shifts this week, believes that patients over 65 should always receive an ECG regardless of symptoms...",
+      "reasoning": "This is a hard constraint because it is a requirement of Dr. Martinez's practice."
+    },
+    {
+      "id": "H_3",
+      "formula": "(P_7 ∨ P_8) ⟹ ¬P_6",
+      "translation": "If the patient reports radiating pain to his left arm or is sweating, then the patient's symptoms do not resolve within 30 minutes without intervention.",
+      "evidence": "However, if the sweating continues or if he reports any radiating pain to his left arm, the protocol escalates to immediate cardiac workup regardless of age or apparent cause.",
+      "reasoning": "This is a hard constraint because it is a requirement of the hospital's emergency triage protocol."
+    }
+  ],
+  "soft_constraints": [
+    {
+      "id": "S_1",
+      "formula": "P_10 ⟹ ¬P_6",
+      "translation": "If the patient has a family history of cardiac issues, then it is likely that the patient's symptoms do not resolve within 30 minutes without intervention.",
+      "evidence": "Dr. Okonkwo, who generally follows official protocol strictly but makes exceptions when family history suggests elevated risk.",
+      "reasoning": "This is a soft constraint because it is a discretionary practice of Dr. Okonkwo, and the weight reflects the fact that it is not a strict rule but a guideline that can be followed based on the doctor's judgement.",
+      "weight": 0.7
+    },
+    {
+      "id": "S_2",
+      "formula": "¬P_5 ⟹ P_6",
+      "translation": "If the patient does not have a documented cardiac history, then it is likely that the patient's symptoms resolve within 30 minutes without intervention.",
+      "evidence": "The official guidelines only mandate this when cardiac history is documented.",
+      "reasoning": "This is a soft constraint because it is a guideline from the official protocol, and the weight reflects the fact that it is not a strict rule but a guideline that can be followed based on the doctor's judgement.",
+      "weight": 0.6
+    }
+  ]
+}
