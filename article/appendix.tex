@@ -4,21 +4,14 @@
 \subsection{Weights for soft constrains}
 \label{sec:weights}
 
-Next, we describe two methods for Assigning Weights to Soft Constraints.
-
-\subsubsection{SBERT Retrieval + NLI Reranking}
-\label{sec:weights_SBERT}
-
-Given a large text document \(T\) and an extracted soft constraint \(Q\) (represented in natural language as a hypothesis sentence \(h\)), assign a weight \(w(Q)\in(0,1)\) that reflects how strongly the document supports \(Q\) versus contradicts \(Q\), without requiring any external labeled calibration data.
-
-Our method is designed for very large documents (hundreds of pages) and avoids sending the full text to an LLM per constraint. It uses:
+Next, we describe a method for assigning weights to soft constraints $Q$ using SBERT Retrieval and  Natural Language Inference (NLI) Reranking. The weight \(w(Q)\in(0,1)\) that reflects how strongly the document supports \(Q\) versus contradicts \(Q\). It uses the following tools:
 \begin{itemize}
 \item \textbf {A bi-encoder} sentence embedding model (e.g., SBERT) for fast retrieval of relevant segments.
 \item \textbf{An NLI cross-encoder} (Natural Language Inference) to score entailment vs contradiction on only a small set of retrieved segments.
 \item \textbf{Log-sum-exp pooling} to aggregate evidence robustly (less brittle than max pooling).
 \item \textbf{A final sigmoid} transform to map pooled evidence to a probability-like weight.
 \end{itemize}
-The resulting weight is an evidence score, not a statistically calibrated probability. It is obtaine from the following algorithm
+The resulting weight is an evidence score, not a statistically calibrated probability. It is obtained from the following algorithm
 \begin{itemize}
     \item[1.]
     Given a soft constraint $Q$ from  a natural-language hypothesis sentence $h$.
@@ -88,6 +81,8 @@ Interpretation:
 This $w(Q)$ is used as the soft constraint weight in downstream reasoning (e.g., in a likelihood factor $\lambda(\varphi)$ that prefers readings satisfying $Q$).
 
 \paragraph{Algorithm Summary:}
+We complete the following steps
+\\
 \textbf{Step 1:} Preprocessing (once per document)
 
 \begin{enumerate}
@@ -116,7 +111,7 @@ This $w(Q)$ is used as the soft constraint weight in downstream reasoning (e.g.,
     \]
 \end{enumerate}
 
-\textbf{Defaults:} We use the following defaults
+\textbf{Defaults:} We use the following settings.
 
 \begin{itemize}
     \item Segments: short paragraphs (1–5 sentences).
@@ -124,22 +119,6 @@ This $w(Q)$ is used as the soft constraint weight in downstream reasoning (e.g.,
     \item SBERT retrieval: $K=20$ per paraphrase.
     \item Deduplicated budget: $K_{\text{total}}=50$.
     \item NLI model: any 3-way entailment/contradiction/neutral cross
-
-\subsubsection{LLM perspective}
-\label{sec:weights_LLM}
-Our first approach leverages a two-step calibration procedure using a combination of a less expensive language model (LLM) and a more advanced model on a representative subset of constraints.
-
-\begin{itemize}
-    \item  \textbf{Initial Scoring with a Cost-Effective Model.} We use a less expensive LLM to produce raw scores for each soft constraint 
-   \(C_k\) extracted from the text \(T\).  Here, Set the model's temperature to zero to ensure deterministic outputs, so that the scores are stable and reproducible.
-   \item \textbf{Representative Calibration with an Advanced Model.}
-   We select a representative subset of constraints (e.g., 10–20\% of the total) and run the advanced LLM on that subset to obtain a more accurate probability that the text endorses each constraint.  These advanced-model outputs serve as your "gold standard" for the subset.
-   \item \textbf{Calibration.}
-   Using the representative subset, fit a Platt scaling model to map the raw scores from the cheaper LLM to the probabilities produced by the advanced LLM. This involves fitting two parameters \(a\) and \(b\) in a logistic function \(w = \sigma(a s + b)\), where \(s\) is the raw score.
-   \item \textbf{Applying Calibration to All Constraints.} Once the scaling parameters are determined, we apply this calibration mapping to the raw scores of all constraints in the full dataset. This will convert those raw scores into calibrated probabilities.
-   \item \textbf{Using Calibrated Weights in the Model.}  The resulting calibrated probability \(w_k\) for each constraint \(C_k\) can now be used as the weight in the soft-likelihood factor within your overall model.
-\end{itemize}
-In conclusion, by combining a cost-effective model for bulk scoring with a limited use of a more powerful model for calibration, this method ensures that the assigned weights are not arbitrary. Instead, they are empirically grounded and aligned with a more advanced reasoning process, while keeping computational costs manageable.
 
 
 
