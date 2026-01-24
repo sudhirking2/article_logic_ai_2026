@@ -23,9 +23,13 @@ The evidence provided should comment on this.
 METHODOLOGY
 Let's work step-by-step as follows:
 
+STEP 0: Review Examplars
+- Review the examples for a better understanding of task intent.
+- These represent a baseline level for propsotiional extraction. You are expected to perform at least on par or better than the examples. 
+- The examples may help on dealing with ambiguous text that is more open to interprataion.
+
 STEP 1: Analyze Relation Triples
 - Review the provided relation triples to better understand extracted entities and relationships.
-- Use triples to help identify key subjects, predicates, and objects that will inform atomic proposition creation.
 - Importantly these triples are preprocessing aids---they often will be incomplete, represnt partial information, and not capture the full text. The final extraction must be grounded in the original text.
 - We intend for the triples to help improve the precision of logical extraction; if there is a conflict between triples and natural langauge, always prioritize the natural language text. 
 
@@ -48,16 +52,17 @@ STEP 4: Extract Soft Constraints
 - Ensure that the soft constraints are faithful to the text.
 - Include a brief summary of reasoning on why it is a soft constraint.
 
-Note that the constraints help inform how to specify the atomic propositions. 
-Make any revisions as needed so that atomic propositions are specific, mutually exclusive, and exhaust all constraints. 
+STEP 5: Double Check Work
+- Note that the constraints help inform how to specify the atomic propositions, so add atomics as needed. 
+- Make any revisions so that atomic propositions are specific, mutually exclusive, and exhaust all constraints.
+- Verify no constraints are missing and that all constraints are logically accurate. Repeat the previous steps if needed. 
 
 GUIDELINES:
 - Make sure the expressions are written in zeroth-order logic.
 - Even if the text resembles first-order logic, break it down into zeroth-order logic by flattening the expression into atomic primitives.
-  E.g. if it is a predicate like Study(Alice, Tuesday), then convert that into a single, specific atomic proposition "Alice studies on Tuesday".
+  E.g. if it is a predicate like "Every student studies on Tuesday", then identify all students from the text, e.g. Alice and Bob, and convert that into a single, constaint: "Alice studies on Tuesday and Bob studies on Tuesday". In this example, observe that "Alice studies on Tuesday" and "Bob studies on Tuesday" are atomic propositions. 
 - Ensure final output is faithful to the original text.
-- The text might make many assumptions that are implcitely made. Do your best to exract the propositional calculus based on the intent od the text and common-sense.
-- All weight values are real numbers in the interval (0,1) rounded to four-decimals.
+- The text might make many assumptions that are implcitely made. Do your best to exract the propositional calculus based on the intent of the text and common-sense.
 - If triples provide conflicting information, prioritize the original text for resolution.
 
 GRAMMAR
@@ -124,3 +129,7 @@ RELATION TRIPLES:
 <<<
 [Input for relation triples]
 >>>
+
+
+EXAMPLARS 
+
