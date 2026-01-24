@@ -5,31 +5,32 @@ openie_extractor.py - OpenIE Relation Triple Extractor
 This module handles Stage 1 of the text-to-logic pipeline:
 extracting relation triples from natural language text using Stanford CoreNLP OpenIE.
 
-Uses Stanza's CoreNLPClient (the official, actively maintained library) for proper
-coreference resolution and OpenIE support.
+Uses native Stanza library (latest version) for coreference resolution and
+Stanza's CoreNLPClient for OpenIE extraction.
 
 Key features:
-- Coreference resolution to replace pronouns with their antecedents
-- Dependency-parse fallback for sentences where OpenIE fails to extract triples
-- Configurable extraction modes
+- Native Python coreference resolution using Stanza 1.7.0+ coref models
+- Stanza Universal Dependencies for enhanced syntactic analysis
+- Dependency-parse fallback using Stanza's native pipeline
+- No confidence scoring (removed for cleaner output)
 """
 
 import os
-from typing import List, Dict, Any, Optional, Set, Tuple
+from typing import List, Dict, Any, Optional, Set
 
-# Set CORENLP_HOME before importing
-CORENLP_HOME = os.environ.get('CORENLP_HOME', '/workspace/.stanfordnlp_resources/stanford-corenlp-4.5.3')
-os.environ['CORENLP_HOME'] = CORENLP_HOME
-
+import stanza
 from stanza.server import CoreNLPClient
 
 
 class OpenIEExtractor:
     """
-    Extracts relation triples from text using Stanford CoreNLP OpenIE with coreference resolution.
+    Extracts relation triples from text using native Stanza and CoreNLP OpenIE.
 
-    Uses Stanza's CoreNLPClient (official Stanford NLP Python library) for reliable access
-    to CoreNLP's OpenIE and coreference resolution capabilities.
+    Architecture:
+    1. Native Stanza coref resolution (Python-based, fast)
+    2. Text resolution using coref chains
+    3. CoreNLP OpenIE extraction on resolved text
+    4. Stanza dependency parse fallback with Universal Dependencies
     """
 
     def __init__(
@@ -38,70 +39,184 @@ class OpenIEExtractor:
         timeout: int = 60000,
         enable_coref: bool = True,
         use_depparse_fallback: bool = True,
-        port: int = 9000
+        port: int = 9000,
+        language: str = 'en',
+        download_models: bool = False
     ):
         """
-        Initialize the Stanford CoreNLP client with OpenIE and coreference resolution.
+        Initialize Stanza pipelines and CoreNLP client for OpenIE extraction.
 
         Args:
-            memory: JVM memory allocation (default: '8G')
+            memory: JVM memory allocation for CoreNLP (default: '8G')
             timeout: Server timeout in milliseconds (default: 60000)
-            enable_coref: Whether to enable coreference resolution (default: True)
-            use_depparse_fallback: Extract triples from dependency parse for sentences
-                                   where OpenIE fails (default: True)
+            enable_coref: Whether to enable native Stanza coreference resolution (default: True)
+            use_depparse_fallback: Use Stanza dependency parse fallback for missing triples (default: True)
             port: Port for CoreNLP server (default: 9000)
+            language: Language code for Stanza models (default: 'en')
+            download_models: Whether to download Stanza models if not present (default: False)
         """
-        print("Initializing Stanford CoreNLP with OpenIE via Stanza...")
+        print("Initializing OpenIE Extractor with native Stanza...")
 
         self.coref_enabled = enable_coref
         self.use_depparse_fallback = use_depparse_fallback
         self.memory = memory
         self.timeout = timeout
         self.port = port
+        self.language = language
+
+        # Initialize native Stanza pipelines
+        self.coref_pipeline: Optional[stanza.Pipeline] = None
+        self.depparse_pipeline: Optional[stanza.Pipeline] = None
         self.client: Optional[CoreNLPClient] = None
 
-        # Define annotators - include coref if enabled
-        # Required for OpenIE: tokenize, ssplit, pos, lemma, depparse, natlog, openie
-        # Required for coref: ner, coref
-        base_annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'depparse', 'natlog', 'openie']
+        # Download models if requested
+        if download_models:
+            print(f"Downloading Stanza models for '{language}'...")
+            if enable_coref:
+                stanza.download(language, processors='tokenize,coref')
+            if use_depparse_fallback:
+                stanza.download(language, processors='tokenize,pos,lemma,depparse')
 
+        # Initialize native Stanza coreference resolution pipeline
         if enable_coref:
-            # Insert coref before openie
-            self.annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'depparse', 'coref', 'natlog', 'openie']
-            self.properties = {
-                'openie.resolve_coref': 'true',
-                'openie.triple.strict': 'false',  # Extract more triples
-                'openie.triple.all_nominals': 'true',  # Include nominal relations
-            }
-        else:
-            self.annotators = base_annotators
-            self.properties = {
-                'openie.triple.strict': 'false',
-                'openie.triple.all_nominals': 'true',
-            }
+            print("Initializing native Stanza coreference pipeline...")
+            try:
+                self.coref_pipeline = stanza.Pipeline(
+                    language,
+                    processors='tokenize,coref',
+                    download_method=None,  # Don't auto-download
+                    verbose=False
+                )
+                print("  ✓ Native Stanza coref initialized")
+            except Exception as e:
+                print(f"  ✗ Warning: Stanza coref initialization failed: {e}")
+                print(f"    Run with download_models=True or manually: stanza.download('{language}', processors='tokenize,coref')")
+                self.coref_enabled = False
+
+        # Initialize Stanza dependency parse pipeline for fallback
+        if use_depparse_fallback:
+            print("Initializing Stanza dependency parse pipeline...")
+            try:
+                self.depparse_pipeline = stanza.Pipeline(
+                    language,
+                    processors='tokenize,pos,lemma,depparse',
+                    download_method=None,
+                    verbose=False
+                )
+                print("  ✓ Stanza depparse initialized")
+            except Exception as e:
+                print(f"  ✗ Warning: Stanza depparse initialization failed: {e}")
+                self.use_depparse_fallback = False
+
+        # Initialize CoreNLP client for OpenIE (no coref needed, using native Stanza)
+        print("Initializing CoreNLP client for OpenIE...")
+        self.openie_annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'depparse', 'natlog', 'openie']
+        self.openie_properties = {
+            'openie.triple.strict': 'false',
+            'openie.triple.all_nominals': 'true',
+            'openie.max_entailments_per_clause': '500',
+            'openie.affinity_probability_cap': '0.33',
+        }
 
         try:
             self._start_client()
-            print(f"Stanford CoreNLP initialization complete.")
-            print(f"  - Coref enabled: {self.coref_enabled}")
-            print(f"  - Depparse fallback: {self.use_depparse_fallback}")
-            print(f"  - Port: {self.port}")
+            print("  ✓ CoreNLP OpenIE client initialized")
+            print(f"\nInitialization complete:")
+            print(f"  - Native Stanza coref: {self.coref_enabled}")
+            print(f"  - Stanza depparse fallback: {self.use_depparse_fallback}")
+            print(f"  - CoreNLP port: {self.port}")
         except Exception as e:
-            print(f"Error initializing Stanford CoreNLP: {e}")
-            raise RuntimeError(f"Failed to initialize Stanford CoreNLP: {e}")
+            print(f"Error initializing CoreNLP OpenIE client: {e}")
+            raise RuntimeError(f"Failed to initialize CoreNLP: {e}")
 
     def _start_client(self):
-        """Start the CoreNLP client using Stanza."""
+        """Start the CoreNLP client for OpenIE."""
         self.client = CoreNLPClient(
-            annotators=self.annotators,
+            annotators=self.openie_annotators,
             timeout=self.timeout,
             memory=self.memory,
-            properties=self.properties,
+            properties=self.openie_properties,
             be_quiet=True,
             endpoint=f'http://localhost:{self.port}'
         )
         # Enter the context to start the server
         self.client.__enter__()
+
+    def _resolve_coreferences(self, text: str) -> tuple[str, List[Dict[str, Any]]]:
+        """
+        Resolve coreferences in text using native Stanza coref model.
+
+        Args:
+            text: Input text with pronouns
+
+        Returns:
+            Tuple of (resolved_text, coref_chains)
+            - resolved_text: Text with pronouns replaced by their antecedents
+            - coref_chains: List of coreference chain information
+        """
+        if not self.coref_enabled or self.coref_pipeline is None:
+            return text, []
+
+        # Run Stanza coref
+        doc = self.coref_pipeline(text)
+
+        # Extract coref chains
+        coref_chains = []
+        if hasattr(doc, 'coref_chains') and doc.coref_chains:
+            for chain in doc.coref_chains:
+                mentions = []
+                representative_text = None
+
+                for mention in chain:
+                    mention_text = mention.text
+                    mention_info = {
+                        'text': mention_text,
+                        'sentence_index': mention.sent_index,
+                        'start_char': mention.start_char,
+                        'end_char': mention.end_char,
+                        'is_representative': mention.is_representative
+                    }
+                    mentions.append(mention_info)
+
+                    if mention.is_representative:
+                        representative_text = mention_text
+
+                if representative_text is None and mentions:
+                    representative_text = mentions[0]['text']
+
+                coref_chains.append({
+                    'representative': representative_text,
+                    'mentions': mentions
+                })
+
+        # Build resolved text by replacing pronouns with representatives
+        resolved_text = text
+        if coref_chains:
+            # Process replacements from end to start to maintain character positions
+            replacements = []
+            for chain in coref_chains:
+                representative = chain['representative']
+                for mention in chain['mentions']:
+                    if not mention['is_representative']:
+                        replacements.append({
+                            'start': mention['start_char'],
+                            'end': mention['end_char'],
+                            'original': mention['text'],
+                            'replacement': representative
+                        })
+
+            # Sort by position (reverse order to maintain positions)
+            replacements.sort(key=lambda x: x['start'], reverse=True)
+
+            # Apply replacements
+            for repl in replacements:
+                resolved_text = (
+                    resolved_text[:repl['start']] +
+                    repl['replacement'] +
+                    resolved_text[repl['end']:]
+                )
+
+        return resolved_text, coref_chains
 
     def _extract_depparse_triples(
         self,
