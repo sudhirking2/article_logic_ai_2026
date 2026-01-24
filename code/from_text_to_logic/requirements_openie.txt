@@ -1,0 +1,10 @@
+# Requirements for modernized OpenIE Extractor
+# Updated to use native Stanza library
+
+# Core NLP libraries
+stanza>=1.7.0          # Native Python NLP with coref support
+torch>=1.13.0          # Required by Stanza for neural models
+protobuf>=3.20.0       # Required by CoreNLP client
+
+# Note: CoreNLP Java package will be auto-downloaded by Stanza on first use
+# Ensure Java JDK 8+ is installed: sudo apt-get install default-jdk

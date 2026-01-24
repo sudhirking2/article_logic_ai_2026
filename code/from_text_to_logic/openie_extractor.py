@@ -5,31 +5,32 @@ openie_extractor.py - OpenIE Relation Triple Extractor
 This module handles Stage 1 of the text-to-logic pipeline:
 extracting relation triples from natural language text using Stanford CoreNLP OpenIE.
 
-Uses Stanza's CoreNLPClient (the official, actively maintained library) for proper
-coreference resolution and OpenIE support.
+Uses native Stanza library (latest version) for coreference resolution and
+Stanza's CoreNLPClient for OpenIE extraction.
 
 Key features:
-- Coreference resolution to replace pronouns with their antecedents
-- Dependency-parse fallback for sentences where OpenIE fails to extract triples
-- Configurable extraction modes
+- Native Python coreference resolution using Stanza 1.7.0+ coref models
+- Stanza Universal Dependencies for enhanced syntactic analysis
+- Dependency-parse fallback using Stanza's native pipeline
+- No confidence scoring (removed for cleaner output)
 """
 
 import os
-from typing import List, Dict, Any, Optional, Set, Tuple
+from typing import List, Dict, Any, Optional, Set
 
-# Set CORENLP_HOME before importing
-CORENLP_HOME = os.environ.get('CORENLP_HOME', '/workspace/.stanfordnlp_resources/stanford-corenlp-4.5.3')
-os.environ['CORENLP_HOME'] = CORENLP_HOME
-
+import stanza
 from stanza.server import CoreNLPClient
 
 
 class OpenIEExtractor:
     """
-    Extracts relation triples from text using Stanford CoreNLP OpenIE with coreference resolution.
+    Extracts relation triples from text using native Stanza and CoreNLP OpenIE.
 
-    Uses Stanza's CoreNLPClient (official Stanford NLP Python library) for reliable access
-    to CoreNLP's OpenIE and coreference resolution capabilities.
+    Architecture:
+    1. Native Stanza coref resolution (Python-based, fast)
+    2. Text resolution using coref chains
+    3. CoreNLP OpenIE extraction on resolved text
+    4. Stanza dependency parse fallback with Universal Dependencies
     """
 
     def __init__(
@@ -38,238 +39,356 @@ class OpenIEExtractor:
         timeout: int = 60000,
         enable_coref: bool = True,
         use_depparse_fallback: bool = True,
-        port: int = 9000
+        port: int = 9000,
+        language: str = 'en',
+        download_models: bool = False
     ):
         """
-        Initialize the Stanford CoreNLP client with OpenIE and coreference resolution.
+        Initialize Stanza pipelines and CoreNLP client for OpenIE extraction.
 
         Args:
-            memory: JVM memory allocation (default: '8G')
+            memory: JVM memory allocation for CoreNLP (default: '8G')
             timeout: Server timeout in milliseconds (default: 60000)
-            enable_coref: Whether to enable coreference resolution (default: True)
-            use_depparse_fallback: Extract triples from dependency parse for sentences
-                                   where OpenIE fails (default: True)
+            enable_coref: Whether to enable native Stanza coreference resolution (default: True)
+            use_depparse_fallback: Use Stanza dependency parse fallback for missing triples (default: True)
             port: Port for CoreNLP server (default: 9000)
+            language: Language code for Stanza models (default: 'en')
+            download_models: Whether to download Stanza models if not present (default: False)
         """
-        print("Initializing Stanford CoreNLP with OpenIE via Stanza...")
+        print("Initializing OpenIE Extractor with native Stanza...")
 
         self.coref_enabled = enable_coref
         self.use_depparse_fallback = use_depparse_fallback
         self.memory = memory
         self.timeout = timeout
         self.port = port
+        self.language = language
+
+        # Initialize native Stanza pipelines
+        self.coref_pipeline: Optional[stanza.Pipeline] = None
+        self.depparse_pipeline: Optional[stanza.Pipeline] = None
         self.client: Optional[CoreNLPClient] = None
 
-        # Define annotators - include coref if enabled
-        # Required for OpenIE: tokenize, ssplit, pos, lemma, depparse, natlog, openie
-        # Required for coref: ner, coref
-        base_annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'depparse', 'natlog', 'openie']
+        # Download models if requested
+        if download_models:
+            print(f"Downloading Stanza models for '{language}'...")
+            if enable_coref:
+                stanza.download(language, processors='tokenize,coref')
+            if use_depparse_fallback:
+                stanza.download(language, processors='tokenize,pos,lemma,depparse')
 
+        # Initialize native Stanza coreference resolution pipeline
         if enable_coref:
-            # Insert coref before openie
-            self.annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'ner', 'depparse', 'coref', 'natlog', 'openie']
-            self.properties = {
-                'openie.resolve_coref': 'true',
-                'openie.triple.strict': 'false',  # Extract more triples
-                'openie.triple.all_nominals': 'true',  # Include nominal relations
-            }
-        else:
-            self.annotators = base_annotators
-            self.properties = {
-                'openie.triple.strict': 'false',
-                'openie.triple.all_nominals': 'true',
-            }
+            print("Initializing native Stanza coreference pipeline...")
+            try:
+                self.coref_pipeline = stanza.Pipeline(
+                    language,
+                    processors='tokenize,coref',
+                    download_method=None,  # Don't auto-download
+                    verbose=False
+                )
+                print("  ✓ Native Stanza coref initialized")
+            except Exception as e:
+                print(f"  ✗ Warning: Stanza coref initialization failed: {e}")
+                print(f"    Run with download_models=True or manually: stanza.download('{language}', processors='tokenize,coref')")
+                self.coref_enabled = False
+
+        # Initialize Stanza dependency parse pipeline for fallback
+        if use_depparse_fallback:
+            print("Initializing Stanza dependency parse pipeline...")
+            try:
+                self.depparse_pipeline = stanza.Pipeline(
+                    language,
+                    processors='tokenize,pos,lemma,depparse',
+                    download_method=None,
+                    verbose=False
+                )
+                print("  ✓ Stanza depparse initialized")
+            except Exception as e:
+                print(f"  ✗ Warning: Stanza depparse initialization failed: {e}")
+                self.use_depparse_fallback = False
+
+        # Initialize CoreNLP client for OpenIE (no coref needed, using native Stanza)
+        print("Initializing CoreNLP client for OpenIE...")
+        self.openie_annotators = ['tokenize', 'ssplit', 'pos', 'lemma', 'depparse', 'natlog', 'openie']
+        self.openie_properties = {
+            'openie.triple.strict': 'false',
+            'openie.triple.all_nominals': 'true',
+            'openie.max_entailments_per_clause': '500',
+            'openie.affinity_probability_cap': '0.33',
+        }
 
         try:
             self._start_client()
-            print(f"Stanford CoreNLP initialization complete.")
-            print(f"  - Coref enabled: {self.coref_enabled}")
-            print(f"  - Depparse fallback: {self.use_depparse_fallback}")
-            print(f"  - Port: {self.port}")
+            print("  ✓ CoreNLP OpenIE client initialized")
+            print(f"\nInitialization complete:")
+            print(f"  - Native Stanza coref: {self.coref_enabled}")
+            print(f"  - Stanza depparse fallback: {self.use_depparse_fallback}")
+            print(f"  - CoreNLP port: {self.port}")
         except Exception as e:
-            print(f"Error initializing Stanford CoreNLP: {e}")
-            raise RuntimeError(f"Failed to initialize Stanford CoreNLP: {e}")
+            print(f"Error initializing CoreNLP OpenIE client: {e}")
+            raise RuntimeError(f"Failed to initialize CoreNLP: {e}")
 
     def _start_client(self):
-        """Start the CoreNLP client using Stanza."""
+        """Start the CoreNLP client for OpenIE."""
         self.client = CoreNLPClient(
-            annotators=self.annotators,
+            annotators=self.openie_annotators,
             timeout=self.timeout,
             memory=self.memory,
-            properties=self.properties,
+            properties=self.openie_properties,
             be_quiet=True,
             endpoint=f'http://localhost:{self.port}'
         )
         # Enter the context to start the server
         self.client.__enter__()
 
-    def _extract_depparse_triples(
+    def _resolve_coreferences(self, text: str) -> tuple[str, List[Dict[str, Any]]]:
+        """
+        Resolve coreferences in text using native Stanza coref model.
+
+        Args:
+            text: Input text with pronouns
+
+        Returns:
+            Tuple of (resolved_text, coref_chains)
+            - resolved_text: Text with pronouns replaced by their antecedents
+            - coref_chains: List of coreference chain information
+        """
+        if not self.coref_enabled or self.coref_pipeline is None:
+            return text, []
+
+        # Run Stanza coref
+        doc = self.coref_pipeline(text)
+
+        # Extract coref chains
+        coref_chains = []
+        if hasattr(doc, 'coref_chains') and doc.coref_chains:
+            for chain in doc.coref_chains:
+                mentions = []
+                representative_text = None
+
+                for mention in chain:
+                    mention_text = mention.text
+                    mention_info = {
+                        'text': mention_text,
+                        'sentence_index': mention.sent_index,
+                        'start_char': mention.start_char,
+                        'end_char': mention.end_char,
+                        'is_representative': mention.is_representative
+                    }
+                    mentions.append(mention_info)
+
+                    if mention.is_representative:
+                        representative_text = mention_text
+
+                if representative_text is None and mentions:
+                    representative_text = mentions[0]['text']
+
+                coref_chains.append({
+                    'representative': representative_text,
+                    'mentions': mentions
+                })
+
+        # Build resolved text by replacing pronouns with representatives
+        resolved_text = text
+        if coref_chains:
+            # Process replacements from end to start to maintain character positions
+            replacements = []
+            for chain in coref_chains:
+                representative = chain['representative']
+                for mention in chain['mentions']:
+                    if not mention['is_representative']:
+                        replacements.append({
+                            'start': mention['start_char'],
+                            'end': mention['end_char'],
+                            'original': mention['text'],
+                            'replacement': representative
+                        })
+
+            # Sort by position (reverse order to maintain positions)
+            replacements.sort(key=lambda x: x['start'], reverse=True)
+
+            # Apply replacements
+            for repl in replacements:
+                resolved_text = (
+                    resolved_text[:repl['start']] +
+                    repl['replacement'] +
+                    resolved_text[repl['end']:]
+                )
+
+        return resolved_text, coref_chains
+
+    def _extract_stanza_depparse_triples(
         self,
-        sentence,
+        sentence_text: str,
         sentence_idx: int,
         existing_subjects: Set[str]
     ) -> List[Dict[str, Any]]:
         """
-        Extract triples from dependency parse for sentences where OpenIE fails.
+        Extract triples from Stanza dependency parse for sentences where OpenIE fails.
 
-        This is a fallback mechanism to capture relations that OpenIE misses,
-        particularly for:
+        Uses Stanza's Universal Dependencies representation for better syntactic analysis.
+        Handles:
         - Intransitive verbs with adverbs (e.g., "studies hard")
-        - Sentences where POS tagger misclassifies verbs as nouns
-        - Certain sentence structures that OpenIE doesn't handle
+        - Verb/noun ambiguity using Stanza's UPOS tags
+        - Complex dependency patterns with enhanced UD
 
         Args:
-            sentence: CoreNLP sentence object
+            sentence_text: Text of the sentence
             sentence_idx: Index of the sentence
-            existing_subjects: Set of subjects already extracted by OpenIE (to avoid duplicates)
+            existing_subjects: Set of subjects already extracted by OpenIE
 
         Returns:
             List of extracted triples
         """
+        if not self.use_depparse_fallback or self.depparse_pipeline is None:
+            return []
+
         triples = []
 
-        # Build token lookup by SENTENCE-LOCAL index (1-based)
-        # Dependency edges use sentence-local indices, not document-level tokenEndIndex
-        tokens = {}
-        for i, token in enumerate(sentence.token):
-            local_idx = i + 1  # 1-based index
-            tokens[local_idx] = token
+        try:
+            # Parse with Stanza
+            doc = self.depparse_pipeline(sentence_text)
 
-        # Build dependency graph
-        # In CoreNLP, edges go from HEAD (source) to DEPENDENT (target)
-        # e.g., "reads" --[nsubj]--> "Bob" means "reads" is head, "Bob" is dependent
-        deps_from_head = {}  # head_idx -> list of (dependent_idx, dep_type)
-        for edge in sentence.basicDependencies.edge:
-            head_idx = edge.source
-            dependent_idx = edge.target
+            for sent in doc.sentences:
+                # Build word lookup by id (1-based in Stanza)
+                words_by_id = {word.id: word for word in sent.words}
 
-            if head_idx not in deps_from_head:
-                deps_from_head[head_idx] = []
-            deps_from_head[head_idx].append({
-                'dependent': dependent_idx,
-                'dep': edge.dep
-            })
+                # Build dependency graph: head_id -> [(dependent_id, deprel)]
+                deps_from_head = {}
+                for word in sent.words:
+                    head_id = word.head
+                    if head_id not in deps_from_head:
+                        deps_from_head[head_id] = []
+                    deps_from_head[head_id].append({
+                        'dependent_id': word.id,
+                        'deprel': word.deprel
+                    })
 
-        # Find the root (uses sentence-local 1-based index)
-        root_idx = sentence.basicDependencies.root[0] if sentence.basicDependencies.root else None
-        if root_idx is None:
-            return triples
+                # Find root (head == 0 in UD)
+                root_word = None
+                for word in sent.words:
+                    if word.head == 0:
+                        root_word = word
+                        break
 
-        root_token = tokens.get(root_idx)
-        if root_token is None:
-            return triples
+                if root_word is None:
+                    continue
 
-        # Determine if root is a verb or verb-like
-        root_pos = root_token.pos
-        root_lemma = root_token.lemma if hasattr(root_token, 'lemma') else root_token.word
+                # Check if root is a verb using Universal POS (UPOS)
+                is_verb = root_word.upos == 'VERB'
 
-        is_verb = root_pos.startswith('VB')
-        # Handle cases where POS tagger misclassifies verbs as nouns (e.g., "studies" as NNS)
-        # If lemma differs from word, it might be a verb form
-        is_potential_verb = root_pos in ['NNS', 'NN'] and root_lemma != root_token.word.lower()
+                # Handle verb/noun ambiguity: check if lemma differs from text
+                # and if UPOS could be misclassified
+                is_potential_verb = (
+                    root_word.upos in ['NOUN', 'PROPN'] and
+                    root_word.lemma.lower() != root_word.text.lower()
+                )
 
-        # Check dependencies from root to find subject, object, advmod
-        has_subject = False
-        has_advmod = False
-        subject = None
-        obj = None
-        advmod = None
-        compound_subject = None
+                # Extract arguments from dependencies
+                subject = None
+                obj = None
+                advmod = None
 
-        for dep_info in deps_from_head.get(root_idx, []):
-            dep_type = dep_info['dep']
-            dependent_token = tokens.get(dep_info['dependent'])
-            if dependent_token is None:
-                continue
+                for dep_info in deps_from_head.get(root_word.id, []):
+                    deprel = dep_info['deprel']
+                    dependent_word = words_by_id.get(dep_info['dependent_id'])
 
-            if dep_type in ['nsubj', 'nsubj:pass']:
-                subject = dependent_token.word
-                has_subject = True
-            elif dep_type in ['obj', 'dobj', 'iobj']:
-                obj = dependent_token.word
-            elif dep_type == 'advmod':
-                advmod = dependent_token.word
-                has_advmod = True
-            elif dep_type == 'compound':
-                # "Alice" in "Alice studies" might be tagged as compound if "studies" is NNS
-                compound_subject = dependent_token.word
+                    if dependent_word is None:
+                        continue
 
-        # If we have a compound and advmod but no subject, the compound might be the subject
-        # This handles "Alice studies hard" where "studies"(NNS) --[compound]--> "Alice"
-        if compound_subject and not subject and has_advmod:
-            subject = compound_subject
-            has_subject = True
+                    # Universal Dependencies relations
+                    if deprel in ['nsubj', 'nsubj:pass', 'csubj']:
+                        subject = dependent_word.text
+                    elif deprel in ['obj', 'iobj', 'dobj']:
+                        obj = dependent_word.text
+                    elif deprel == 'advmod':
+                        advmod = dependent_word.text
 
-        # Decide if we should extract a triple
-        should_extract = False
-        predicate = root_token.word
+                # Decide whether to extract
+                should_extract = False
+                predicate = root_word.lemma  # Use lemma for normalized form
 
-        if is_verb and has_subject:
-            should_extract = True
-        elif is_potential_verb and has_subject and has_advmod:
-            # Likely a misclassified verb like "studies" tagged as NNS
-            should_extract = True
-        elif has_subject and has_advmod and root_pos in ['NNS', 'NN', 'VB', 'VBZ', 'VBP', 'VBD', 'VBG', 'VBN']:
-            # Be more permissive - if we have subject + advmod, likely a verb
-            should_extract = True
+                if is_verb and subject:
+                    should_extract = True
+                elif is_potential_verb and subject and advmod:
+                    # Potential misclassification
+                    should_extract = True
+                elif subject and advmod and root_word.upos in ['NOUN', 'VERB', 'PROPN']:
+                    # Permissive: subject + advmod pattern
+                    should_extract = True
 
-        if not should_extract:
-            return triples
+                if not should_extract:
+                    continue
 
-        # Skip if we already have this subject from OpenIE
-        if subject and subject.lower() in {s.lower() for s in existing_subjects}:
-            return triples
+                # Skip duplicates
+                if subject and subject.lower() in {s.lower() for s in existing_subjects}:
+                    continue
 
-        # Create triple
-        if subject:
-            if obj:
-                triples.append({
-                    'subject': subject,
-                    'predicate': predicate,
-                    'object': obj,
-                    'confidence': 0.8,
-                    'sentence_index': sentence_idx,
-                    'source': 'depparse_fallback'
-                })
-            elif advmod:
-                # For intransitive verbs with adverbs like "studies hard"
-                triples.append({
-                    'subject': subject,
-                    'predicate': predicate,
-                    'object': advmod,
-                    'confidence': 0.7,
-                    'sentence_index': sentence_idx,
-                    'source': 'depparse_fallback_advmod'
-                })
+                # Create triples (no confidence scores)
+                if subject:
+                    if obj:
+                        triples.append({
+                            'subject': subject,
+                            'predicate': predicate,
+                            'object': obj,
+                            'sentence_index': sentence_idx,
+                            'source': 'stanza_depparse',
+                            'pos': root_word.upos
+                        })
+                    elif advmod:
+                        triples.append({
+                            'subject': subject,
+                            'predicate': predicate,
+                            'object': advmod,
+                            'sentence_index': sentence_idx,
+                            'source': 'stanza_depparse_advmod',
+                            'pos': root_word.upos
+                        })
+
+        except Exception as e:
+            print(f"Warning: Stanza depparse fallback failed for sentence {sentence_idx}: {e}")
 
         return triples
 
     def extract_triples(self, text: str) -> List[Dict[str, Any]]:
         """
-        Extract OpenIE relation triples from the input text using Stanford CoreNLP.
+        Extract OpenIE relation triples from input text.
 
-        Performs coreference resolution to replace pronouns with their antecedents,
-        then extracts relation triples using OpenIE. Uses dependency parse fallback
-        for sentences where OpenIE fails to extract triples.
+        Pipeline:
+        1. Native Stanza coreference resolution (replace pronouns with antecedents)
+        2. CoreNLP OpenIE extraction on resolved text
+        3. Stanza dependency parse fallback for missed relations
 
         Args:
-            text (str): Input text to extract relations from
+            text: Input text to extract relations from
 
         Returns:
-            List[Dict[str, Any]]: List of relation triples with confidence scores
-                Each triple contains: subject, predicate, object, confidence, sentence_index, source
+            List of relation triples (no confidence scores)
+            Each triple contains: subject, predicate, object, sentence_index, source
         """
-        print("Extracting relation triples using Stanford CoreNLP OpenIE...")
+        print("Extracting relation triples with native Stanza...")
 
         if self.client is None:
-            raise RuntimeError("CoreNLP client not initialized. Call _start_client() first.")
+            raise RuntimeError("CoreNLP client not initialized.")
 
         try:
-            # Annotate the text
-            annotation = self.client.annotate(text)
+            # Step 1: Resolve coreferences with native Stanza
+            resolved_text, coref_chains = self._resolve_coreferences(text)
+
+            if self.coref_enabled and coref_chains:
+                print(f"  ✓ Resolved {len(coref_chains)} coreference chains")
+
+            # Step 2: Extract OpenIE triples from resolved text
+            annotation = self.client.annotate(resolved_text)
 
             triples = []
-            sentences_with_triples = set()
+            sentence_texts = []
+
+            # Extract sentence texts for fallback
+            for sentence in annotation.sentence:
+                tokens = [token.word for token in sentence.token]
+                sentence_texts.append(' '.join(tokens))
 
             # Extract OpenIE triples from each sentence
             for sent_idx, sentence in enumerate(annotation.sentence):
@@ -281,7 +400,6 @@ class OpenIEExtractor:
                         subject = triple.subject.strip()
                         predicate = triple.relation.strip()
                         obj = triple.object.strip()
-                        confidence = triple.confidence if hasattr(triple, 'confidence') else 1.0
 
                         # Filter out empty components
                         if len(subject) > 0 and len(predicate) > 0 and len(obj) > 0:
@@ -289,167 +407,103 @@ class OpenIEExtractor:
                                 'subject': subject,
                                 'predicate': predicate,
                                 'object': obj,
-                                'confidence': float(confidence),
                                 'sentence_index': sent_idx,
                                 'source': 'openie'
                             })
                             existing_subjects.add(subject)
-                            sentences_with_triples.add(sent_idx)
 
                 triples.extend(sentence_triples)
 
-                # Use dependency parse fallback if no triples were extracted
+                # Step 3: Use Stanza dependency parse fallback if no triples extracted
                 if self.use_depparse_fallback and not sentence_triples:
-                    fallback_triples = self._extract_depparse_triples(
-                        sentence, sent_idx, existing_subjects
+                    fallback_triples = self._extract_stanza_depparse_triples(
+                        sentence_texts[sent_idx], sent_idx, existing_subjects
                     )
                     triples.extend(fallback_triples)
-                    if fallback_triples:
-                        sentences_with_triples.add(sent_idx)
 
-            print(f"Extracted {len(triples)} relation triples")
-            print(f"  - From OpenIE: {sum(1 for t in triples if t.get('source') == 'openie')}")
-            print(f"  - From fallback: {sum(1 for t in triples if 'fallback' in t.get('source', ''))}")
+            print(f"  ✓ Extracted {len(triples)} relation triples")
+            print(f"    - OpenIE: {sum(1 for t in triples if t.get('source') == 'openie')}")
+            print(f"    - Stanza fallback: {sum(1 for t in triples if 'stanza' in t.get('source', ''))}")
 
-            # Log some examples for debugging
+            # Log sample triples
             if triples:
-                print("Sample triples:")
+                print("\n  Sample triples:")
                 for i, triple in enumerate(triples[:5]):
                     src = f"[{triple.get('source', 'unknown')}]"
-                    print(f"  {i+1}. ({triple['subject']}; {triple['predicate']}; {triple['object']}) {src}")
+                    print(f"    {i+1}. ({triple['subject']} ; {triple['predicate']} ; {triple['object']}) {src}")
 
             return triples
 
         except Exception as e:
-            print(f"Warning: Stanford CoreNLP OpenIE extraction failed: {e}")
+            print(f"Error: Triple extraction failed: {e}")
             import traceback
             traceback.print_exc()
             return []
 
     def extract_triples_with_coref_info(self, text: str) -> Dict[str, Any]:
         """
-        Extract OpenIE triples along with coreference chain information.
+        Extract OpenIE triples along with native Stanza coreference chain information.
 
-        This method provides additional context about which pronouns were resolved
-        to which entities, useful for debugging and analysis.
+        Provides detailed information about coreference resolution for debugging
+        and analysis.
 
         Args:
-            text (str): Input text to extract relations from
+            text: Input text to extract relations from
 
         Returns:
             Dict containing:
-                - 'triples': List of relation triples
-                - 'coref_chains': List of coreference chains with resolved mentions
-                - 'sentences': List of original sentences
+                - 'triples': List of relation triples (no confidence scores)
+                - 'coref_chains': List of coreference chains from native Stanza
+                - 'resolved_text': Text with pronouns replaced
+                - 'original_text': Original input text
         """
-        print("Extracting triples with coreference information...")
+        print("Extracting triples with native Stanza coref information...")
 
         if self.client is None:
             raise RuntimeError("CoreNLP client not initialized.")
 
         try:
-            annotation = self.client.annotate(text)
+            # Step 1: Resolve coreferences with native Stanza
+            resolved_text, coref_chains = self._resolve_coreferences(text)
 
-            # Extract sentences and their tokens
-            sentences = []
-            sentences_tokens = []
-            for sentence in annotation.sentence:
-                tokens = [token.word for token in sentence.token]
-                sentences_tokens.append(tokens)
-                sentences.append(' '.join(tokens))
-
-            # Extract coreference chains
-            coref_chains = []
-            if hasattr(annotation, 'corefChain') and annotation.corefChain:
-                for chain in annotation.corefChain:
-                    chain_mentions = []
-                    representative = None
-                    for mention in chain.mention:
-                        sent_idx = mention.sentenceIndex
-                        begin_idx = mention.beginIndex
-                        end_idx = mention.endIndex
-                        mention_text = ' '.join(sentences_tokens[sent_idx][begin_idx:end_idx])
-                        mention_info = {
-                            'text': mention_text,
-                            'sentence_index': sent_idx,
-                            'begin_index': begin_idx,
-                            'end_index': end_idx,
-                            'type': str(mention.mentionType)
-                        }
-                        chain_mentions.append(mention_info)
-                        # The first PROPER or NOMINAL mention is typically the representative
-                        if representative is None and mention.mentionType in [0, 1]:  # PROPER=0, NOMINAL=1
-                            representative = mention_text
-
-                    if representative is None and chain_mentions:
-                        representative = chain_mentions[0]['text']
-
-                    coref_chains.append({
-                        'representative': representative,
-                        'mentions': chain_mentions
-                    })
-
-            # Extract triples (reuse the main method to include fallback)
-            triples = []
-            for sent_idx, sentence in enumerate(annotation.sentence):
-                sentence_triples = []
-                existing_subjects = set()
-
-                if hasattr(sentence, 'openieTriple') and sentence.openieTriple:
-                    for triple in sentence.openieTriple:
-                        subject = triple.subject.strip()
-                        predicate = triple.relation.strip()
-                        obj = triple.object.strip()
-                        confidence = triple.confidence if hasattr(triple, 'confidence') else 1.0
-
-                        if len(subject) > 0 and len(predicate) > 0 and len(obj) > 0:
-                            sentence_triples.append({
-                                'subject': subject,
-                                'predicate': predicate,
-                                'object': obj,
-                                'confidence': float(confidence),
-                                'sentence_index': sent_idx,
-                                'source': 'openie'
-                            })
-                            existing_subjects.add(subject)
-
-                triples.extend(sentence_triples)
-
-                # Use fallback if enabled and no triples extracted
-                if self.use_depparse_fallback and not sentence_triples:
-                    fallback_triples = self._extract_depparse_triples(
-                        sentence, sent_idx, existing_subjects
-                    )
-                    triples.extend(fallback_triples)
+            # Step 2: Extract triples using standard method
+            triples = self.extract_triples(text)
 
             return {
                 'triples': triples,
                 'coref_chains': coref_chains,
-                'sentences': sentences
+                'resolved_text': resolved_text,
+                'original_text': text
             }
 
         except Exception as e:
             print(f"Error extracting triples with coref info: {e}")
             import traceback
             traceback.print_exc()
-            return {'triples': [], 'coref_chains': [], 'sentences': []}
+            return {
+                'triples': [],
+                'coref_chains': [],
+                'resolved_text': text,
+                'original_text': text
+            }
 
     def format_triples(self, triples: List[Dict[str, Any]]) -> str:
         """
         Format OpenIE triples as tab-separated values for downstream processing.
 
         Args:
-            triples (List[Dict[str, Any]]): List of relation triples
+            triples: List of relation triples
 
         Returns:
-            str: Formatted string of triples (one per line, tab-separated)
+            Formatted string of triples (one per line, tab-separated)
+            Format: subject\tpredicate\tobject
         """
         if not triples:
             return "No OpenIE triples extracted."
 
         formatted_lines = []
         for triple in triples:
-            line = f"{triple['subject']}\t{triple['predicate']}\t{triple['object']}\t{triple['confidence']:.4f}"
+            line = f"{triple['subject']}\t{triple['predicate']}\t{triple['object']}"
             formatted_lines.append(line)
 
         return "\n".join(formatted_lines)
@@ -459,10 +513,10 @@ class OpenIEExtractor:
         Format OpenIE triples in a human-readable verbose format.
 
         Args:
-            triples (List[Dict[str, Any]]): List of relation triples
+            triples: List of relation triples
 
         Returns:
-            str: Formatted string with numbered triples
+            Formatted string with numbered triples and source information
         """
         if not triples:
             return "No OpenIE triples extracted."
@@ -471,20 +525,30 @@ class OpenIEExtractor:
         for i, triple in enumerate(triples, 1):
             source = triple.get('source', 'unknown')
             line = f"{i}. ({triple['subject']}) --[{triple['predicate']}]--> ({triple['object']})"
-            line += f"  [conf: {triple['confidence']:.2f}, src: {source}]"
+            line += f"  [src: {source}]"
+
+            # Add POS tag if from Stanza depparse
+            if 'pos' in triple:
+                line += f" [pos: {triple['pos']}]"
+
             lines.append(line)
 
         return "\n".join(lines)
 
     def close(self):
-        """Clean up Stanford CoreNLP resources."""
+        """Clean up Stanza pipelines and CoreNLP resources."""
+        # Close CoreNLP client
         if self.client is not None:
             try:
                 self.client.__exit__(None, None, None)
                 self.client = None
-                print("Stanford CoreNLP client closed.")
+                print("CoreNLP client closed.")
             except Exception as e:
                 print(f"Warning: Error closing CoreNLP client: {e}")
+
+        # Clear Stanza pipelines (they don't need explicit cleanup, but clear references)
+        self.coref_pipeline = None
+        self.depparse_pipeline = None
 
     def __enter__(self):
         """Context manager entry."""
