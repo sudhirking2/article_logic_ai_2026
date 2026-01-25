@@ -162,6 +162,28 @@ def format_results(metrics, dataset_name):
         dataset_name: Name of the dataset being evaluated
 
     Returns:
-        Formatted string with results table
+        Formatted multi-line string with results table, including:
+        - Dataset name header
+        - Overall metrics (accuracy, precision, recall, F1)
+        - Per-class breakdown
+        - Confusion matrix
     """
-    pass
+    lines = []
+    lines.append(f"\n{'='*50}")
+    lines.append(f"Results for {dataset_name}")
+    lines.append(f"{'='*50}\n")
+
+    lines.append("Overall Metrics:")
+    lines.append(f"  Accuracy:  {metrics['accuracy']:.3f}")
+    lines.append(f"  Precision: {metrics['precision']:.3f}")
+    lines.append(f"  Recall:    {metrics['recall']:.3f}")
+    lines.append(f"  F1 Score:  {metrics['f1']:.3f}\n")
+
+    lines.append("Per-Class Metrics:")
+    for label, class_metrics in metrics['per_class_metrics'].items():
+        lines.append(f"  {label}:")
+        lines.append(f"    Precision: {class_metrics['precision']:.3f}")
+        lines.append(f"    Recall:    {class_metrics['recall']:.3f}")
+        lines.append(f"    F1:        {class_metrics['f1']:.3f}")
+
+    return '\n'.join(lines)
