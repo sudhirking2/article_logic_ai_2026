@@ -37,7 +37,9 @@ def chunk_document(text, chunk_size=512, overlap=50):
         chunk_text = detokenize(chunk_tokens)
 
         char_start = len(detokenize(tokens[:start_idx]))
-        char_end = len(detokenize(tokens[:end_idx]))
+        if start_idx > 0:
+            char_start += 1
+        char_end = char_start + len(chunk_text)
 
         chunks.append({
             'text': chunk_text,

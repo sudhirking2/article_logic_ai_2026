@@ -56,9 +56,10 @@ def call_llm(prompt, model_name, temperature=0):
     Returns:
         Raw string response from the LLM
     """
-    import openai
+    from openai import OpenAI
 
-    response = openai.ChatCompletion.create(
+    client = OpenAI()
+    response = client.chat.completions.create(
         model=model_name,
         messages=[{"role": "user", "content": prompt}],
         temperature=temperature
@@ -80,8 +81,6 @@ def parse_response(response):
                        ['Entailed', 'Contradicted', 'NotMentioned']
             - 'reasoning': Chain-of-thought reasoning steps (if extractable)
     """
-    import re
-
     answer = None
     reasoning = response
 
