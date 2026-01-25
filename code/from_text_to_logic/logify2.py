@@ -19,19 +19,20 @@ from logic_converter import LogicConverter
 class LogifyConverter2:
     """Orchestrates the two-stage text-to-logic conversion pipeline."""
 
-    def __init__(self, api_key: str, model: str = "gpt-4"):
+    def __init__(self, api_key: str, model: str = "gpt-5.2", reasoning_effort: str = "high"):
         """
         Initialize the pipeline with both stages.
 
         Args:
             api_key (str): OpenAI API key
-            model (str): Model to use (default: gpt-4)
+            model (str): Model to use (default: gpt-5.2)
+            reasoning_effort (str): Reasoning effort for GPT-5.2/o3 models (default: high)
         """
         # Stage 1: OpenIE extraction
         self.extractor = OpenIEExtractor()
 
         # Stage 2: LLM-based logic conversion
-        self.converter = LogicConverter(api_key=api_key, model=model)
+        self.converter = LogicConverter(api_key=api_key, model=model, reasoning_effort=reasoning_effort)
 
     def convert_text_to_logic(self, text: str) -> Dict[str, Any]:
         """
@@ -76,7 +77,8 @@ def main():
     parser = argparse.ArgumentParser(description="Convert text to structured propositional logic using OpenIE + LLM")
     parser.add_argument("input_text", help="Input text to convert (or path to text file)")
     parser.add_argument("--api-key", required=True, help="OpenAI API key")
-    parser.add_argument("--model", default="gpt-4", help="Model to use (default: gpt-4)")
+    parser.add_argument("--model", default="gpt-5.2", help="Model to use (default: gpt-5.2)")
+    parser.add_argument("--reasoning-effort", default="high", help="Reasoning effort for GPT-5.2/o3 models: none, low, medium, high, xhigh (default: high)")
     parser.add_argument("--output", default="logified2.JSON", help="Output JSON file path")
     parser.add_argument("--file", action="store_true", help="Treat input_text as file path")
 
@@ -94,10 +96,10 @@ def main():
 
     try:
         # Initialize converter
-        converter = LogifyConverter2(api_key=args.api_key, model=args.model)
+        converter = LogifyConverter2(api_key=args.api_key, model=args.model, reasoning_effort=args.reasoning_effort)
 
         # Convert text to logic
-        print(f"Converting text using model: {args.model}")
+        print(f"Converting text using model: {args.model} (reasoning effort: {args.reasoning_effort})")
         logic_structure = converter.convert_text_to_logic(text)
 
         # Save output

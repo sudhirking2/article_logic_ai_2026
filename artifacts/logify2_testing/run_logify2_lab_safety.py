@@ -99,7 +99,8 @@ OPENIE TRIPLES:
         print("       --api-key YOUR_API_KEY \\")
         print("       --file /workspace/repo/artifacts/lab_safety_input.txt \\")
         print("       --output /workspace/repo/artifacts/lab_safety_output.json \\")
-        print("       --model gpt-4")
+        print("       --model gpt-5.2 \\")
+        print("       --reasoning-effort high")
         print("\n3. Or set the API key as an environment variable:")
         print("   export OPENAI_API_KEY=your_key_here")
 

@@ -119,11 +119,12 @@ Example: [["Alice", "likes", "Bob", 0], ["Bob", "studies", "hard", 1]]
 >>>
 
 
-EXEMPLARS 
+EXEMPLAR 1
+
 INPUT TEXT
 <<<
-The hospital's emergency triage protocol requires immediate attention for patients presenting with chest pain, 
-unless the pain is clearly musculoskeletal in origin and the patient is under 40 years old. 
+The hospital's emergency triage protocol requires immediate attention for patients presenting with chest pain,
+unless the pain is clearly musculoskeletal in origin and the patient is under 40 years old.
 Dr. Martinez, who has been working double shifts this week, believes that patients over 65 should always receive an ECG regardless of symptoms, althought Dr. Yang only sometimes believes this.
 The official guidelines only mandate this when cardiac history is documented.
 >>>
@@ -148,7 +149,6 @@ INPUT TRIPLES
   ["history", "is", "when documented", 2]]
 >>>
 
-OUTPUT JSON
 OUTPUT JSON
 {
     "primitive_props": [
@@ -256,6 +256,261 @@ OUTPUT JSON
       "translation": "If the patient is over 65 years old, then Dr. Yang makes sure the patient receives an ECG",
       "evidence": "In Sentence 2, from '...although Dr. Yang only sometimes believes this'",
       "reasoning": "Although it is a statement of belief, the text seems to intend to speak about how Dr. Yang acts. The word 'sometimes' indicates this is a soft constraint, not a hard rule.",
+    }
+  ]
+}
+
+
+EXEMPLAR 2
+
+INPUT TEXT
+<<<
+Before entering the laboratory, all researchers must wear protective equipment and sign the safety logbook.
+After completing an experiment, the workspace must be cleaned and all chemicals must be properly stored.
+While the fume hood is running, the ventilation system cannot be turned off.
+Senior researchers typically supervise undergraduate students during their first month, though this is not always enforced.
+Lab equipment should be inspected weekly, but monthly inspections are generally acceptable for low-risk items.
+If a chemical spill occurs, the area must be evacuated immediately and the safety officer must be notified within 5 minutes.
+Researchers are encouraged to attend monthly safety meetings, although attendance is not mandatory for experienced personnel.
+The lab director believes that all experiments involving hazardous materials should be conducted with a partner present, but researchers working after hours sometimes work alone.
+>>>
+
+INPUT TRIPLES
+<<<
+researchers	sign	safety logbook
+equipment	is	protective
+researchers	entering	laboratory
+workspace	must	must cleaned
+chemicals	must	must properly stored
+chemicals	must	must stored
+system	turn	not
+students	is	undergraduate
+researchers	is	Senior
+equipment	inspect	weekly
+safety officer	must	must notified
+safety officer	must	must notified within 5 minutes
+Researchers	are encouraged	not mandatory for experienced personnel
+safety meetings	is	monthly
+Researchers	attend	safety meetings
+Researchers	attend	monthly safety meetings
+partner	is with	present
+>>>
+
+OUTPUT JSON
+{
+  "primitive_props": [
+    {
+      "id": "P_1",
+      "translation": "The researcher enters the laboratory",
+      "evidence": "Sentence 0: 'Before entering the laboratory...'",
+      "explanation": "A specific action by a researcher. This is atomic and serves as the trigger condition for mandatory safety procedures"
+    },
+    {
+      "id": "P_2",
+      "translation": "The researcher wears protective equipment",
+      "evidence": "Sentence 0: '...all researchers must wear protective equipment...'",
+      "explanation": "A specific safety action. The temporal context ('before entering') is captured in the constraint, not in the proposition itself to maintain atomicity"
+    },
+    {
+      "id": "P_3",
+      "translation": "The researcher signs the safety logbook",
+      "evidence": "Sentence 0: '...and sign the safety logbook'",
+      "explanation": "A specific administrative action required for lab entry. Independent of P_2"
+    },
+    {
+      "id": "P_4",
+      "translation": "The researcher completes an experiment",
+      "evidence": "Sentence 1: 'After completing an experiment...'",
+      "explanation": "An atomic event that triggers cleanup obligations"
+    },
+    {
+      "id": "P_5",
+      "translation": "The workspace is cleaned",
+      "evidence": "Sentence 1: '...the workspace must be cleaned...'",
+      "explanation": "A specific post-experiment requirement. The temporal relationship is in the constraint"
+    },
+    {
+      "id": "P_6",
+      "translation": "All chemicals are properly stored",
+      "evidence": "Sentence 1: '...and all chemicals must be properly stored'",
+      "explanation": "A specific safety state required after experiments. Independent of P_5"
+    },
+    {
+      "id": "P_7",
+      "translation": "The fume hood is running",
+      "evidence": "Sentence 2: 'While the fume hood is running...'",
+      "explanation": "A specific equipment state that creates a constraint on other systems"
+    },
+    {
+      "id": "P_8",
+      "translation": "The ventilation system is turned off",
+      "evidence": "Sentence 2: '...the ventilation system cannot be turned off'",
+      "explanation": "A specific system state that is prohibited under certain conditions"
+    },
+    {
+      "id": "P_9",
+      "translation": "An undergraduate student is in their first month in the lab",
+      "evidence": "Sentence 3: '...during their first month...'",
+      "explanation": "Temporal condition that is independent from the supervision action. This decomposition allows expressing violations where P_9 is true but P_10 is false"
+    },
+    {
+      "id": "P_10",
+      "translation": "A senior researcher supervises the undergraduate student",
+      "evidence": "Sentence 3: 'Senior researchers typically supervise undergraduate students...'",
+      "explanation": "Supervision action that is independent of the timeframe. Can be reused in different contexts"
+    },
+    {
+      "id": "P_11",
+      "translation": "Lab equipment is inspected weekly",
+      "evidence": "Sentence 4: 'Lab equipment should be inspected weekly...'",
+      "explanation": "Generic baseline inspection frequency. Specific enough without needing to flatten to individual equipment items"
+    },
+    {
+      "id": "P_12",
+      "translation": "An item of lab equipment is low-risk",
+      "evidence": "Sentence 4: '...for low-risk items'",
+      "explanation": "Classification property that enables exceptions to the baseline inspection frequency"
+    },
+    {
+      "id": "P_13",
+      "translation": "Low-risk lab equipment is inspected monthly",
+      "evidence": "Sentence 4: '...monthly inspections are generally acceptable for low-risk items'",
+      "explanation": "Alternative inspection frequency for a specific equipment class"
+    },
+    {
+      "id": "P_14",
+      "translation": "A chemical spill occurs",
+      "evidence": "Sentence 5: 'If a chemical spill occurs...'",
+      "explanation": "Emergency event that triggers mandatory response procedures"
+    },
+    {
+      "id": "P_15",
+      "translation": "The area is evacuated immediately",
+      "evidence": "Sentence 5: '...the area must be evacuated immediately...'",
+      "explanation": "First required emergency response. Independent of notification requirement"
+    },
+    {
+      "id": "P_16",
+      "translation": "The safety officer is notified within 5 minutes",
+      "evidence": "Sentence 5: '...and the safety officer must be notified within 5 minutes'",
+      "explanation": "Second required emergency response with specific time constraint"
+    },
+    {
+      "id": "P_17",
+      "translation": "A researcher attends monthly safety meetings",
+      "evidence": "Sentence 6: 'Researchers are encouraged to attend monthly safety meetings...'",
+      "explanation": "Voluntary participation action that is encouraged but not required"
+    },
+    {
+      "id": "P_18",
+      "translation": "The researcher is experienced personnel",
+      "evidence": "Sentence 6: '...not mandatory for experienced personnel'",
+      "explanation": "Status classification that affects obligation strength"
+    },
+    {
+      "id": "P_19",
+      "translation": "An experiment involves hazardous materials",
+      "evidence": "Sentence 7: '...all experiments involving hazardous materials...'",
+      "explanation": "Experiment classification that triggers partnership requirements"
+    },
+    {
+      "id": "P_20",
+      "translation": "The experiment is conducted with a partner present",
+      "evidence": "Sentence 7: '...should be conducted with a partner present...'",
+      "explanation": "Safety measure for hazardous work. The director's belief translates to this policy/action expectation"
+    },
+    {
+      "id": "P_21",
+      "translation": "A researcher works after hours",
+      "evidence": "Sentence 7: '...researchers working after hours...'",
+      "explanation": "Temporal working condition that affects partnership practices"
+    },
+    {
+      "id": "P_22",
+      "translation": "The researcher works alone",
+      "evidence": "Sentence 7: '...sometimes work alone'",
+      "explanation": "Working arrangement that may conflict with partnership expectations"
+    }
+  ],
+  "hard_constraints": [
+    {
+      "id": "H_1",
+      "formula": "P_1 ⟹ (P_2 ∧ P_3)",
+      "translation": "If a researcher enters the laboratory, they must wear protective equipment and sign the safety logbook",
+      "evidence": "Sentence 0: 'Before entering the laboratory, all researchers must wear protective equipment and sign the safety logbook'",
+      "reasoning": "The word 'must' indicates a hard constraint. The temporal 'before' is captured by the implication structure"
+    },
+    {
+      "id": "H_2",
+      "formula": "P_4 ⟹ (P_5 ∧ P_6)",
+      "translation": "If a researcher completes an experiment, the workspace must be cleaned and all chemicals must be properly stored",
+      "evidence": "Sentence 1: 'After completing an experiment, the workspace must be cleaned and all chemicals must be properly stored'",
+      "reasoning": "The word 'must' indicates this is a hard constraint with no exceptions"
+    },
+    {
+      "id": "H_3",
+      "formula": "P_7 ⟹ ¬P_8",
+      "translation": "If the fume hood is running, the ventilation system cannot be turned off",
+      "evidence": "Sentence 2: 'While the fume hood is running, the ventilation system cannot be turned off'",
+      "reasoning": "The word 'cannot' indicates an absolute prohibition, making this a hard constraint"
+    },
+    {
+      "id": "H_4",
+      "formula": "P_14 ⟹ (P_15 ∧ P_16)",
+      "translation": "If a chemical spill occurs, the area must be evacuated immediately and the safety officer must be notified within 5 minutes",
+      "evidence": "Sentence 5: 'If a chemical spill occurs, the area must be evacuated immediately and the safety officer must be notified within 5 minutes'",
+      "reasoning": "Emergency response with 'must' and specific timing requirements indicates this is a hard constraint"
+    },
+    {
+      "id": "H_5",
+      "formula": "¬P_18 ⟹ P_17",
+      "translation": "If a researcher is not experienced personnel, they must attend monthly safety meetings",
+      "evidence": "Sentence 6: 'Researchers are encouraged to attend monthly safety meetings, although attendance is not mandatory for experienced personnel'",
+      "reasoning": "By stating it's not mandatory only for experienced personnel, the text implies it is mandatory for non-experienced personnel. The 'encouraged' applies to the soft constraint S_3 for experienced personnel"
+    },
+    {
+      "id": "H_6",
+      "formula": "P_21 ⟹ P_22",
+      "translation": "If a researcher works after hours, they sometimes work alone",
+      "evidence": "Sentence 7: '...researchers working after hours sometimes work alone'",
+      "reasoning": "This is presented as a descriptive fact about actual practice. The word 'sometimes' indicates this is observed behavior that occurs in reality"
+    }
+  ],
+  "soft_constraints": [
+    {
+      "id": "S_1",
+      "formula": "P_9 ⟹ P_10",
+      "translation": "If an undergraduate student is in their first month, a senior researcher should supervise them",
+      "evidence": "Sentence 3: 'Senior researchers typically supervise undergraduate students during their first month, though this is not always enforced'",
+      "reasoning": "The words 'typically' and 'not always enforced' indicate this is a soft constraint - expected but not strictly mandatory"
+    },
+    {
+      "id": "S_2",
+      "formula": "P_11",
+      "translation": "Lab equipment should be inspected weekly",
+      "evidence": "Sentence 4: 'Lab equipment should be inspected weekly...'",
+      "reasoning": "The word 'should' indicates this is a recommended practice but allows for exceptions (as expressed in S_3)"
+    },
+    {
+      "id": "S_3",
+      "formula": "P_12 ⟹ P_13",
+      "translation": "If lab equipment is low-risk, monthly inspections are generally acceptable",
+      "evidence": "Sentence 4: '...but monthly inspections are generally acceptable for low-risk items'",
+      "reasoning": "The word 'generally' indicates this is an acceptable exception to S_2, not a hard rule"
+    },
+    {
+      "id": "S_4",
+      "formula": "P_18 ⟹ P_17",
+      "translation": "If a researcher is experienced personnel, they are encouraged to attend monthly safety meetings",
+      "evidence": "Sentence 6: 'Researchers are encouraged to attend monthly safety meetings, although attendance is not mandatory for experienced personnel'",
+      "reasoning": "The word 'encouraged' for experienced personnel indicates this is a soft expectation, not a requirement. Contrasts with H_5 for non-experienced personnel"
+    },
+    {
+      "id": "S_5",
+      "formula": "P_19 ⟹ P_20",
+      "translation": "If an experiment involves hazardous materials, it should be conducted with a partner present",
+      "evidence": "Sentence 7: 'The lab director believes that all experiments involving hazardous materials should be conducted with a partner present...'",
+      "reasoning": "Although framed as the director's belief, it translates to policy/action expectations. The word 'should' and the contrasting observation in the same sentence indicate this is a soft constraint"
     }
   ]
 }

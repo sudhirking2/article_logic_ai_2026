@@ -15,20 +15,22 @@ from openai import OpenAI
 class LogicConverter:
     """Converts text + OpenIE triples to structured propositional logic using LLM."""
 
-    def __init__(self, api_key: str, model: str = "gpt-4", temperature: float = 0.1, max_tokens: int = 4000):
+    def __init__(self, api_key: str, model: str = "gpt-5.2", temperature: float = 0.1, max_tokens: int = 4000, reasoning_effort: str = "high"):
         """
         Initialize the logic converter with API key and model.
 
         Args:
             api_key (str): OpenAI API key
-            model (str): Model to use (default: gpt-4)
-            temperature (float): Sampling temperature for LLM (default: 0.1)
+            model (str): Model to use (default: gpt-5.2)
+            temperature (float): Sampling temperature for LLM (default: 0.1, ignored for reasoning models)
             max_tokens (int): Maximum tokens in response (default: 4000)
+            reasoning_effort (str): Reasoning effort level for GPT-5.2/o3 models (none, low, medium, high, xhigh). Default: high
         """
         self.client = OpenAI(api_key=api_key)
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.reasoning_effort = reasoning_effort
         self.system_prompt = self._load_system_prompt()
 
     def _load_system_prompt(self) -> str:
@@ -70,20 +72,49 @@ OPENIE TRIPLES:
 {formatted_triples}
 >>>"""
 
-            print("Sending to LLM for logical structure extraction...")
+            print(f"Sending to LLM for logical structure extraction (model: {self.model})...")
+
+            # Determine if this is a reasoning model (GPT-5.2, o3-mini, etc.)
+            is_reasoning_model = self.model.startswith("gpt-5") or self.model.startswith("o3")
+
+            # Build API call parameters based on model type
+            if is_reasoning_model:
+                # Reasoning models use different parameters
+                api_params = {
+                    "model": self.model,
+                    "messages": [
+                        {"role": "developer", "content": self.system_prompt},  # Use "developer" role for GPT-5.2
+                        {"role": "user", "content": combined_input}
+                    ],
+                    "reasoning_effort": self.reasoning_effort,  # Set reasoning effort (top-level parameter)
+                    "max_completion_tokens": self.max_tokens  # Use max_completion_tokens for reasoning models
+                }
+                print(f"  Using reasoning effort: {self.reasoning_effort}")
+            else:
+                # Standard models (gpt-4o, gpt-4-turbo, etc.)
+                api_params = {
+                    "model": self.model,
+                    "messages": [
+                        {"role": "system", "content": self.system_prompt},
+                        {"role": "user", "content": combined_input}
+                    ],
+                    "temperature": self.temperature,
+                    "max_tokens": self.max_tokens
+                }
 
             # Send to LLM with the enhanced prompt
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {"role": "user", "content": combined_input}
-                ],
-                temperature=self.temperature,
-                max_tokens=self.max_tokens
-            )
+            response = self.client.chat.completions.create(**api_params)
 
-            response_text = response.choices[0].message.content.strip()
+            # Debug: print the raw response
+            print(f"  Response received. Parsing...")
+
+            response_text = response.choices[0].message.content
+            if response_text is None:
+                print(f"  WARNING: Response content is None. Full response: {response}")
+                raise ValueError("LLM returned empty response")
+
+            response_text = response_text.strip()
+            print(f"  Response length: {len(response_text)} characters")
 
             # Parse the JSON response
             try:
