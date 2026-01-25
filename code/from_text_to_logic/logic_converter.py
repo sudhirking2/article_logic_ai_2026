@@ -86,7 +86,7 @@ OPENIE TRIPLES:
                         {"role": "developer", "content": self.system_prompt},  # Use "developer" role for GPT-5.2
                         {"role": "user", "content": combined_input}
                     ],
-                    "reasoning": {"effort": self.reasoning_effort},  # Set reasoning effort
+                    "reasoning_effort": self.reasoning_effort,  # Set reasoning effort (top-level parameter)
                     "max_completion_tokens": self.max_tokens  # Use max_completion_tokens for reasoning models
                 }
                 print(f"  Using reasoning effort: {self.reasoning_effort}")
