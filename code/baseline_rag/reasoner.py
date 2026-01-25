@@ -85,15 +85,27 @@ def parse_response(response):
                        ['Entailed', 'Contradicted', 'NotMentioned']
             - 'reasoning': Chain-of-thought reasoning steps (if extractable)
     """
+    import re
+
     answer = None
     reasoning = response
 
-    response_lower = response.lower()
+    answer_pattern = r'Answer:\s*(\w+)'
+    match = re.search(answer_pattern, response, re.IGNORECASE)
+    if match:
+        answer = match.group(1).capitalize()
 
-    for label in ['true', 'false', 'unknown', 'entailed', 'contradicted', 'notmentioned']:
-        if label in response_lower:
-            answer = label.capitalize()
-            break
+    reasoning_pattern = r'Reasoning:\s*(.*?)(?=Answer:|$)'
+    reasoning_match = re.search(reasoning_pattern, response, re.IGNORECASE | re.DOTALL)
+    if reasoning_match:
+        reasoning = reasoning_match.group(1).strip()
+
+    if answer is None:
+        response_lower = response.lower()
+        for label in ['entailed', 'contradicted', 'notmentioned', 'true', 'false', 'unknown']:
+            if label in response_lower:
+                answer = label.capitalize()
+                break
 
     if answer is None:
         answer = 'Unknown'
