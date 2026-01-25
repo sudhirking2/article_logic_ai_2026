@@ -9,6 +9,9 @@ The retrieval is deterministic given fixed embeddings and query, ensuring
 reproducibility across runs.
 """
 
+from sentence_transformers import SentenceTransformer
+import numpy as np
+
 
 def load_sbert_model(model_name):
     """
@@ -20,7 +23,7 @@ def load_sbert_model(model_name):
     Returns:
         Loaded SBERT model object
     """
-    pass
+    return SentenceTransformer(model_name)
 
 
 def encode_chunks(chunks, model):
@@ -34,7 +37,9 @@ def encode_chunks(chunks, model):
     Returns:
         Numpy array of shape (num_chunks, embedding_dim) containing embeddings
     """
-    pass
+    texts = [chunk['text'] for chunk in chunks]
+    embeddings = model.encode(texts, convert_to_numpy=True)
+    return embeddings
 
 
 def encode_query(query, model):
@@ -48,7 +53,8 @@ def encode_query(query, model):
     Returns:
         Numpy array of shape (embedding_dim,) containing query embedding
     """
-    pass
+    embedding = model.encode(query, convert_to_numpy=True)
+    return embedding
 
 
 def retrieve(query_embedding, chunk_embeddings, chunks, k=5):
@@ -64,7 +70,13 @@ def retrieve(query_embedding, chunk_embeddings, chunks, k=5):
     Returns:
         List of k chunk dictionaries, ordered by decreasing similarity
     """
-    pass
+    similarities = compute_cosine_similarity(query_embedding, chunk_embeddings)
+
+    top_k_indices = np.argsort(similarities)[::-1][:k]
+
+    retrieved_chunks = [chunks[i] for i in top_k_indices]
+
+    return retrieved_chunks
 
 
 def compute_cosine_similarity(query_embedding, chunk_embeddings):
@@ -78,4 +90,10 @@ def compute_cosine_similarity(query_embedding, chunk_embeddings):
     Returns:
         Numpy array of shape (num_chunks,) containing similarity scores
     """
-    pass
+    query_norm = np.linalg.norm(query_embedding)
+    chunk_norms = np.linalg.norm(chunk_embeddings, axis=1)
+
+    dot_products = np.dot(chunk_embeddings, query_embedding)
+    similarities = dot_products / (chunk_norms * query_norm)
+
+    return similarities
