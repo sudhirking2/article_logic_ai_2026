@@ -1,26 +1,3 @@
-Initializing OpenIE Extractor with native Stanza...
-Initializing native Stanza coreference pipeline...
-  ✓ Native Stanza coref initialized
-Initializing Stanza dependency parse pipeline...
-  ✓ Stanza depparse initialized
-Initializing CoreNLP client for OpenIE...
-  ✓ CoreNLP OpenIE client initialized
-
-Initialization complete:
-  - Native Stanza coref: True
-  - Stanza depparse fallback: True
-  - CoreNLP port: 9011
-Extracting relation triples with native Stanza...
-  ✓ Extracted 16 relation triples
-    - OpenIE: 16
-    - Stanza fallback: 0
-
-  Sample triples:
-    1. (40 years ; is under ; old) [openie]
-    2. (attention ; is ; immediate) [openie]
-    3. (hospital ; has ; emergency triage protocol) [openie]
-    4. (pain ; is ; unless clearly musculoskeletal) [openie]
-    5. (hospital 's emergency triage protocol ; requires ; immediate attention for patients presenting with chest pain) [openie]
 [
   {
     "subject": "40 years",
@@ -119,4 +96,3 @@ Extracting relation triples with native Stanza...
     "sentence_index": 2
   }
 ]
-CoreNLP client closed.
