@@ -36,12 +36,38 @@ try:
         print(f"\n✓ Extracted {len(triples)} relation triples")
 
         print("\n" + "=" * 80)
-        print("EXTRACTED TRIPLES (Verbose)")
+        print("NEW ARRAY FORMAT (Token-Optimized JSON)")
+        print("=" * 80)
+        print("\nFormat: [subject, predicate, object, sentence_index]")
+        print("-" * 80)
+        json_output = extractor.format_triples_json(triples, indent=2)
+        print(json_output)
+
+        print("\n" + "=" * 80)
+        print("COMPACT FORMAT (No Indentation)")
+        print("=" * 80)
+        compact_output = extractor.format_triples_json(triples, indent=0)
+        print(compact_output)
+
+        print("\n" + "=" * 80)
+        print("VERBOSE FORMAT (Human-Readable)")
         print("=" * 80)
         print(extractor.format_triples_verbose(triples))
 
         print("\n" + "=" * 80)
-        print("✅ SUCCESS: OpenIE extractor is fully functional!")
+        print("TOKEN SAVINGS ANALYSIS")
+        print("=" * 80)
+        old_format_chars = len('{"subject": "X", "predicate": "Y", "object": "Z", "sentence_index": 0}')
+        new_format_chars = len('["X", "Y", "Z", 0]')
+        savings_per_triple = old_format_chars - new_format_chars
+        total_savings = savings_per_triple * len(triples)
+        print(f"Old format: ~{old_format_chars} chars/triple")
+        print(f"New format: ~{new_format_chars} chars/triple")
+        print(f"Savings: ~{savings_per_triple} chars/triple ({len(triples)} triples)")
+        print(f"Total savings: ~{total_savings} chars ≈ {total_savings // 4} tokens")
+
+        print("\n" + "=" * 80)
+        print("✅ SUCCESS: OpenIE extractor with new array format is working!")
         print("=" * 80)
 
 except Exception as e:

@@ -1,0 +1,18 @@
+[
+  ["40 years", "is under", "old", 0],
+  ["attention", "is", "immediate", 0],
+  ["hospital", "has", "emergency triage protocol", 0],
+  ["pain", "is", "unless clearly musculoskeletal", 0],
+  ["hospital 's emergency triage protocol", "requires", "immediate attention for patients presenting with chest pain", 0],
+  ["hospital 's emergency triage protocol", "requires", "immediate attention", 0],
+  ["immediate attention", "is for", "patients presenting with chest pain", 0],
+  ["pain", "is", "unless clearly musculoskeletal in origin", 0],
+  ["shifts", "is", "double", 1],
+  ["patients", "is over", "65", 1],
+  ["history", "is", "documented", 2],
+  ["guidelines", "is", "official", 2],
+  ["cardiac history", "is", "documented", 2],
+  ["cardiac history", "is", "when documented", 2],
+  ["history", "is", "cardiac", 2],
+  ["history", "is", "when documented", 2]
+]

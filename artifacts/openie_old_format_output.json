@@ -1,0 +1,98 @@
+[
+  {
+    "subject": "40 years",
+    "predicate": "is under",
+    "object": "old",
+    "sentence_index": 0
+  },
+  {
+    "subject": "attention",
+    "predicate": "is",
+    "object": "immediate",
+    "sentence_index": 0
+  },
+  {
+    "subject": "hospital",
+    "predicate": "has",
+    "object": "emergency triage protocol",
+    "sentence_index": 0
+  },
+  {
+    "subject": "pain",
+    "predicate": "is",
+    "object": "unless clearly musculoskeletal",
+    "sentence_index": 0
+  },
+  {
+    "subject": "hospital 's emergency triage protocol",
+    "predicate": "requires",
+    "object": "immediate attention for patients presenting with chest pain",
+    "sentence_index": 0
+  },
+  {
+    "subject": "hospital 's emergency triage protocol",
+    "predicate": "requires",
+    "object": "immediate attention",
+    "sentence_index": 0
+  },
+  {
+    "subject": "immediate attention",
+    "predicate": "is for",
+    "object": "patients presenting with chest pain",
+    "sentence_index": 0
+  },
+  {
+    "subject": "pain",
+    "predicate": "is",
+    "object": "unless clearly musculoskeletal in origin",
+    "sentence_index": 0
+  },
+  {
+    "subject": "shifts",
+    "predicate": "is",
+    "object": "double",
+    "sentence_index": 1
+  },
+  {
+    "subject": "patients",
+    "predicate": "is over",
+    "object": "65",
+    "sentence_index": 1
+  },
+  {
+    "subject": "history",
+    "predicate": "is",
+    "object": "documented",
+    "sentence_index": 2
+  },
+  {
+    "subject": "guidelines",
+    "predicate": "is",
+    "object": "official",
+    "sentence_index": 2
+  },
+  {
+    "subject": "cardiac history",
+    "predicate": "is",
+    "object": "documented",
+    "sentence_index": 2
+  },
+  {
+    "subject": "cardiac history",
+    "predicate": "is",
+    "object": "when documented",
+    "sentence_index": 2
+  },
+  {
+    "subject": "history",
+    "predicate": "is",
+    "object": "cardiac",
+    "sentence_index": 2
+  },
+  {
+    "subject": "history",
+    "predicate": "is",
+    "object": "when documented",
+    "sentence_index": 2
+  }
+]
