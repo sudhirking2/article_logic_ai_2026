@@ -119,9 +119,7 @@ Example: [["Alice", "likes", "Bob", 0], ["Bob", "studies", "hard", 1]]
 >>>
 
 
-EXEMPLARS
-
-EXEMPLAR 1: Hospital Triage Protocol
+EXEMPLAR 1
 
 INPUT TEXT
 <<<
@@ -151,7 +149,6 @@ INPUT TRIPLES
   ["history", "is", "when documented", 2]]
 >>>
 
-OUTPUT JSON
 OUTPUT JSON
 {
     "primitive_props": [
@@ -264,7 +261,7 @@ OUTPUT JSON
 }
 
 
-EXEMPLAR 2: Lab Safety Protocol
+EXEMPLAR 2
 
 INPUT TEXT
 <<<
