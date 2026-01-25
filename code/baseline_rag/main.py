@@ -76,24 +76,6 @@ def load_dataset(dataset_name, split='validation'):
     return examples
 
 
-def get_dataset_prompt(dataset_name):
-    """
-    Select optimal prompt template based on dataset characteristics.
-
-    Args:
-        dataset_name: Name of the dataset (string)
-
-    Returns:
-        Dataset-specific prompt template string
-    """
-    prompt_map = {
-        'folio': config.FOLIO_PROMPT_TEMPLATE,
-        'proofwriter': config.PROOFWRITER_PROMPT_TEMPLATE,
-        'contractnli': config.CONTRACTNLI_PROMPT_TEMPLATE
-    }
-    return prompt_map.get(dataset_name, config.COT_PROMPT_TEMPLATE)
-
-
 def preprocess_document(document):
     """
     Preprocess document text before chunking.
@@ -134,8 +116,6 @@ def run_baseline_experiment(dataset_name, model_name=None):
     if model_name is None:
         model_name = config.DEFAULT_MODEL
 
-    prompt_template = get_dataset_prompt(dataset_name)
-
     print(f"Loading dataset: {dataset_name}")
     examples = load_dataset(dataset_name)
 
@@ -153,7 +133,7 @@ def run_baseline_experiment(dataset_name, model_name=None):
         chunks = chunk_document(preprocessed_doc, config.CHUNK_SIZE, config.OVERLAP)
         chunk_embeddings = encode_chunks(chunks, sbert_model)
 
-        result = process_single_example(example, chunk_embeddings, chunks, sbert_model, model_name, prompt_template)
+        result = process_single_example(example, chunk_embeddings, chunks, sbert_model, model_name)
 
         predictions.append(result['prediction'])
         ground_truth.append(example['label'])
@@ -177,7 +157,7 @@ def run_baseline_experiment(dataset_name, model_name=None):
     }
 
 
-def process_single_example(example, chunk_embeddings, chunks, sbert_model, llm_model, prompt_template):
+def process_single_example(example, chunk_embeddings, chunks, sbert_model, llm_model):
     """
     Process a single query-document pair through the RAG pipeline.
 
@@ -187,7 +167,6 @@ def process_single_example(example, chunk_embeddings, chunks, sbert_model, llm_m
         chunks: List of chunk dictionaries from chunker
         sbert_model: Loaded SBERT model object
         llm_model: Name of LLM to use (string)
-        prompt_template: Dataset-specific prompt template (string)
 
     Returns:
         Dictionary containing:
@@ -201,7 +180,7 @@ def process_single_example(example, chunk_embeddings, chunks, sbert_model, llm_m
 
     retrieved_chunks = retrieve(query_embedding, chunk_embeddings, chunks, k=config.TOP_K)
 
-    result = reason_with_cot(query, retrieved_chunks, llm_model, prompt_template, config.TEMPERATURE)
+    result = reason_with_cot(query, retrieved_chunks, llm_model, config.COT_PROMPT_TEMPLATE, config.TEMPERATURE)
 
     return {
         'prediction': result['answer'],
