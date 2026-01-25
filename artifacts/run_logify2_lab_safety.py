@@ -48,8 +48,9 @@ def main():
         print(f"\nExtracted {len(openie_triples)} triples:")
         print("-" * 80)
         for i, triple in enumerate(openie_triples, 1):
-            print(f"\n{i}. {triple['subject']} | {triple['relation']} | {triple['object']}")
-            print(f"   Confidence: {triple['confidence']:.3f}")
+            print(f"\n{i}. {triple['subject']} | {triple['predicate']} | {triple['object']}")
+            source = triple.get('source', 'unknown')
+            print(f"   Source: {source}")
 
         # Format triples for LLM
         formatted_triples = extractor.format_triples(openie_triples)

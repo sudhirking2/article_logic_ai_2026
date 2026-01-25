@@ -1,0 +1,123 @@
+[
+  {
+    "subject": "researchers",
+    "predicate": "sign",
+    "object": "safety logbook",
+    "sentence_index": 0,
+    "source": "openie"
+  },
+  {
+    "subject": "equipment",
+    "predicate": "is",
+    "object": "protective",
+    "sentence_index": 0,
+    "source": "openie"
+  },
+  {
+    "subject": "researchers",
+    "predicate": "entering",
+    "object": "laboratory",
+    "sentence_index": 0,
+    "source": "openie"
+  },
+  {
+    "subject": "workspace",
+    "predicate": "must",
+    "object": "must cleaned",
+    "sentence_index": 1,
+    "source": "openie"
+  },
+  {
+    "subject": "chemicals",
+    "predicate": "must",
+    "object": "must properly stored",
+    "sentence_index": 1,
+    "source": "openie"
+  },
+  {
+    "subject": "chemicals",
+    "predicate": "must",
+    "object": "must stored",
+    "sentence_index": 1,
+    "source": "openie"
+  },
+  {
+    "subject": "system",
+    "predicate": "turn",
+    "object": "not",
+    "sentence_index": 2,
+    "source": "stanza_depparse_advmod",
+    "pos": "VERB"
+  },
+  {
+    "subject": "students",
+    "predicate": "is",
+    "object": "undergraduate",
+    "sentence_index": 3,
+    "source": "openie"
+  },
+  {
+    "subject": "researchers",
+    "predicate": "is",
+    "object": "Senior",
+    "sentence_index": 3,
+    "source": "openie"
+  },
+  {
+    "subject": "equipment",
+    "predicate": "inspect",
+    "object": "weekly",
+    "sentence_index": 4,
+    "source": "stanza_depparse_advmod",
+    "pos": "VERB"
+  },
+  {
+    "subject": "safety officer",
+    "predicate": "must",
+    "object": "must notified",
+    "sentence_index": 5,
+    "source": "openie"
+  },
+  {
+    "subject": "safety officer",
+    "predicate": "must",
+    "object": "must notified within 5 minutes",
+    "sentence_index": 5,
+    "source": "openie"
+  },
+  {
+    "subject": "Researchers",
+    "predicate": "are encouraged",
+    "object": "not mandatory for experienced personnel",
+    "sentence_index": 6,
+    "source": "openie"
+  },
+  {
+    "subject": "safety meetings",
+    "predicate": "is",
+    "object": "monthly",
+    "sentence_index": 6,
+    "source": "openie"
+  },
+  {
+    "subject": "Researchers",
+    "predicate": "attend",
+    "object": "safety meetings",
+    "sentence_index": 6,
+    "source": "openie"
+  },
+  {
+    "subject": "Researchers",
+    "predicate": "attend",
+    "object": "monthly safety meetings",
+    "sentence_index": 6,
+    "source": "openie"
+  },
+  {
+    "subject": "partner",
+    "predicate": "is with",
+    "object": "present",
+    "sentence_index": 7,
+    "source": "openie"
+  }
+]
