@@ -27,7 +27,8 @@ class LogicConverter:
             reasoning_effort (str): Reasoning effort level for GPT-5.2/o3 models (none, low, medium, high, xhigh). Default: xhigh
         """
         # Detect OpenRouter keys and use appropriate base URL
-        if api_key.startswith('sk-or-'):
+        # OpenRouter keys start with 'sk-or-v1-'
+        if api_key.startswith('sk-or-v1-') or api_key.startswith('sk-or-'):
             self.client = OpenAI(api_key=api_key, base_url='https://openrouter.ai/api/v1')
             # Prefix model with openai/ for OpenRouter
             if not model.startswith('openai/'):
