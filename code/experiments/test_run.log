@@ -12,3 +12,54 @@ Step 1: Extracting text from PDF...
 Step 2: Initializing logify2 pipeline...
 Initializing OpenIE Extractor with native Stanza...
 Initializing native Stanza coreference pipeline...
+  ✓ Native Stanza coref initialized
+Initializing Stanza dependency parse pipeline...
+  ✓ Stanza depparse initialized
+Initializing CoreNLP client for OpenIE...
+Error initializing CoreNLP OpenIE client: When trying to run CoreNLP, a FileNotFoundError occurred, which frequently means Java was not installed or was not in the classpath.
+
+ERROR: Failed to initialize CoreNLP: When trying to run CoreNLP, a FileNotFoundError occurred, which frequently means Java was not installed or was not in the classpath.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/stanza/server/client.py", line 155, in start
+    self.server = subprocess.Popen(self.start_cmd,
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/local/lib/python3.11/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'java'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/__modal/volumes/vo-FpxPCyDwaDSFNzFxTE1n5N/repo/code/from_text_to_logic/openie_extractor.py", line 123, in __init__
+    self._start_client()
+  File "/__modal/volumes/vo-FpxPCyDwaDSFNzFxTE1n5N/repo/code/from_text_to_logic/openie_extractor.py", line 144, in _start_client
+    self.client.__enter__()
+  File "/usr/local/lib/python3.11/site-packages/stanza/server/client.py", line 187, in __enter__
+    self.start()
+  File "/usr/local/lib/python3.11/site-packages/stanza/server/client.py", line 159, in start
+    raise FileNotFoundError("When trying to run CoreNLP, a FileNotFoundError occurred, which frequently means Java was not installed or was not in the classpath.") from e
+FileNotFoundError: When trying to run CoreNLP, a FileNotFoundError occurred, which frequently means Java was not installed or was not in the classpath.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/__modal/volumes/vo-FpxPCyDwaDSFNzFxTE1n5N/repo/code/experiments/test_sintec_pdf.py", line 47, in main
+    converter = LogifyConverter2(api_key=api_key)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/__modal/volumes/vo-FpxPCyDwaDSFNzFxTE1n5N/repo/code/from_text_to_logic/logify2.py", line 100, in __init__
+    self.extractor = OpenIEExtractor()
+                     ^^^^^^^^^^^^^^^^^
+  File "/__modal/volumes/vo-FpxPCyDwaDSFNzFxTE1n5N/repo/code/from_text_to_logic/openie_extractor.py", line 131, in __init__
+    raise RuntimeError(f"Failed to initialize CoreNLP: {e}")
+RuntimeError: Failed to initialize CoreNLP: When trying to run CoreNLP, a FileNotFoundError occurred, which frequently means Java was not installed or was not in the classpath.
+CoreNLP client closed.
+Exception ignored in: <function LogifyConverter2.__del__ at 0x2af4be4fd8a0>
+Traceback (most recent call last):
+  File "/__modal/volumes/vo-FpxPCyDwaDSFNzFxTE1n5N/repo/code/from_text_to_logic/logify2.py", line 140, in __del__
+    self.close()
+  File "/__modal/volumes/vo-FpxPCyDwaDSFNzFxTE1n5N/repo/code/from_text_to_logic/logify2.py", line 136, in close
+    self.extractor.close()
+    ^^^^^^^^^^^^^^
+AttributeError: 'LogifyConverter2' object has no attribute 'extractor'
