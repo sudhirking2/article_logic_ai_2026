@@ -81,8 +81,10 @@ RELATION TRIPLES:
 
             print(f"Sending to LLM for logical structure extraction (model: {self.model})...")
 
-            # Determine if this is a reasoning model (GPT-5.2, o3-mini, etc.)
-            is_reasoning_model = self.model.startswith("gpt-5") or self.model.startswith("o3")
+            # Determine if this is a reasoning model (GPT-5.x, o1, o3, etc.)
+            # Check base model name (strip openai/ prefix if present for OpenRouter)
+            base_model = self.model.replace("openai/", "")
+            is_reasoning_model = base_model.startswith("gpt-5") or base_model.startswith("o1") or base_model.startswith("o3")
 
             # Build API call parameters based on model type
             if is_reasoning_model:
