@@ -44,7 +44,9 @@ class LogicConverter:
 
     def _load_system_prompt(self) -> str:
         """Load the system prompt from the prompt file."""
-        prompt_path = "/workspace/repo/code/prompts/prompt_logify2"
+        import os
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        prompt_path = os.path.join(script_dir, "..", "prompts", "prompt_logify2")
         try:
             with open(prompt_path, 'r', encoding='utf-8') as f:
                 content = f.read()
