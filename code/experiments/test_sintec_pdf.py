@@ -42,13 +42,9 @@ def main():
         text = extract_text_from_document(str(pdf_path))
         print(f"  ✓ Extracted {len(text)} characters\n")
 
-        # Initialize converter
+        # Initialize converter (using defaults: gpt-5.2, temp=0.1, reasoning_effort=xhigh)
         print("Step 2: Initializing logify2 pipeline...")
-        converter = LogifyConverter2(
-            api_key=api_key,
-            model="o1",
-            reasoning_effort="high"
-        )
+        converter = LogifyConverter2(api_key=api_key)
         print("  ✓ Pipeline initialized\n")
 
         # Convert to logic
