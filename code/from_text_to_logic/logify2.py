@@ -86,14 +86,14 @@ def extract_text_from_document(file_path: str) -> str:
 class LogifyConverter2:
     """Orchestrates the two-stage text-to-logic conversion pipeline."""
 
-    def __init__(self, api_key: str, model: str = "gpt-5.2", reasoning_effort: str = "high"):
+    def __init__(self, api_key: str, model: str = "o1", reasoning_effort: str = "high"):
         """
         Initialize the pipeline with both stages.
 
         Args:
             api_key (str): OpenAI API key
-            model (str): Model to use (default: gpt-5.2)
-            reasoning_effort (str): Reasoning effort for GPT-5.2/o3 models (default: high)
+            model (str): Model to use (default: o1 with extended thinking)
+            reasoning_effort (str): Reasoning effort for o1/o3 models (default: high)
         """
         # Stage 1: OpenIE extraction
         self.extractor = OpenIEExtractor()
@@ -150,12 +150,16 @@ def main():
         help="Path to document file (PDF/DOCX/TXT) or raw text string"
     )
     parser.add_argument("--api-key", required=True, help="OpenAI API key")
-    parser.add_argument("--model", default="gpt-5.2", help="Model to use (default: gpt-5.2)")
+    parser.add_argument(
+        "--model",
+        default="o1",
+        help="Model to use (default: o1). Options: o1, gpt-4o, gpt-4-turbo, etc."
+    )
     parser.add_argument(
         "--reasoning-effort",
         default="high",
-        choices=["none", "low", "medium", "high", "xhigh"],
-        help="Reasoning effort for GPT-5.2/o3 models (default: high)"
+        choices=["none", "low", "medium", "high"],
+        help="Reasoning effort for o1/o3 models (default: high)"
     )
     parser.add_argument("--output", default="logified2.JSON", help="Output JSON file path")
 
