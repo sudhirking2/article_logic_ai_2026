@@ -76,7 +76,7 @@ Design decisions (from Logic-LM++ paper):
 """
 
 import json
-import openai
+from openai import OpenAI
 from config import (
     REFINEMENT_PROMPT,
     PAIRWISE_COMPARISON_PROMPT,
@@ -120,8 +120,9 @@ def generate_refinements(current_formulation, error_feedback, original_text,
     )
 
     # Call LLM
+    client = OpenAI()
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model_name,
             messages=[{"role": "user", "content": prompt}],
             temperature=temperature,
