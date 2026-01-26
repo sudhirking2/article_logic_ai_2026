@@ -22,8 +22,8 @@ SBERT_MODEL = "all-MiniLM-L6-v2"
 TOP_K = 5
 
 # Chunking Configuration
-CHUNK_SIZE = 512
-OVERLAP = 50
+CHUNK_SIZE = 400
+OVERLAP = 80
 
 # LLM Configuration
 DEFAULT_MODEL = "openai/gpt-5-nano"
