@@ -86,7 +86,7 @@ def extract_text_from_document(file_path: str) -> str:
 class LogifyConverter2:
     """Orchestrates the two-stage text-to-logic conversion pipeline."""
 
-    def __init__(self, api_key: str, model: str = "gpt-5.2", temperature: float = 0.1, reasoning_effort: str = "xhigh"):
+    def __init__(self, api_key: str, model: str = "gpt-5.2", temperature: float = 0.1, reasoning_effort: str = "medium"):
         """
         Initialize the pipeline with both stages.
 
