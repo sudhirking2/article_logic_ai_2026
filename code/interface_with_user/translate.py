@@ -12,6 +12,7 @@ Input:
     - api_key: OpenRouter API key
     - Model parameters (model, temperature, reasoning_effort, max_tokens)
     - k: Number of top propositions to retrieve (default: 20)
+    - max_tokens: Maximum tokens in response (default: 64000)
 
 Output:
     {
@@ -195,7 +196,7 @@ def call_llm(
     model: str = "gpt-5.2",
     temperature: float = 0.1,
     reasoning_effort: str = "medium",
-    max_tokens: int = 2000
+    max_tokens: int = 64000
 ) -> Dict[str, Any]:
     """
     Call LLM to translate query to propositional formula.
@@ -300,7 +301,7 @@ def translate_query(
     model: str = "gpt-5.2",
     temperature: float = 0.1,
     reasoning_effort: str = "medium",
-    max_tokens: int = 2000,
+    max_tokens: int = 64000,
     k: int = 20,
     sbert_model_name: str = "all-MiniLM-L6-v2",
     verbose: bool = True
