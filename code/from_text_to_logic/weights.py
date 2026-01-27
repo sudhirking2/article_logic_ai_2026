@@ -360,7 +360,8 @@ class WeightAssigner:
 
     def _score_with_nli(self,
                        chunks: List[Dict],
-                       hypotheses: List[str]) -> np.ndarray:
+                       hypotheses: List[str],
+                       verbose_debug: bool = False) -> np.ndarray:
         """
         Appendix Step 2.4-2.5: Score with NLI and compute evidence scores.
 
@@ -389,6 +390,24 @@ class WeightAssigner:
         # nli_scores[:, 1] = neutral
         # nli_scores[:, 2] = entailment
 
+        # ===================== DEBUG OUTPUT =====================
+        if verbose_debug:
+            print("\n      [DEBUG] NLI Scoring Details:")
+            print(f"      Hypothesis: {hypotheses[0][:80]}...")
+            print(f"      Number of premises (chunks): {len(premises)}")
+            print(f"      Raw NLI scores shape: {nli_scores.shape}")
+            print("\n      Top 5 premise-hypothesis pairs by entailment score:")
+            # Sort by entailment score (index 2)
+            sorted_indices = np.argsort(nli_scores[:, 2])[::-1][:5]
+            for rank, idx in enumerate(sorted_indices):
+                p_idx = idx // len(hypotheses)
+                h_idx = idx % len(hypotheses)
+                scores = nli_scores[idx]
+                print(f"        [{rank+1}] Premise {p_idx} (chunk preview: '{premises[p_idx][:50]}...')")
+                print(f"            contradiction={scores[0]:.4f}, neutral={scores[1]:.4f}, entailment={scores[2]:.4f}")
+                print(f"            d = z_ent - z_con = {scores[2]:.4f} - {scores[0]:.4f} = {scores[2] - scores[0]:.4f}")
+        # ========================================================
+
         # Reshape to [num_premises, num_hypotheses, 3]
         nli_scores = nli_scores.reshape(len(premises), len(hypotheses), 3)
 
@@ -397,8 +416,26 @@ class WeightAssigner:
         z_ent = nli_scores[:, :, 2]  # [premises, hypotheses] - entailment
         d_matrix = z_ent - z_con     # [premises, hypotheses]
 
+        # ===================== DEBUG OUTPUT =====================
+        if verbose_debug:
+            print("\n      [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):")
+            print(f"      d_matrix shape: {d_matrix.shape}")
+            print(f"      d_matrix stats: min={np.min(d_matrix):.4f}, max={np.max(d_matrix):.4f}, mean={np.mean(d_matrix):.4f}")
+            # Show distribution
+            d_flat = d_matrix.flatten()
+            print(f"      Distribution: <-0.5: {np.sum(d_flat < -0.5)}, [-0.5,0]: {np.sum((d_flat >= -0.5) & (d_flat < 0))}, "
+                  f"[0,0.5]: {np.sum((d_flat >= 0) & (d_flat < 0.5))}, >=0.5: {np.sum(d_flat >= 0.5)}")
+        # ========================================================
+
         # Take max over hypotheses: d(p) = max_j d(p, h_j)
         d_values = np.max(d_matrix, axis=1)  # [premises]
+
+        # ===================== DEBUG OUTPUT =====================
+        if verbose_debug:
+            print("\n      [DEBUG] After max over hypotheses:")
+            print(f"      d_values shape: {d_values.shape}")
+            print(f"      d_values stats: min={np.min(d_values):.4f}, max={np.max(d_values):.4f}, mean={np.mean(d_values):.4f}")
+        # ========================================================
 
         # Numerical stability: clip extreme values
         # (Prevents overflow in log-sum-exp)
@@ -406,7 +443,7 @@ class WeightAssigner:
 
         return d_values
 
-    def _log_sum_exp_pooling(self, evidence_scores: np.ndarray) -> float:
+    def _log_sum_exp_pooling(self, evidence_scores: np.ndarray, verbose_debug: bool = False) -> float:
         """
         Appendix Step 2.6: Log-sum-exp pooling.
 
@@ -446,9 +483,19 @@ class WeightAssigner:
         # = (1/τ) * [log((1/K) * Σ exp(τ * (d_i - max_d))) + τ * max_d]
         D = (1/tau) * (np.log((1/K) * np.sum(exp_scores)) + tau * max_score)
 
+        # ===================== DEBUG OUTPUT =====================
+        if verbose_debug:
+            print("\n      [DEBUG] Log-Sum-Exp Pooling:")
+            print(f"      τ (temperature) = {tau}")
+            print(f"      K (num evidence scores) = {K}")
+            print(f"      max(d) = {max_score:.4f}")
+            print(f"      Input d values: min={np.min(evidence_scores):.4f}, max={np.max(evidence_scores):.4f}, mean={np.mean(evidence_scores):.4f}")
+            print(f"      D (pooled score) = {D:.4f}")
+        # ========================================================
+
         return D
 
-    def _sigmoid(self, x: float) -> float:
+    def _sigmoid(self, x: float, verbose_debug: bool = False) -> float:
         """
         Appendix Step 2.7: Sigmoid transformation.
 
@@ -460,7 +507,17 @@ class WeightAssigner:
         - D << 0 (strong contradiction) → w ≈ 0
         - D ≈ 0 (neutral) → w ≈ 0.5
         """
-        return 1.0 / (1.0 + np.exp(-x))
+        result = 1.0 / (1.0 + np.exp(-x))
+
+        # ===================== DEBUG OUTPUT =====================
+        if verbose_debug:
+            print(f"\n      [DEBUG] Sigmoid Transform:")
+            print(f"      Input D = {x:.4f}")
+            print(f"      Output σ(D) = {result:.4f}")
+            print(f"      (Reference: σ(0)=0.5, σ(2)=0.88, σ(4)=0.98, σ(-2)=0.12)")
+        # ========================================================
+
+        return result
 
     def _print_weight_summary(self, constraints: List[Dict]):
         """Print summary statistics of assigned weights."""
@@ -478,6 +535,7 @@ class WeightAssigner:
 def assign_weights(logified_structure: Dict[str, Any],
                   document_text: str,
                   verbose: bool = True,
+                  debug: bool = False,
                   **kwargs) -> Dict[str, Any]:
     """
     Convenience function: Assign weights to constraints.
@@ -488,6 +546,7 @@ def assign_weights(logified_structure: Dict[str, Any],
         logified_structure: Output from logify.py
         document_text: Original document text
         verbose: Print progress messages
+        debug: Print detailed debug info for each constraint (NLI scores, etc.)
         **kwargs: Additional parameters for WeightAssigner
 
     Returns:
@@ -502,6 +561,9 @@ def assign_weights(logified_structure: Dict[str, Any],
         # Assign weights
         logified_with_weights = assign_weights(logified, text)
 
+        # Assign weights with debug output
+        logified_with_weights = assign_weights(logified, text, debug=True)
+
         # Now both hard_constraints[i]['weight'] and
         # soft_constraints[i]['weight'] exist!
     """
@@ -509,7 +571,8 @@ def assign_weights(logified_structure: Dict[str, Any],
     return assigner.assign_weights_to_structure(
         logified_structure,
         document_text,
-        verbose=verbose
+        verbose=verbose,
+        debug=debug
     )
 
 
