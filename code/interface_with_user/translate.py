@@ -209,7 +209,7 @@ def call_llm(
         model: Model name (default: gpt-5.2)
         temperature: Sampling temperature (default: 0.1)
         reasoning_effort: For reasoning models (default: medium)
-        max_tokens: Max response tokens (default: 2000)
+        max_tokens: Max response tokens (default: 64000)
 
     Returns:
         Parsed JSON response dict
@@ -316,7 +316,7 @@ def translate_query(
         model: LLM model (default: gpt-5.2)
         temperature: Sampling temperature (default: 0.1)
         reasoning_effort: For reasoning models (default: medium)
-        max_tokens: Max response tokens (default: 2000)
+        max_tokens: Max response tokens (default: 64000)
         k: Number of propositions to retrieve (default: 20)
         sbert_model_name: SBERT model for retrieval (default: all-MiniLM-L6-v2)
         verbose: Print progress messages (default: True)
@@ -426,8 +426,8 @@ def main():
     parser.add_argument(
         "--max-tokens",
         type=int,
-        default=2000,
-        help="Maximum tokens in response (default: 2000)"
+        default=64000,
+        help="Maximum tokens in response (default: 64000)"
     )
     parser.add_argument(
         "--k",
