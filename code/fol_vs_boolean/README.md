@@ -19,10 +19,12 @@ fol_vs_boolean/
 │   │   ├── propositional.jsonl           # Propositional outputs
 │   │   └── fol.jsonl                     # FOL outputs
 │   └── results/error_analysis.json       # Final results
+├── load_logicbench.py                    # Reusable LogicBench loader
 ├── extract_propositional.py              # Propositional wrapper
 ├── extract_fol.py                        # FOL wrapper
 ├── run_dual_extraction.py                # Main extraction script
 ├── analyze_errors.py                     # Error analysis
+├── run_logicbench_experiment.py          # Single-file LogicBench experiment
 └── README.md                             # This file
 ```
 
@@ -135,6 +137,47 @@ This will:
 - FOLIO test set (50 examples)
 - ProofWriter depth-5 (50 examples)
 - Custom examples in JSONL format
+
+## Reusing LogicBench Data in Other Scripts
+
+The `load_logicbench.py` module provides reusable functions for loading LogicBench data:
+
+```python
+# Import the loader
+from load_logicbench import load_logicbench, load_all_propositional, load_all_fol
+
+# Example 1: Load specific patterns
+examples = load_logicbench(
+    logic_type='propositional_logic',
+    reasoning_patterns=['modus_tollens', 'disjunctive_syllogism'],
+    max_examples_per_pattern=10
+)
+
+# Example 2: Load all propositional logic patterns
+examples = load_all_propositional(max_examples_per_pattern=5)
+
+# Example 3: Load all FOL patterns
+examples = load_all_fol(max_examples_per_pattern=5)
+
+# Each example is a dict with:
+# {
+#   'id': str,
+#   'text': str,           # Context/premises
+#   'query': str,          # Question
+#   'ground_truth': bool,  # Answer
+#   'pattern': str,        # Reasoning pattern (e.g., 'modus_tollens')
+#   'logic_type': str      # 'propositional_logic' or 'first_order_logic'
+# }
+```
+
+This module can be imported from any script in your codebase. Just add the appropriate path:
+
+```python
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'path', 'to', 'fol_vs_boolean'))
+from load_logicbench import load_logicbench
+```
 
 ## Timeline
 

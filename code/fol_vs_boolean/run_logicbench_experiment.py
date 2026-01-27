@@ -26,6 +26,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'baseline_logiclm_
 
 from logify import LogifyConverter
 from formalizer import formalize_to_fol
+from load_logicbench import load_logicbench
 
 # Initialize the propositional logic converter (needs API key)
 # We'll initialize it lazily in the extraction function
@@ -108,108 +109,8 @@ def extract_fol(text, query):
     }
 
 
-# ============================================================================
-# DATASET LOADING
-# ============================================================================
-
-def load_logicbench_from_github(logic_type='propositional_logic', reasoning_patterns=None, max_examples=None):
-    """
-    Load LogicBench dataset directly from GitHub repository.
-
-    Args:
-        logic_type: str, 'propositional_logic', 'first_order_logic', or 'nm_logic'
-        reasoning_patterns: list of str, specific patterns to load (e.g., ['modus_tollens', 'disjunctive_syllogism'])
-                           If None, loads all available patterns
-        max_examples: int, optional limit on number of examples to load per pattern
-
-    Returns:
-        List[dict], each with 'id', 'text', 'query', 'ground_truth'
-    """
-    import urllib.request
-
-    print(f"Loading LogicBench from GitHub (logic_type={logic_type})...")
-
-    # Default reasoning patterns for each logic type
-    default_patterns = {
-        'propositional_logic': [
-            'modus_tollens', 'disjunctive_syllogism', 'hypothetical_syllogism',
-            'constructive_dilemma', 'destructive_dilemma', 'bidirectional_dilemma',
-            'commutation', 'material_implication'
-        ],
-        'first_order_logic': [
-            'universal_instantiation', 'existential_generalization',
-            'existential_instantiation', 'universal_generalization'
-        ]
-    }
-
-    if reasoning_patterns is None:
-        reasoning_patterns = default_patterns.get(logic_type, ['modus_tollens'])
-
-    base_url = "https://raw.githubusercontent.com/Mihir3009/LogicBench/main/data/LogicBench(Eval)/BQA"
-
-    examples = []
-    for pattern in reasoning_patterns:
-        print(f"  Loading pattern: {pattern}")
-
-        # Try loading numbered JSON files (1.json, 2.json, etc.)
-        file_idx = 1
-        pattern_examples = 0
-
-        while True:
-            if max_examples and pattern_examples >= max_examples:
-                break
-
-            url = f"{base_url}/{logic_type}/{pattern}/{file_idx}.json"
-
-            try:
-                with urllib.request.urlopen(url) as response:
-                    data = json.loads(response.read().decode())
-
-                    # Extract samples from LogicBench format
-                    for sample in data.get('samples', []):
-                        if max_examples and pattern_examples >= max_examples:
-                            break
-
-                        sample_id = sample.get('id', f"{pattern}_{file_idx}_{len(examples)}")
-                        context = sample.get('context', '')
-
-                        # LogicBench has qa_pairs (question-answer pairs)
-                        qa_pairs = sample.get('qa_pairs', [])
-                        if qa_pairs:
-                            # Use first QA pair
-                            qa = qa_pairs[0]
-                            query = qa.get('question', '')
-                            ground_truth = qa.get('answer', None)
-                        else:
-                            query = ''
-                            ground_truth = None
-
-                        examples.append({
-                            'id': sample_id,
-                            'text': context,
-                            'query': query,
-                            'ground_truth': ground_truth,
-                            'pattern': pattern
-                        })
-                        pattern_examples += 1
-
-                file_idx += 1
-
-            except urllib.error.HTTPError as e:
-                if e.code == 404:
-                    # No more files for this pattern
-                    break
-                else:
-                    print(f"    Error loading {url}: {e}")
-                    break
-            except Exception as e:
-                print(f"    Error processing {url}: {e}")
-                break
-
-        print(f"    Loaded {pattern_examples} examples from {pattern}")
-
-    print(f"Total loaded: {len(examples)} examples from LogicBench")
-    return examples
+# Dataset loading is now handled by load_logicbench.py module
+# Import with: from load_logicbench import load_logicbench
 
 
 # ============================================================================
@@ -367,10 +268,10 @@ def main():
     # Step 1: Load dataset from GitHub
     print("\n[Step 1] Loading LogicBench dataset from GitHub...")
     try:
-        examples = load_logicbench_from_github(
+        examples = load_logicbench(
             logic_type=LOGIC_TYPE,
             reasoning_patterns=PATTERNS,
-            max_examples=MAX_EXAMPLES_PER_PATTERN
+            max_examples_per_pattern=MAX_EXAMPLES_PER_PATTERN
         )
     except Exception as e:
         print(f"ERROR loading dataset: {e}")
