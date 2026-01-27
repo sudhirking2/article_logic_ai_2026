@@ -2,50 +2,126 @@
 Natural language to symbolic formalization module.
 
 This module handles the initial translation from natural language text + query
-into first-order logic (FOL) formulation for Logic-LM++.
+into logical formulations for Logic-LM++.
+
+Supports two logic types:
+1. Propositional logic: Ground atoms (P, Q, R) without quantifiers
+2. First-order logic (FOL): Predicates with arguments and quantifiers
 
 Core responsibilities:
-1. Call LLM with formalization prompt
+1. Call LLM with appropriate formalization prompt (propositional or FOL)
 2. Parse JSON response into structured format
 3. Validate output structure (syntax and well-formedness)
 4. Handle malformed outputs (count as formalization failure)
 
 Key functions:
-- formalize_to_fol(text, query, model_name, temperature=0) -> dict
-  Main entry point for NL → FOL translation
+- formalize(text, query, logic_type='propositional', ...) -> dict
+  Main entry point supporting both propositional and FOL
+
+- formalize_to_fol(text, query, ...) -> dict
+  Legacy FOL-only entry point (for backward compatibility)
 
 - parse_formalization_response(raw_response) -> dict
   Parse LLM JSON output, handle malformed responses
 
 - validate_formalization(formalization) -> bool
-  Check if formalization structure is valid (has required fields, valid FOL syntax)
+  Check if formalization structure is valid
 
 Output format:
 {
-    'predicates': Dict[str, str],       # e.g., {'Student(x)': 'x is a student', 'Human(x)': '...'}
-    'premises': List[str],              # FOL premises: ['∀x (Student(x) → Human(x))', '¬∃x (Young(x) ∧ Teach(x))', ...]
-    'conclusion': str,                  # FOL conclusion: 'Human(rose) ∨ Manager(jerry)'
+    'predicates': Dict[str, str],       # e.g., {'P': 'Liam finished work early', ...}
+    'premises': List[str],              # e.g., ['P → Q', '¬Q', ...]
+    'conclusion': str,                  # e.g., '¬P'
     'raw_response': str,                # Full LLM output for debugging
     'formalization_error': str | None   # Error message if formalization failed
 }
 
-Design decisions (from Logic-LM++ paper):
-- First-order logic (FOL) formalization (FOLIO, ProofWriter, AR-LSAT require FOL)
+Design decisions:
+- Propositional logic for LogicBench propositional tasks (better Z3 compatibility)
+- FOL for FOLIO, AR-LSAT (requires Prover9 or proper FOL handling)
 - JSON output from LLM (reliable parsing)
 - Malformed outputs → formalization failure, no retry
-- FOL syntax compatible with Prover9/Z3
-- Syntactic validation only at this stage (semantic correctness checked by solver + refinement)
 """
 
 import json
 import os
 from openai import OpenAI
-from config import FORMALIZATION_PROMPT, MODEL_NAME, TEMPERATURE, MAX_TOKENS
+from config import (
+    FORMALIZATION_PROMPT,
+    PROPOSITIONAL_FORMALIZATION_PROMPT,
+    MODEL_NAME,
+    TEMPERATURE,
+    MAX_TOKENS
+)
+
+
+def formalize(text, query, logic_type='propositional', model_name=MODEL_NAME, temperature=TEMPERATURE):
+    """
+    Main entry point for NL → logic translation.
+
+    Args:
+        text: Natural language text (premises)
+        query: Natural language query (conclusion to test)
+        logic_type: 'propositional' or 'fol' (first-order logic)
+        model_name: LLM model to use
+        temperature: Sampling temperature
+
+    Returns:
+        dict with keys: predicates, premises, conclusion, raw_response, formalization_error
+    """
+    # Select prompt based on logic type
+    if logic_type == 'propositional':
+        prompt = PROPOSITIONAL_FORMALIZATION_PROMPT.format(text=text, query=query)
+    else:
+        prompt = FORMALIZATION_PROMPT.format(text=text, query=query)
+
+    # Call LLM - auto-detect OpenRouter or OpenAI
+    api_key = os.environ.get('OPENROUTER_API_KEY') or os.environ.get('OPENAI_API_KEY')
+    base_url = None
+
+    if os.environ.get('OPENROUTER_API_KEY'):
+        base_url = "https://openrouter.ai/api/v1"
+    elif os.environ.get('OPENAI_BASE_URL'):
+        base_url = os.environ.get('OPENAI_BASE_URL')
+
+    client = OpenAI(api_key=api_key, base_url=base_url)
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[
+                {"role": "system", "content": "You are a formal logician specializing in propositional and first-order logic."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=temperature,
+            max_tokens=MAX_TOKENS
+        )
+
+        raw_response = response.choices[0].message.content
+
+    except Exception as e:
+        return {
+            'predicates': {},
+            'premises': [],
+            'conclusion': '',
+            'raw_response': '',
+            'formalization_error': f"LLM call failed: {str(e)}"
+        }
+
+    # Parse the response
+    formalization = parse_formalization_response(raw_response)
+
+    # Validate the formalization
+    if validate_formalization(formalization):
+        formalization['formalization_error'] = None
+    else:
+        formalization['formalization_error'] = "Validation failed: missing required fields or invalid structure"
+
+    return formalization
 
 
 def formalize_to_fol(text, query, model_name=MODEL_NAME, temperature=TEMPERATURE):
     """
-    Main entry point for NL → FOL translation.
+    Legacy entry point for NL → FOL translation (backward compatibility).
 
     Args:
         text: Natural language text (premises)
