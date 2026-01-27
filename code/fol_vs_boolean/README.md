@@ -19,16 +19,43 @@ fol_vs_boolean/
 │   │   ├── propositional.jsonl           # Propositional outputs
 │   │   └── fol.jsonl                     # FOL outputs
 │   └── results/error_analysis.json       # Final results
+├── load_logicbench.py                    # Reusable LogicBench loader
 ├── extract_propositional.py              # Propositional wrapper
 ├── extract_fol.py                        # FOL wrapper
 ├── run_dual_extraction.py                # Main extraction script
 ├── analyze_errors.py                     # Error analysis
+├── run_logicbench_experiment.py          # Single-file LogicBench experiment
 └── README.md                             # This file
 ```
 
 ## Usage
 
-### Step 1: Prepare Data
+### Quick Start: LogicBench Experiment (Recommended)
+
+Run the single-file experiment with LogicBench dataset:
+
+```bash
+# Set your OpenAI API key (required for propositional extraction)
+export OPENAI_API_KEY='your-key-here'
+
+# Run the experiment (no additional dependencies needed - loads from GitHub)
+python run_logicbench_experiment.py
+```
+
+This will:
+- Load LogicBench dataset directly from GitHub (no HuggingFace account needed)
+- Uses propositional logic examples (modus_tollens, disjunctive_syllogism patterns)
+- Run both propositional and FOL extraction on same examples
+- Analyze and compare error rates
+- Save results to `data/logicbench_results/`
+
+**Advantages**: No manual data preparation, no external accounts needed, uses standardized benchmark, all-in-one script.
+
+### Alternative: Custom Data Pipeline
+
+For custom datasets, use the modular pipeline:
+
+#### Step 1: Prepare Data
 
 Create `data/raw/source_examples.jsonl` with format:
 
@@ -37,7 +64,7 @@ Create `data/raw/source_examples.jsonl` with format:
 {"id": "002", "text": "Bob teaches math. All teachers work hard.", "query": "Does Bob work hard?"}
 ```
 
-### Step 2: Run Dual Extraction
+#### Step 2: Run Dual Extraction
 
 ```bash
 python run_dual_extraction.py
@@ -49,7 +76,7 @@ This will:
 - Extract FOL for each example
 - Save results to `data/extractions/`
 
-### Step 3: Analyze Errors
+#### Step 3: Analyze Errors
 
 ```bash
 python analyze_errors.py
@@ -101,10 +128,56 @@ This will:
 
 ## Data Sources
 
-Recommended sources for `source_examples.jsonl`:
+**Primary (Recommended)**:
+- **LogicBench** (ACL 2024) - Use `run_logicbench_experiment.py`
+  - Systematic reasoning benchmark with both PL and FOL subsets
+  - Automatically loaded from HuggingFace
+
+**Alternative** (for custom pipeline):
 - FOLIO test set (50 examples)
 - ProofWriter depth-5 (50 examples)
-- Custom examples
+- Custom examples in JSONL format
+
+## Reusing LogicBench Data in Other Scripts
+
+The `load_logicbench.py` module provides reusable functions for loading LogicBench data:
+
+```python
+# Import the loader
+from load_logicbench import load_logicbench, load_all_propositional, load_all_fol
+
+# Example 1: Load specific patterns
+examples = load_logicbench(
+    logic_type='propositional_logic',
+    reasoning_patterns=['modus_tollens', 'disjunctive_syllogism'],
+    max_examples_per_pattern=10
+)
+
+# Example 2: Load all propositional logic patterns
+examples = load_all_propositional(max_examples_per_pattern=5)
+
+# Example 3: Load all FOL patterns
+examples = load_all_fol(max_examples_per_pattern=5)
+
+# Each example is a dict with:
+# {
+#   'id': str,
+#   'text': str,           # Context/premises
+#   'query': str,          # Question
+#   'ground_truth': bool,  # Answer
+#   'pattern': str,        # Reasoning pattern (e.g., 'modus_tollens')
+#   'logic_type': str      # 'propositional_logic' or 'first_order_logic'
+# }
+```
+
+This module can be imported from any script in your codebase. Just add the appropriate path:
+
+```python
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'path', 'to', 'fol_vs_boolean'))
+from load_logicbench import load_logicbench
+```
 
 ## Timeline
 

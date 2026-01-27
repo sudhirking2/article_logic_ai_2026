@@ -37,10 +37,18 @@ Usage (Python):
     weighted_structure = assign_weights(logified_structure, document_text)
 """
 
-import json
-import argparse
+import sys
+import os
 from pathlib import Path
 
+# Add code directory to Python path (for imports to work from anywhere)
+script_dir = Path(__file__).resolve().parent
+code_dir = script_dir.parent
+if str(code_dir) not in sys.path:
+    sys.path.insert(0, str(code_dir))
+
+import json
+import argparse
 import numpy as np
 from typing import Dict, List, Any
 
@@ -367,16 +375,17 @@ class WeightAssigner:
 
         # NLI inference (batch processing)
         nli_scores = self.nli_model.predict(pairs)  # Shape: [len(pairs), 3]
-        # nli_scores[:, 0] = entailment logits
-        # nli_scores[:, 1] = contradiction logits
-        # nli_scores[:, 2] = neutral logits
+        # DeBERTa NLI label order: [contradiction, neutral, entailment]
+        # nli_scores[:, 0] = contradiction
+        # nli_scores[:, 1] = neutral
+        # nli_scores[:, 2] = entailment
 
         # Reshape to [num_premises, num_hypotheses, 3]
         nli_scores = nli_scores.reshape(len(premises), len(hypotheses), 3)
 
         # Compute evidence difference: d(p, h_j) = z_ent - z_con
-        z_ent = nli_scores[:, :, 0]  # [premises, hypotheses]
-        z_con = nli_scores[:, :, 1]  # [premises, hypotheses]
+        z_con = nli_scores[:, :, 0]  # [premises, hypotheses] - contradiction
+        z_ent = nli_scores[:, :, 2]  # [premises, hypotheses] - entailment
         d_matrix = z_ent - z_con     # [premises, hypotheses]
 
         # Take max over hypotheses: d(p) = max_j d(p, h_j)
