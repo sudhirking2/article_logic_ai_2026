@@ -27,16 +27,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-5.0837, neutral=0.9204, entailment=3.5373
-            d = z_ent - z_con = 3.5373 - -5.0837 = 8.6210
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.7989, neutral=-0.2707, entailment=2.8452
-            d = z_ent - z_con = 2.8452 - -2.7989 = 5.6440
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4666, neutral=-4.2949, entailment=-0.3598
-            d = z_ent - z_con = -0.3598 - 5.4666 = -5.8264
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-5.08, neu=0.92, ent=3.54
+            Probs:   con=0.0%, neu=6.8%, ent=93.2%
+            d = ent - con = 8.62
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.80, neu=-0.27, ent=2.85
+            Probs:   con=0.3%, neu=4.2%, ent=95.4%
+            d = ent - con = 5.64
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.47, neu=-4.29, ent=-0.36
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.83
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=63.0%, avg_con=33.4%, avg_neu=3.7%, max_ent=95.4%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -70,16 +80,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.7023, neutral=-0.0012, entailment=4.1967
-            d = z_ent - z_con = 4.1967 - -4.7023 = 8.8991
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.0297, neutral=-1.0942, entailment=3.9186
-            d = z_ent - z_con = 3.9186 - -3.0297 = 6.9483
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.5557, neutral=-4.3956, entailment=-0.3181
-            d = z_ent - z_con = -0.3181 - 5.5557 = -5.8738
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.70, neu=-0.00, ent=4.20
+            Probs:   con=0.0%, neu=1.5%, ent=98.5%
+            d = ent - con = 8.90
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.03, neu=-1.09, ent=3.92
+            Probs:   con=0.1%, neu=0.7%, ent=99.2%
+            d = ent - con = 6.95
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.56, neu=-4.40, ent=-0.32
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.87
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.0%, avg_con=33.3%, avg_neu=0.7%, max_ent=99.2%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -113,16 +133,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.1367, neutral=-1.1153, entailment=4.0488
-            d = z_ent - z_con = 4.0488 - -3.1367 = 7.1854
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.9060, neutral=1.2468, entailment=2.9613
-            d = z_ent - z_con = 2.9613 - -4.9060 = 7.8673
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4033, neutral=-4.4165, entailment=-0.1172
-            d = z_ent - z_con = -0.1172 - 5.4033 = -5.5204
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.91, neu=1.25, ent=2.96
+            Probs:   con=0.0%, neu=15.3%, ent=84.7%
+            d = ent - con = 7.87
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.14, neu=-1.12, ent=4.05
+            Probs:   con=0.1%, neu=0.6%, ent=99.4%
+            d = ent - con = 7.19
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.40, neu=-4.42, ent=-0.12
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.52
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=61.5%, avg_con=33.2%, avg_neu=5.3%, max_ent=99.4%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -156,16 +186,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.1283, neutral=-1.5532, entailment=4.5329
-            d = z_ent - z_con = 4.5329 - -3.1283 = 7.6612
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-5.0901, neutral=0.5678, entailment=3.9317
-            d = z_ent - z_con = 3.9317 - -5.0901 = 9.0218
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.5678, neutral=-4.3156, entailment=-0.4540
-            d = z_ent - z_con = -0.4540 - 5.5678 = -6.0218
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-5.09, neu=0.57, ent=3.93
+            Probs:   con=0.0%, neu=3.3%, ent=96.6%
+            d = ent - con = 9.02
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.13, neu=-1.55, ent=4.53
+            Probs:   con=0.0%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.66
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.57, neu=-4.32, ent=-0.45
+            Probs:   con=99.8%, neu=0.0%, ent=0.2%
+            d = ent - con = -6.02
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=65.5%, avg_con=33.3%, avg_neu=1.2%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -199,16 +239,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.1266, neutral=-1.5317, entailment=4.5001
-            d = z_ent - z_con = 4.5001 - -3.1266 = 7.6267
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-5.0538, neutral=0.3975, entailment=4.0884
-            d = z_ent - z_con = 4.0884 - -5.0538 = 9.1422
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.5290, neutral=-4.2974, entailment=-0.4307
-            d = z_ent - z_con = -0.4307 - 5.5290 = -5.9598
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-5.05, neu=0.40, ent=4.09
+            Probs:   con=0.0%, neu=2.4%, ent=97.6%
+            d = ent - con = 9.14
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.13, neu=-1.53, ent=4.50
+            Probs:   con=0.0%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.63
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.53, neu=-4.30, ent=-0.43
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.96
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=65.8%, avg_con=33.3%, avg_neu=0.9%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -242,16 +292,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.2046, neutral=-1.5213, entailment=4.5600
-            d = z_ent - z_con = 4.5600 - -3.2046 = 7.7646
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-5.2302, neutral=0.5719, entailment=4.0628
-            d = z_ent - z_con = 4.0628 - -5.2302 = 9.2930
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.5291, neutral=-4.3056, entailment=-0.4107
-            d = z_ent - z_con = -0.4107 - 5.5291 = -5.9398
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-5.23, neu=0.57, ent=4.06
+            Probs:   con=0.0%, neu=3.0%, ent=97.0%
+            d = ent - con = 9.29
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.20, neu=-1.52, ent=4.56
+            Probs:   con=0.0%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.76
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.53, neu=-4.31, ent=-0.41
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.94
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=65.7%, avg_con=33.3%, avg_neu=1.1%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -285,16 +345,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9034, neutral=-1.6579, entailment=4.4379
-            d = z_ent - z_con = 4.4379 - -2.9034 = 7.3414
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.4467, neutral=0.6902, entailment=3.2390
-            d = z_ent - z_con = 3.2390 - -4.4467 = 7.6856
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.0681, neutral=-4.3365, entailment=0.1493
-            d = z_ent - z_con = 0.1493 - 5.0681 = -4.9188
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.45, neu=0.69, ent=3.24
+            Probs:   con=0.0%, neu=7.2%, ent=92.7%
+            d = ent - con = 7.69
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.90, neu=-1.66, ent=4.44
+            Probs:   con=0.1%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.34
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.07, neu=-4.34, ent=0.15
+            Probs:   con=99.3%, neu=0.0%, ent=0.7%
+            d = ent - con = -4.92
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=64.4%, avg_con=33.1%, avg_neu=2.5%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -328,16 +398,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9611, neutral=-1.8392, entailment=4.7110
-            d = z_ent - z_con = 4.7110 - -2.9611 = 7.6721
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-5.2822, neutral=1.0167, entailment=3.6118
-            d = z_ent - z_con = 3.6118 - -5.2822 = 8.8940
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4273, neutral=-4.3613, entailment=-0.2209
-            d = z_ent - z_con = -0.2209 - 5.4273 = -5.6482
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-5.28, neu=1.02, ent=3.61
+            Probs:   con=0.0%, neu=6.9%, ent=93.0%
+            d = ent - con = 8.89
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.96, neu=-1.84, ent=4.71
+            Probs:   con=0.0%, neu=0.1%, ent=99.8%
+            d = ent - con = 7.67
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.43, neu=-4.36, ent=-0.22
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.65
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=64.4%, avg_con=33.2%, avg_neu=2.4%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -371,16 +451,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.0697, neutral=-1.7752, entailment=4.7408
-            d = z_ent - z_con = 4.7408 - -3.0697 = 7.8104
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.8304, neutral=2.2590, entailment=1.7787
-            d = z_ent - z_con = 1.7787 - -4.8304 = 6.6091
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.3501, neutral=-4.3696, entailment=-0.1198
-            d = z_ent - z_con = -0.1198 - 5.3501 = -5.4698
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.83, neu=2.26, ent=1.78
+            Probs:   con=0.1%, neu=61.7%, ent=38.2%
+            d = ent - con = 6.61
+            → ? NEUTRAL/UNCERTAIN
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.07, neu=-1.78, ent=4.74
+            Probs:   con=0.0%, neu=0.1%, ent=99.8%
+            d = ent - con = 7.81
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.35, neu=-4.37, ent=-0.12
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.47
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=46.1%, avg_con=33.2%, avg_neu=20.6%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -414,16 +504,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.8679, neutral=-1.5732, entailment=4.3585
-            d = z_ent - z_con = 4.3585 - -2.8679 = 7.2264
-        [2] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.3601, neutral=-4.4828, entailment=0.0190
-            d = z_ent - z_con = 0.0190 - 5.3601 = -5.3411
-        [3] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.7789, neutral=4.0746, entailment=-0.6234
-            d = z_ent - z_con = -0.6234 - -4.7789 = 4.1555
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.78, neu=4.07, ent=-0.62
+            Probs:   con=0.0%, neu=99.1%, ent=0.9%
+            d = ent - con = 4.16
+            → ? NEUTRAL/UNCERTAIN
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.87, neu=-1.57, ent=4.36
+            Probs:   con=0.1%, neu=0.3%, ent=99.7%
+            d = ent - con = 7.23
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.36, neu=-4.48, ent=0.02
+            Probs:   con=99.5%, neu=0.0%, ent=0.5%
+            d = ent - con = -5.34
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=33.7%, avg_con=33.2%, avg_neu=33.1%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -457,16 +557,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9936, neutral=-1.0869, entailment=3.9393
-            d = z_ent - z_con = 3.9393 - -2.9936 = 6.9329
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-3.6013, neutral=0.7119, entailment=2.4059
-            d = z_ent - z_con = 2.4059 - -3.6013 = 6.0072
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4256, neutral=-4.4164, entailment=-0.1399
-            d = z_ent - z_con = -0.1399 - 5.4256 = -5.5655
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-3.60, neu=0.71, ent=2.41
+            Probs:   con=0.2%, neu=15.5%, ent=84.3%
+            d = ent - con = 6.01
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.99, neu=-1.09, ent=3.94
+            Probs:   con=0.1%, neu=0.7%, ent=99.3%
+            d = ent - con = 6.93
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.43, neu=-4.42, ent=-0.14
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.57
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=61.3%, avg_con=33.3%, avg_neu=5.4%, max_ent=99.3%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -500,16 +610,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.3389, neutral=-1.3551, entailment=4.4931
-            d = z_ent - z_con = 4.4931 - -3.3389 = 7.8320
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.5755, neutral=0.1534, entailment=3.8868
-            d = z_ent - z_con = 3.8868 - -4.5755 = 8.4623
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.3838, neutral=-4.4267, entailment=-0.0767
-            d = z_ent - z_con = -0.0767 - 5.3838 = -5.4605
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.58, neu=0.15, ent=3.89
+            Probs:   con=0.0%, neu=2.3%, ent=97.6%
+            d = ent - con = 8.46
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.34, neu=-1.36, ent=4.49
+            Probs:   con=0.0%, neu=0.3%, ent=99.7%
+            d = ent - con = 7.83
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.38, neu=-4.43, ent=-0.08
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.46
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=65.9%, avg_con=33.2%, avg_neu=0.9%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -543,16 +663,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.8856, neutral=-0.9383, entailment=3.6469
-            d = z_ent - z_con = 3.6469 - -2.8856 = 6.5325
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-6.3798, neutral=3.8381, entailment=1.2431
-            d = z_ent - z_con = 1.2431 - -6.3798 = 7.6229
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.6779, neutral=-4.5024, entailment=-0.2908
-            d = z_ent - z_con = -0.2908 - 5.6779 = -5.9688
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-6.38, neu=3.84, ent=1.24
+            Probs:   con=0.0%, neu=93.1%, ent=6.9%
+            d = ent - con = 7.62
+            → ? NEUTRAL/UNCERTAIN
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.89, neu=-0.94, ent=3.65
+            Probs:   con=0.1%, neu=1.0%, ent=98.8%
+            d = ent - con = 6.53
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.68, neu=-4.50, ent=-0.29
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.97
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=35.3%, avg_con=33.3%, avg_neu=31.4%, max_ent=98.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -586,16 +716,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-5.3370, neutral=0.6184, entailment=4.1059
-            d = z_ent - z_con = 4.1059 - -5.3370 = 9.4429
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9324, neutral=-1.0122, entailment=3.7796
-            d = z_ent - z_con = 3.7796 - -2.9324 = 6.7120
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.6615, neutral=-4.5436, entailment=-0.2157
-            d = z_ent - z_con = -0.2157 - 5.6615 = -5.8772
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-5.34, neu=0.62, ent=4.11
+            Probs:   con=0.0%, neu=3.0%, ent=97.0%
+            d = ent - con = 9.44
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.93, neu=-1.01, ent=3.78
+            Probs:   con=0.1%, neu=0.8%, ent=99.1%
+            d = ent - con = 6.71
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.66, neu=-4.54, ent=-0.22
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.88
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=65.5%, avg_con=33.3%, avg_neu=1.3%, max_ent=99.1%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -629,16 +769,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.7119, neutral=-1.0719, entailment=3.6504
-            d = z_ent - z_con = 3.6504 - -2.7119 = 6.3623
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-6.1051, neutral=2.9374, entailment=2.0994
-            d = z_ent - z_con = 2.0994 - -6.1051 = 8.2044
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.6324, neutral=-4.4934, entailment=-0.2561
-            d = z_ent - z_con = -0.2561 - 5.6324 = -5.8885
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-6.11, neu=2.94, ent=2.10
+            Probs:   con=0.0%, neu=69.8%, ent=30.2%
+            d = ent - con = 8.20
+            → ? NEUTRAL/UNCERTAIN
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.71, neu=-1.07, ent=3.65
+            Probs:   con=0.2%, neu=0.9%, ent=98.9%
+            d = ent - con = 6.36
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.63, neu=-4.49, ent=-0.26
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.89
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=43.1%, avg_con=33.3%, avg_neu=23.6%, max_ent=98.9%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -672,16 +822,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.2097, neutral=1.2966, entailment=2.1301
-            d = z_ent - z_con = 2.1301 - -4.2097 = 6.3399
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-4.1076, neutral=2.1701, entailment=1.0821
-            d = z_ent - z_con = 1.0821 - -4.1076 = 5.1897
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.3730, neutral=-4.4885, entailment=0.0275
-            d = z_ent - z_con = 0.0275 - 5.3730 = -5.3456
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.21, neu=1.30, ent=2.13
+            Probs:   con=0.1%, neu=30.3%, ent=69.6%
+            d = ent - con = 6.34
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-4.11, neu=2.17, ent=1.08
+            Probs:   con=0.1%, neu=74.7%, ent=25.2%
+            d = ent - con = 5.19
+            → ? NEUTRAL/UNCERTAIN
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.37, neu=-4.49, ent=0.03
+            Probs:   con=99.5%, neu=0.0%, ent=0.5%
+            d = ent - con = -5.35
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=31.8%, avg_con=33.3%, avg_neu=35.0%, max_ent=69.6%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -715,16 +875,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.1903, neutral=-1.4433, entailment=4.4653
-            d = z_ent - z_con = 4.4653 - -3.1903 = 7.6556
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-3.9904, neutral=-0.7036, entailment=4.3365
-            d = z_ent - z_con = 4.3365 - -3.9904 = 8.3270
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.5184, neutral=-4.2581, entailment=-0.4772
-            d = z_ent - z_con = -0.4772 - 5.5184 = -5.9957
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-3.99, neu=-0.70, ent=4.34
+            Probs:   con=0.0%, neu=0.6%, ent=99.3%
+            d = ent - con = 8.33
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.19, neu=-1.44, ent=4.47
+            Probs:   con=0.0%, neu=0.3%, ent=99.7%
+            d = ent - con = 7.66
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.52, neu=-4.26, ent=-0.48
+            Probs:   con=99.7%, neu=0.0%, ent=0.2%
+            d = ent - con = -6.00
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.3%, avg_neu=0.3%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -758,16 +928,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.6811, neutral=-0.2421, entailment=4.4618
-            d = z_ent - z_con = 4.4618 - -4.6811 = 9.1429
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.2249, neutral=-1.3747, entailment=4.4126
-            d = z_ent - z_con = 4.4126 - -3.2249 = 7.6375
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.3593, neutral=-4.3951, entailment=-0.0989
-            d = z_ent - z_con = -0.0989 - 5.3593 = -5.4582
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.68, neu=-0.24, ent=4.46
+            Probs:   con=0.0%, neu=0.9%, ent=99.1%
+            d = ent - con = 9.14
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.22, neu=-1.37, ent=4.41
+            Probs:   con=0.0%, neu=0.3%, ent=99.6%
+            d = ent - con = 7.64
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.36, neu=-4.40, ent=-0.10
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.46
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.2%, avg_neu=0.4%, max_ent=99.6%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -801,16 +981,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.5867, neutral=-0.1805, entailment=4.3070
-            d = z_ent - z_con = 4.3070 - -4.5867 = 8.8936
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-1.8507, neutral=-1.9310, entailment=3.8602
-            d = z_ent - z_con = 3.8602 - -1.8507 = 5.7109
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.0392, neutral=-4.2096, entailment=0.0041
-            d = z_ent - z_con = 0.0041 - 5.0392 = -5.0352
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.59, neu=-0.18, ent=4.31
+            Probs:   con=0.0%, neu=1.1%, ent=98.9%
+            d = ent - con = 8.89
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-1.85, neu=-1.93, ent=3.86
+            Probs:   con=0.3%, neu=0.3%, ent=99.4%
+            d = ent - con = 5.71
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.04, neu=-4.21, ent=0.00
+            Probs:   con=99.3%, neu=0.0%, ent=0.6%
+            d = ent - con = -5.04
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.3%, avg_con=33.2%, avg_neu=0.5%, max_ent=99.4%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -844,16 +1034,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.1998, neutral=-1.5065, entailment=4.5263
-            d = z_ent - z_con = 4.5263 - -3.1998 = 7.7261
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.6141, neutral=-0.3182, entailment=4.4891
-            d = z_ent - z_con = 4.4891 - -4.6141 = 9.1033
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.1284, neutral=-4.4752, entailment=0.2654
-            d = z_ent - z_con = 0.2654 - 5.1284 = -4.8630
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.61, neu=-0.32, ent=4.49
+            Probs:   con=0.0%, neu=0.8%, ent=99.2%
+            d = ent - con = 9.10
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.20, neu=-1.51, ent=4.53
+            Probs:   con=0.0%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.73
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.13, neu=-4.48, ent=0.27
+            Probs:   con=99.2%, neu=0.0%, ent=0.8%
+            d = ent - con = -4.86
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.6%, avg_con=33.1%, avg_neu=0.4%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -887,16 +1087,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9005, neutral=-1.7247, entailment=4.5136
-            d = z_ent - z_con = 4.5136 - -2.9005 = 7.4141
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.6168, neutral=-0.2069, entailment=4.3514
-            d = z_ent - z_con = 4.3514 - -4.6168 = 8.9681
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.1512, neutral=-4.3487, entailment=0.0751
-            d = z_ent - z_con = 0.0751 - 5.1512 = -5.0761
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.62, neu=-0.21, ent=4.35
+            Probs:   con=0.0%, neu=1.0%, ent=99.0%
+            d = ent - con = 8.97
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.90, neu=-1.72, ent=4.51
+            Probs:   con=0.1%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.41
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.15, neu=-4.35, ent=0.08
+            Probs:   con=99.4%, neu=0.0%, ent=0.6%
+            d = ent - con = -5.08
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.1%, avg_neu=0.4%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -930,16 +1140,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.4437, neutral=-0.6588, entailment=4.7220
-            d = z_ent - z_con = 4.7220 - -4.4437 = 9.1657
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.1485, neutral=-1.4654, entailment=4.4253
-            d = z_ent - z_con = 4.4253 - -3.1485 = 7.5738
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.2999, neutral=-4.4811, entailment=0.0943
-            d = z_ent - z_con = 0.0943 - 5.2999 = -5.2057
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.44, neu=-0.66, ent=4.72
+            Probs:   con=0.0%, neu=0.5%, ent=99.5%
+            d = ent - con = 9.17
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.15, neu=-1.47, ent=4.43
+            Probs:   con=0.1%, neu=0.3%, ent=99.7%
+            d = ent - con = 7.57
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.30, neu=-4.48, ent=0.09
+            Probs:   con=99.4%, neu=0.0%, ent=0.5%
+            d = ent - con = -5.21
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.6%, avg_con=33.2%, avg_neu=0.2%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -973,16 +1193,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9319, neutral=-1.6573, entailment=4.4737
-            d = z_ent - z_con = 4.4737 - -2.9319 = 7.4056
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-5.2801, neutral=0.4953, entailment=4.1965
-            d = z_ent - z_con = 4.1965 - -5.2801 = 9.4766
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.5928, neutral=-4.3818, entailment=-0.3722
-            d = z_ent - z_con = -0.3722 - 5.5928 = -5.9649
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-5.28, neu=0.50, ent=4.20
+            Probs:   con=0.0%, neu=2.4%, ent=97.6%
+            d = ent - con = 9.48
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.93, neu=-1.66, ent=4.47
+            Probs:   con=0.1%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.41
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.59, neu=-4.38, ent=-0.37
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.96
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=65.9%, avg_con=33.3%, avg_neu=0.9%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1016,16 +1246,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.6890, neutral=-1.9278, entailment=4.5764
-            d = z_ent - z_con = 4.5764 - -2.6890 = 7.2654
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.7945, neutral=-0.1086, entailment=4.3994
-            d = z_ent - z_con = 4.3994 - -4.7945 = 9.1939
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.1093, neutral=-4.3406, entailment=0.1006
-            d = z_ent - z_con = 0.1006 - 5.1093 = -5.0087
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.79, neu=-0.11, ent=4.40
+            Probs:   con=0.0%, neu=1.1%, ent=98.9%
+            d = ent - con = 9.19
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.69, neu=-1.93, ent=4.58
+            Probs:   con=0.1%, neu=0.1%, ent=99.8%
+            d = ent - con = 7.27
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.11, neu=-4.34, ent=0.10
+            Probs:   con=99.3%, neu=0.0%, ent=0.7%
+            d = ent - con = -5.01
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.1%, avg_neu=0.4%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1059,16 +1299,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.7765, neutral=-1.8838, entailment=4.5942
-            d = z_ent - z_con = 4.5942 - -2.7765 = 7.3708
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.5530, neutral=-0.3074, entailment=4.3934
-            d = z_ent - z_con = 4.3934 - -4.5530 = 8.9464
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=4.9252, neutral=-4.2571, entailment=0.2139
-            d = z_ent - z_con = 0.2139 - 4.9252 = -4.7113
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.55, neu=-0.31, ent=4.39
+            Probs:   con=0.0%, neu=0.9%, ent=99.1%
+            d = ent - con = 8.95
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.78, neu=-1.88, ent=4.59
+            Probs:   con=0.1%, neu=0.2%, ent=99.8%
+            d = ent - con = 7.37
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=4.93, neu=-4.26, ent=0.21
+            Probs:   con=99.1%, neu=0.0%, ent=0.9%
+            d = ent - con = -4.71
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.6%, avg_con=33.1%, avg_neu=0.4%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1102,16 +1352,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.0308, neutral=-0.9180, entailment=4.6171
-            d = z_ent - z_con = 4.6171 - -4.0308 = 8.6479
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.8960, neutral=-1.7582, entailment=4.5614
-            d = z_ent - z_con = 4.5614 - -2.8960 = 7.4573
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4651, neutral=-4.4697, entailment=-0.1116
-            d = z_ent - z_con = -0.1116 - 5.4651 = -5.5767
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.03, neu=-0.92, ent=4.62
+            Probs:   con=0.0%, neu=0.4%, ent=99.6%
+            d = ent - con = 8.65
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.90, neu=-1.76, ent=4.56
+            Probs:   con=0.1%, neu=0.2%, ent=99.8%
+            d = ent - con = 7.46
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.47, neu=-4.47, ent=-0.11
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.58
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.6%, avg_con=33.2%, avg_neu=0.2%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1145,16 +1405,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.5790, neutral=-0.5361, entailment=4.7226
-            d = z_ent - z_con = 4.7226 - -4.5790 = 9.3016
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.7155, neutral=-0.7830, entailment=4.2126
-            d = z_ent - z_con = 4.2126 - -3.7155 = 7.9281
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.1475, neutral=-4.7467, entailment=0.6436
-            d = z_ent - z_con = 0.6436 - 5.1475 = -4.5038
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.58, neu=-0.54, ent=4.72
+            Probs:   con=0.0%, neu=0.5%, ent=99.5%
+            d = ent - con = 9.30
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.72, neu=-0.78, ent=4.21
+            Probs:   con=0.0%, neu=0.7%, ent=99.3%
+            d = ent - con = 7.93
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.15, neu=-4.75, ent=0.64
+            Probs:   con=98.9%, neu=0.0%, ent=1.1%
+            d = ent - con = -4.50
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.6%, avg_con=33.0%, avg_neu=0.4%, max_ent=99.5%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1188,16 +1458,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.6200, neutral=-0.4313, entailment=4.6172
-            d = z_ent - z_con = 4.6172 - -4.6200 = 9.2372
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.1404, neutral=-1.5586, entailment=4.5421
-            d = z_ent - z_con = 4.5421 - -3.1404 = 7.6825
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.6281, neutral=-4.3844, entailment=-0.4173
-            d = z_ent - z_con = -0.4173 - 5.6281 = -6.0454
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.62, neu=-0.43, ent=4.62
+            Probs:   con=0.0%, neu=0.6%, ent=99.4%
+            d = ent - con = 9.24
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.14, neu=-1.56, ent=4.54
+            Probs:   con=0.0%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.68
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.63, neu=-4.38, ent=-0.42
+            Probs:   con=99.8%, neu=0.0%, ent=0.2%
+            d = ent - con = -6.05
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.3%, avg_neu=0.3%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1231,16 +1511,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.3443, neutral=-1.3650, entailment=4.5052
-            d = z_ent - z_con = 4.5052 - -3.3443 = 7.8495
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.4045, neutral=-0.4458, entailment=4.4309
-            d = z_ent - z_con = 4.4309 - -4.4045 = 8.8354
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.6470, neutral=-4.4050, entailment=-0.4081
-            d = z_ent - z_con = -0.4081 - 5.6470 = -6.0550
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.40, neu=-0.45, ent=4.43
+            Probs:   con=0.0%, neu=0.8%, ent=99.2%
+            d = ent - con = 8.84
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.34, neu=-1.37, ent=4.51
+            Probs:   con=0.0%, neu=0.3%, ent=99.7%
+            d = ent - con = 7.85
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.65, neu=-4.40, ent=-0.41
+            Probs:   con=99.8%, neu=0.0%, ent=0.2%
+            d = ent - con = -6.06
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.3%, avg_neu=0.3%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1274,16 +1564,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.1855, neutral=-0.8396, entailment=4.6970
-            d = z_ent - z_con = 4.6970 - -4.1855 = 8.8825
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.3392, neutral=-0.5295, entailment=3.5743
-            d = z_ent - z_con = 3.5743 - -3.3392 = 6.9135
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4851, neutral=-4.5682, entailment=0.0318
-            d = z_ent - z_con = 0.0318 - 5.4851 = -5.4533
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.19, neu=-0.84, ent=4.70
+            Probs:   con=0.0%, neu=0.4%, ent=99.6%
+            d = ent - con = 8.88
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.34, neu=-0.53, ent=3.57
+            Probs:   con=0.1%, neu=1.6%, ent=98.3%
+            d = ent - con = 6.91
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.49, neu=-4.57, ent=0.03
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.45
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.1%, avg_con=33.2%, avg_neu=0.7%, max_ent=99.6%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1317,16 +1617,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.8269, neutral=-1.0453, entailment=4.6013
-            d = z_ent - z_con = 4.6013 - -3.8269 = 8.4282
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.4465, neutral=-0.4644, entailment=4.4917
-            d = z_ent - z_con = 4.4917 - -4.4465 = 8.9382
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.8780, neutral=-4.2196, entailment=-0.9371
-            d = z_ent - z_con = -0.9371 - 5.8780 = -6.8151
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.45, neu=-0.46, ent=4.49
+            Probs:   con=0.0%, neu=0.7%, ent=99.3%
+            d = ent - con = 8.94
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.83, neu=-1.05, ent=4.60
+            Probs:   con=0.0%, neu=0.4%, ent=99.6%
+            d = ent - con = 8.43
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.88, neu=-4.22, ent=-0.94
+            Probs:   con=99.9%, neu=0.0%, ent=0.1%
+            d = ent - con = -6.82
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.3%, avg_con=33.3%, avg_neu=0.4%, max_ent=99.6%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1360,16 +1670,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.1510, neutral=-0.7523, entailment=4.5451
-            d = z_ent - z_con = 4.5451 - -4.1510 = 8.6960
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.9432, neutral=-0.8848, entailment=4.5225
-            d = z_ent - z_con = 4.5225 - -3.9432 = 8.4656
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.7497, neutral=-4.2273, entailment=-0.7457
-            d = z_ent - z_con = -0.7457 - 5.7497 = -6.4955
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.15, neu=-0.75, ent=4.55
+            Probs:   con=0.0%, neu=0.5%, ent=99.5%
+            d = ent - con = 8.70
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.94, neu=-0.88, ent=4.52
+            Probs:   con=0.0%, neu=0.4%, ent=99.5%
+            d = ent - con = 8.47
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.75, neu=-4.23, ent=-0.75
+            Probs:   con=99.8%, neu=0.0%, ent=0.2%
+            d = ent - con = -6.50
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.3%, avg_neu=0.3%, max_ent=99.5%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1403,16 +1723,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.1021, neutral=-0.8402, entailment=4.5979
-            d = z_ent - z_con = 4.5979 - -4.1021 = 8.6999
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-4.0457, neutral=-0.7913, entailment=4.5125
-            d = z_ent - z_con = 4.5125 - -4.0457 = 8.5582
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.8508, neutral=-4.3195, entailment=-0.7554
-            d = z_ent - z_con = -0.7554 - 5.8508 = -6.6062
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.10, neu=-0.84, ent=4.60
+            Probs:   con=0.0%, neu=0.4%, ent=99.6%
+            d = ent - con = 8.70
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-4.05, neu=-0.79, ent=4.51
+            Probs:   con=0.0%, neu=0.5%, ent=99.5%
+            d = ent - con = 8.56
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.85, neu=-4.32, ent=-0.76
+            Probs:   con=99.9%, neu=0.0%, ent=0.1%
+            d = ent - con = -6.61
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.3%, avg_neu=0.3%, max_ent=99.6%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1446,16 +1776,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.8585, neutral=-0.1237, entailment=4.4880
-            d = z_ent - z_con = 4.4880 - -4.8585 = 9.3465
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-4.0794, neutral=-0.5625, entailment=4.2638
-            d = z_ent - z_con = 4.2638 - -4.0794 = 8.3431
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.8707, neutral=-4.3827, entailment=-0.6852
-            d = z_ent - z_con = -0.6852 - 5.8707 = -6.5559
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.86, neu=-0.12, ent=4.49
+            Probs:   con=0.0%, neu=1.0%, ent=99.0%
+            d = ent - con = 9.35
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-4.08, neu=-0.56, ent=4.26
+            Probs:   con=0.0%, neu=0.8%, ent=99.2%
+            d = ent - con = 8.34
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.87, neu=-4.38, ent=-0.69
+            Probs:   con=99.9%, neu=0.0%, ent=0.1%
+            d = ent - con = -6.56
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.1%, avg_con=33.3%, avg_neu=0.6%, max_ent=99.2%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1489,16 +1829,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.3859, neutral=-1.3281, entailment=4.5240
-            d = z_ent - z_con = 4.5240 - -3.3859 = 7.9098
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.8764, neutral=-0.1279, entailment=4.5126
-            d = z_ent - z_con = 4.5126 - -4.8764 = 9.3890
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.6494, neutral=-4.1524, entailment=-0.7651
-            d = z_ent - z_con = -0.7651 - 5.6494 = -6.4145
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.88, neu=-0.13, ent=4.51
+            Probs:   con=0.0%, neu=1.0%, ent=99.0%
+            d = ent - con = 9.39
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.39, neu=-1.33, ent=4.52
+            Probs:   con=0.0%, neu=0.3%, ent=99.7%
+            d = ent - con = 7.91
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.65, neu=-4.15, ent=-0.77
+            Probs:   con=99.8%, neu=0.0%, ent=0.2%
+            d = ent - con = -6.41
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.3%, avg_con=33.3%, avg_neu=0.4%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1532,16 +1882,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.6342, neutral=-0.2882, entailment=4.4818
-            d = z_ent - z_con = 4.4818 - -4.6342 = 9.1160
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9716, neutral=-1.3611, entailment=4.1911
-            d = z_ent - z_con = 4.1911 - -2.9716 = 7.1626
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.5513, neutral=-4.3381, entailment=-0.3919
-            d = z_ent - z_con = -0.3919 - 5.5513 = -5.9432
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.63, neu=-0.29, ent=4.48
+            Probs:   con=0.0%, neu=0.8%, ent=99.1%
+            d = ent - con = 9.12
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.97, neu=-1.36, ent=4.19
+            Probs:   con=0.1%, neu=0.4%, ent=99.5%
+            d = ent - con = 7.16
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.55, neu=-4.34, ent=-0.39
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.94
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.3%, avg_con=33.3%, avg_neu=0.4%, max_ent=99.5%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1575,16 +1935,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.0712, neutral=-1.7990, entailment=4.7701
-            d = z_ent - z_con = 4.7701 - -3.0712 = 7.8413
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.4612, neutral=-0.5498, entailment=4.6049
-            d = z_ent - z_con = 4.6049 - -4.4612 = 9.0661
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.5045, neutral=-4.3899, entailment=-0.2560
-            d = z_ent - z_con = -0.2560 - 5.5045 = -5.7605
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.46, neu=-0.55, ent=4.60
+            Probs:   con=0.0%, neu=0.6%, ent=99.4%
+            d = ent - con = 9.07
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.07, neu=-1.80, ent=4.77
+            Probs:   con=0.0%, neu=0.1%, ent=99.8%
+            d = ent - con = 7.84
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.50, neu=-4.39, ent=-0.26
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.76
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.5%, avg_con=33.2%, avg_neu=0.2%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1618,16 +1988,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.2754, neutral=-1.0942, entailment=5.0999
-            d = z_ent - z_con = 5.0999 - -4.2754 = 9.3754
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.0827, neutral=-1.7063, entailment=4.6753
-            d = z_ent - z_con = 4.6753 - -3.0827 = 7.7580
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=3.9160, neutral=-3.4897, entailment=0.2914
-            d = z_ent - z_con = 0.2914 - 3.9160 = -3.6246
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.28, neu=-1.09, ent=5.10
+            Probs:   con=0.0%, neu=0.2%, ent=99.8%
+            d = ent - con = 9.38
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.08, neu=-1.71, ent=4.68
+            Probs:   con=0.0%, neu=0.2%, ent=99.8%
+            d = ent - con = 7.76
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=3.92, neu=-3.49, ent=0.29
+            Probs:   con=97.3%, neu=0.1%, ent=2.6%
+            d = ent - con = -3.62
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=67.4%, avg_con=32.5%, avg_neu=0.1%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1661,16 +2041,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9840, neutral=-1.7627, entailment=4.6459
-            d = z_ent - z_con = 4.6459 - -2.9840 = 7.6299
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.9502, neutral=0.0741, entailment=4.3530
-            d = z_ent - z_con = 4.3530 - -4.9502 = 9.3032
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=4.7050, neutral=-3.6587, entailment=-0.4847
-            d = z_ent - z_con = -0.4847 - 4.7050 = -5.1898
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.95, neu=0.07, ent=4.35
+            Probs:   con=0.0%, neu=1.4%, ent=98.6%
+            d = ent - con = 9.30
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.98, neu=-1.76, ent=4.65
+            Probs:   con=0.0%, neu=0.2%, ent=99.8%
+            d = ent - con = 7.63
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=4.71, neu=-3.66, ent=-0.48
+            Probs:   con=99.4%, neu=0.0%, ent=0.6%
+            d = ent - con = -5.19
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.3%, avg_con=33.2%, avg_neu=0.5%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1704,16 +2094,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.6668, neutral=-1.9431, entailment=4.5451
-            d = z_ent - z_con = 4.5451 - -2.6668 = 7.2118
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.2464, neutral=-0.5552, entailment=4.3921
-            d = z_ent - z_con = 4.3921 - -4.2464 = 8.6384
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.2650, neutral=-3.6333, entailment=-1.1531
-            d = z_ent - z_con = -1.1531 - 5.2650 = -6.4181
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.25, neu=-0.56, ent=4.39
+            Probs:   con=0.0%, neu=0.7%, ent=99.3%
+            d = ent - con = 8.64
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.67, neu=-1.94, ent=4.55
+            Probs:   con=0.1%, neu=0.2%, ent=99.8%
+            d = ent - con = 7.21
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.26, neu=-3.63, ent=-1.15
+            Probs:   con=99.8%, neu=0.0%, ent=0.2%
+            d = ent - con = -6.42
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.3%, avg_neu=0.3%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1747,16 +2147,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.5045, neutral=-2.1307, entailment=4.6323
-            d = z_ent - z_con = 4.6323 - -2.5045 = 7.1367
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.2455, neutral=-0.5928, entailment=4.4477
-            d = z_ent - z_con = 4.4477 - -4.2455 = 8.6931
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=4.8257, neutral=-3.9638, entailment=-0.1523
-            d = z_ent - z_con = -0.1523 - 4.8257 = -4.9780
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.25, neu=-0.59, ent=4.45
+            Probs:   con=0.0%, neu=0.6%, ent=99.3%
+            d = ent - con = 8.69
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.50, neu=-2.13, ent=4.63
+            Probs:   con=0.1%, neu=0.1%, ent=99.8%
+            d = ent - con = 7.14
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=4.83, neu=-3.96, ent=-0.15
+            Probs:   con=99.3%, neu=0.0%, ent=0.7%
+            d = ent - con = -4.98
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.6%, avg_con=33.1%, avg_neu=0.3%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1790,16 +2200,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.8979, neutral=-2.1012, entailment=4.9398
-            d = z_ent - z_con = 4.9398 - -2.8979 = 7.8377
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.7903, neutral=-0.2631, entailment=4.5971
-            d = z_ent - z_con = 4.5971 - -4.7903 = 9.3874
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=3.8196, neutral=-4.3124, entailment=1.4238
-            d = z_ent - z_con = 1.4238 - 3.8196 = -2.3958
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.79, neu=-0.26, ent=4.60
+            Probs:   con=0.0%, neu=0.8%, ent=99.2%
+            d = ent - con = 9.39
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.90, neu=-2.10, ent=4.94
+            Probs:   con=0.0%, neu=0.1%, ent=99.9%
+            d = ent - con = 7.84
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=3.82, neu=-4.31, ent=1.42
+            Probs:   con=91.6%, neu=0.0%, ent=8.3%
+            d = ent - con = -2.40
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=69.1%, avg_con=30.6%, avg_neu=0.3%, max_ent=99.9%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1833,16 +2253,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9756, neutral=-1.8300, entailment=4.7149
-            d = z_ent - z_con = 4.7149 - -2.9756 = 7.6905
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.6276, neutral=-0.2291, entailment=4.3951
-            d = z_ent - z_con = 4.3951 - -4.6276 = 9.0227
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.0762, neutral=-4.2888, entailment=0.0369
-            d = z_ent - z_con = 0.0369 - 5.0762 = -5.0392
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.63, neu=-0.23, ent=4.40
+            Probs:   con=0.0%, neu=1.0%, ent=99.0%
+            d = ent - con = 9.02
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.98, neu=-1.83, ent=4.71
+            Probs:   con=0.0%, neu=0.1%, ent=99.8%
+            d = ent - con = 7.69
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.08, neu=-4.29, ent=0.04
+            Probs:   con=99.3%, neu=0.0%, ent=0.6%
+            d = ent - con = -5.04
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.5%, avg_con=33.1%, avg_neu=0.4%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1876,16 +2306,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.1515, neutral=-0.5373, entailment=4.2923
-            d = z_ent - z_con = 4.2923 - -4.1515 = 8.4438
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-0.8592, neutral=-2.8444, entailment=4.0967
-            d = z_ent - z_con = 4.0967 - -0.8592 = 4.9559
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=-0.8563, neutral=-2.6222, entailment=3.8414
-            d = z_ent - z_con = 3.8414 - -0.8563 = 4.6977
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.15, neu=-0.54, ent=4.29
+            Probs:   con=0.0%, neu=0.8%, ent=99.2%
+            d = ent - con = 8.44
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-0.86, neu=-2.84, ent=4.10
+            Probs:   con=0.7%, neu=0.1%, ent=99.2%
+            d = ent - con = 4.96
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=-0.86, neu=-2.62, ent=3.84
+            Probs:   con=0.9%, neu=0.2%, ent=98.9%
+            d = ent - con = 4.70
+            → ✓ GROUNDED (entailment)
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=99.1%, avg_con=0.5%, avg_neu=0.3%, max_ent=99.2%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1919,16 +2359,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9543, neutral=-1.6424, entailment=4.4843
-            d = z_ent - z_con = 4.4843 - -2.9543 = 7.4387
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.3736, neutral=-0.3755, entailment=4.3212
-            d = z_ent - z_con = 4.3212 - -4.3736 = 8.6948
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=1.1483, neutral=-4.3548, entailment=4.1623
-            d = z_ent - z_con = 4.1623 - 1.1483 = 3.0140
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.37, neu=-0.38, ent=4.32
+            Probs:   con=0.0%, neu=0.9%, ent=99.1%
+            d = ent - con = 8.69
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.95, neu=-1.64, ent=4.48
+            Probs:   con=0.1%, neu=0.2%, ent=99.7%
+            d = ent - con = 7.44
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=1.15, neu=-4.35, ent=4.16
+            Probs:   con=4.7%, neu=0.0%, ent=95.3%
+            d = ent - con = 3.01
+            → ✓ GROUNDED (entailment)
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=98.0%, avg_con=1.6%, avg_neu=0.4%, max_ent=99.7%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -1962,16 +2412,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.7398, neutral=-0.9238, entailment=4.3503
-            d = z_ent - z_con = 4.3503 - -3.7398 = 8.0901
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-3.4307, neutral=-0.9038, entailment=4.0184
-            d = z_ent - z_con = 4.0184 - -3.4307 = 7.4491
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4100, neutral=-4.4318, entailment=-0.0712
-            d = z_ent - z_con = -0.0712 - 5.4100 = -5.4812
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-3.43, neu=-0.90, ent=4.02
+            Probs:   con=0.1%, neu=0.7%, ent=99.2%
+            d = ent - con = 7.45
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.74, neu=-0.92, ent=4.35
+            Probs:   con=0.0%, neu=0.5%, ent=99.5%
+            d = ent - con = 8.09
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.41, neu=-4.43, ent=-0.07
+            Probs:   con=99.6%, neu=0.0%, ent=0.4%
+            d = ent - con = -5.48
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.2%, avg_neu=0.4%, max_ent=99.5%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -2007,16 +2467,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.7684, neutral=-0.1956, entailment=4.4947
-            d = z_ent - z_con = 4.4947 - -4.7684 = 9.2631
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.9168, neutral=-0.8456, entailment=4.4271
-            d = z_ent - z_con = 4.4271 - -3.9168 = 8.3439
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.1711, neutral=-4.2828, entailment=-0.0449
-            d = z_ent - z_con = -0.0449 - 5.1711 = -5.2160
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.77, neu=-0.20, ent=4.49
+            Probs:   con=0.0%, neu=0.9%, ent=99.1%
+            d = ent - con = 9.26
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.92, neu=-0.85, ent=4.43
+            Probs:   con=0.0%, neu=0.5%, ent=99.5%
+            d = ent - con = 8.34
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.17, neu=-4.28, ent=-0.04
+            Probs:   con=99.5%, neu=0.0%, ent=0.5%
+            d = ent - con = -5.22
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.4%, avg_con=33.2%, avg_neu=0.5%, max_ent=99.5%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -2050,16 +2520,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-2.9049, neutral=-1.8039, entailment=4.5984
-            d = z_ent - z_con = 4.5984 - -2.9049 = 7.5033
-        [2] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-4.8164, neutral=-0.0097, entailment=4.3264
-            d = z_ent - z_con = 4.3264 - -4.8164 = 9.1429
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4897, neutral=-4.3764, entailment=-0.2570
-            d = z_ent - z_con = -0.2570 - 5.4897 = -5.7467
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-4.82, neu=-0.01, ent=4.33
+            Probs:   con=0.0%, neu=1.3%, ent=98.7%
+            d = ent - con = 9.14
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-2.90, neu=-1.80, ent=4.60
+            Probs:   con=0.1%, neu=0.2%, ent=99.8%
+            d = ent - con = 7.50
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.49, neu=-4.38, ent=-0.26
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.75
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.3%, avg_con=33.2%, avg_neu=0.5%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -2093,16 +2573,26 @@ Assigning weights to 49 constraints...
       Number of premises (chunks): 3
       Raw NLI scores shape: (3, 3)
 
-      Top 5 premise-hypothesis pairs by entailment score:
-        [1] Premise 0 (chunk preview: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 ...')
-            contradiction=-3.8932, neutral=-1.2662, entailment=4.9006
-            d = z_ent - z_con = 4.9006 - -3.8932 = 8.7938
-        [2] Premise 1 (chunk preview: 'the Receiving Party to the extent it invokes them....')
-            contradiction=-3.2395, neutral=-1.2219, entailment=4.2801
-            d = z_ent - z_con = 4.2801 - -3.2395 = 7.5196
-        [3] Premise 2 (chunk preview: 'indirect or consequential losses, loss of profit, ...')
-            contradiction=5.4967, neutral=-4.3844, entailment=-0.2691
-            d = z_ent - z_con = -0.2691 - 5.4967 = -5.7658
+      NLI Probabilities for ALL chunks:
+      --------------------------------------------------------------------------------
+        Chunk 0: 'SINTEC UK LIMITED Non-disclosure Agreement – 2017 1 Non-Disc...'
+            Logits:  con=-3.89, neu=-1.27, ent=4.90
+            Probs:   con=0.0%, neu=0.2%, ent=99.8%
+            d = ent - con = 8.79
+            → ✓ GROUNDED (entailment)
+        Chunk 1: 'the Receiving Party to the extent it invokes them. 5. Propri...'
+            Logits:  con=-3.24, neu=-1.22, ent=4.28
+            Probs:   con=0.1%, neu=0.4%, ent=99.5%
+            d = ent - con = 7.52
+            → ✓ GROUNDED (entailment)
+        Chunk 2: 'indirect or consequential losses, loss of profit, loss of re...'
+            Logits:  con=5.50, neu=-4.38, ent=-0.27
+            Probs:   con=99.7%, neu=0.0%, ent=0.3%
+            d = ent - con = -5.77
+            → ✗ CONTRADICTED
+      --------------------------------------------------------------------------------
+
+      Summary: avg_ent=66.5%, avg_con=33.3%, avg_neu=0.2%, max_ent=99.8%
 
       [DEBUG] Evidence Difference Matrix (d = z_ent - z_con):
       d_matrix shape: (3, 1)
@@ -2139,4 +2629,3 @@ Assigning weights to 49 constraints...
     Median: 1.000
 
 ✓ Weights assigned! Output saved to: code/experiments/SINTEC-output_weighted.json
-sudubudu@Sudhirs-MacBook-Pro article_logic_ai_2026 % 
