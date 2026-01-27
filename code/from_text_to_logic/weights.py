@@ -444,16 +444,10 @@ def assign_weights(
             print(f"      → neg_logit_yes={result_negated['logit_yes']:.4f}, neg_logit_no={result_negated['logit_no']:.4f}, "
                   f"neg_P(YES)={result_negated['prob_yes']:.4f}, neg_P(NO)={result_negated['prob_no']:.4f}")
 
-        # Add weight field to constraint (8 values: original + negated)
+        # Add weight field to constraint (2 values: prob_yes for original and negated)
         constraint['weight'] = [
-            result_original['logit_yes'],
-            result_original['logit_no'],
             result_original['prob_yes'],
-            result_original['prob_no'],
-            result_negated['logit_yes'],
-            result_negated['logit_no'],
-            result_negated['prob_yes'],
-            result_negated['prob_no']
+            result_negated['prob_yes']
         ]
 
     # Step 7: Save output
