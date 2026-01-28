@@ -59,16 +59,32 @@ RESULTS_DIR = _script_dir / "results_rag_contract_NLI"
 # ContractNLI-specific Chain-of-Thought Prompt Template
 # =============================================================================
 
-CONTRACTNLI_COT_PROMPT = """
-TODO: Define the ContractNLI-specific CoT prompt template.
+CONTRACTNLI_COT_PROMPT = """You are a legal contract analyst. Given excerpts from a contract and a hypothesis, determine whether the hypothesis is supported by the contract.
 
-This prompt should:
-- Provide retrieved contract chunks as context
-- Present the hypothesis to evaluate
-- Instruct the LLM to output TRUE, FALSE, or UNCERTAIN
-- Explain confidence meaning (1.0 = absolutely certain, 0.5 = unsure, 0.0 = no support)
-- Request structured output format: **Reasoning:**, **Answer:**, **Confidence:**
-"""
+**Contract Excerpts:**
+{context}
+
+**Hypothesis:** {hypothesis}
+
+**Instructions:**
+1. Carefully read the contract excerpts provided above
+2. Determine if the hypothesis is:
+   - TRUE: The contract clearly states or logically entails this hypothesis
+   - FALSE: The contract clearly contradicts this hypothesis
+   - UNCERTAIN: The contract does not mention or address this hypothesis
+3. Provide your confidence level as a number between 0.0 and 1.0:
+   - 1.0 = Absolutely certain (explicit statement in contract)
+   - 0.7-0.9 = High confidence (strong implication)
+   - 0.4-0.6 = Moderate confidence (some evidence but not conclusive)
+   - 0.1-0.3 = Low confidence (weak or indirect evidence)
+   - 0.0 = No support for this conclusion
+
+**Format your response exactly as follows:**
+**Reasoning:** [Your step-by-step analysis of the contract excerpts]
+**Answer:** [TRUE or FALSE or UNCERTAIN]
+**Confidence:** [A number between 0.0 and 1.0]
+
+Begin your analysis:"""
 
 
 # =============================================================================
@@ -85,7 +101,8 @@ def load_contractnli_dataset(dataset_path: str) -> Dict[str, Any]:
     Returns:
         Dictionary containing 'documents' and 'labels' keys
     """
-    pass
+    with open(dataset_path, 'r', encoding='utf-8') as f:
+        return json.load(f)
 
 
 def get_ground_truth_label(choice: str) -> str:
@@ -103,7 +120,12 @@ def get_ground_truth_label(choice: str) -> str:
     Returns:
         Mapped label (TRUE, FALSE, or UNCERTAIN)
     """
-    pass
+    mapping = {
+        "Entailment": "TRUE",
+        "Contradiction": "FALSE",
+        "NotMentioned": "UNCERTAIN"
+    }
+    return mapping.get(choice, "UNCERTAIN")
 
 
 # =============================================================================
@@ -124,7 +146,57 @@ def parse_rag_response(response: str) -> Dict[str, Any]:
     Returns:
         Dictionary with 'answer', 'confidence', and 'reasoning' keys
     """
-    pass
+    import re
+
+    answer = None
+    confidence = 0.5  # Default confidence
+    reasoning = response
+
+    # Extract answer from **Answer:** section
+    answer_match = re.search(r'\*\*Answer:\*\*\s*(TRUE|FALSE|UNCERTAIN)', response, re.IGNORECASE)
+    if answer_match:
+        answer = answer_match.group(1).upper()
+    else:
+        # Fallback: search for keywords in the response
+        response_upper = response.upper()
+        if 'UNCERTAIN' in response_upper:
+            answer = 'UNCERTAIN'
+        elif 'TRUE' in response_upper:
+            answer = 'TRUE'
+        elif 'FALSE' in response_upper:
+            answer = 'FALSE'
+        else:
+            answer = 'UNCERTAIN'  # Default if nothing found
+
+    # Extract confidence from **Confidence:** section
+    confidence_match = re.search(r'\*\*Confidence:\*\*\s*([\d.]+)', response)
+    if confidence_match:
+        try:
+            confidence = float(confidence_match.group(1))
+            # Clamp to [0, 1]
+            confidence = max(0.0, min(1.0, confidence))
+        except ValueError:
+            confidence = 0.5
+    else:
+        # Fallback: search for any decimal number after "confidence"
+        fallback_match = re.search(r'confidence[:\s]+(\d*\.?\d+)', response, re.IGNORECASE)
+        if fallback_match:
+            try:
+                confidence = float(fallback_match.group(1))
+                confidence = max(0.0, min(1.0, confidence))
+            except ValueError:
+                confidence = 0.5
+
+    # Extract reasoning from **Reasoning:** section
+    reasoning_match = re.search(r'\*\*Reasoning:\*\*\s*(.*?)(?=\*\*Answer:|\Z)', response, re.DOTALL)
+    if reasoning_match:
+        reasoning = reasoning_match.group(1).strip()
+
+    return {
+        'answer': answer,
+        'confidence': confidence,
+        'reasoning': reasoning
+    }
 
 
 # =============================================================================
@@ -145,7 +217,20 @@ def call_llm(prompt: str, model_name: str, temperature: float = 0) -> str:
     Returns:
         Raw string response from the LLM
     """
-    pass
+    from openai import OpenAI
+
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=os.environ.get("OPENROUTER_API_KEY")
+    )
+
+    response = client.chat.completions.create(
+        model=model_name,
+        messages=[{"role": "user", "content": prompt}],
+        temperature=temperature
+    )
+
+    return response.choices[0].message.content
 
 
 def construct_prompt(hypothesis: str, retrieved_chunks: List[Dict]) -> str:
@@ -159,7 +244,20 @@ def construct_prompt(hypothesis: str, retrieved_chunks: List[Dict]) -> str:
     Returns:
         Formatted prompt string ready for LLM
     """
-    pass
+    # Format chunks with separators
+    formatted_chunks = []
+    for i, chunk in enumerate(retrieved_chunks):
+        formatted_chunks.append(f"[Excerpt {i+1}]\n{chunk['text']}")
+
+    context = "\n\n".join(formatted_chunks)
+
+    # Fill in the template
+    prompt = CONTRACTNLI_COT_PROMPT.format(
+        context=context,
+        hypothesis=hypothesis
+    )
+
+    return prompt
 
 
 # =============================================================================
@@ -195,7 +293,43 @@ def process_single_hypothesis(
     Returns:
         Dictionary with 'prediction', 'confidence', 'latency_sec', 'error'
     """
-    pass
+    start_time = time.time()
+
+    try:
+        # Step 1: Encode hypothesis as query
+        query_embedding = encode_query(hypothesis_text, sbert_model)
+
+        # Step 2: Retrieve top-k relevant chunks
+        retrieved_chunks = retrieve(
+            query_embedding,
+            chunk_embeddings,
+            chunks,
+            k=rag_config.TOP_K
+        )
+
+        # Step 3: Construct prompt with retrieved context
+        prompt = construct_prompt(hypothesis_text, retrieved_chunks)
+
+        # Step 4: Call LLM for reasoning
+        raw_response = call_llm(prompt, model_name, temperature)
+
+        # Step 5: Parse response for answer and confidence
+        parsed = parse_rag_response(raw_response)
+
+        return {
+            "prediction": parsed['answer'],
+            "confidence": parsed['confidence'],
+            "query_latency_sec": time.time() - start_time,
+            "error": None
+        }
+
+    except Exception as e:
+        return {
+            "prediction": None,
+            "confidence": None,
+            "query_latency_sec": time.time() - start_time,
+            "error": str(e)
+        }
 
 
 # =============================================================================
@@ -216,7 +350,17 @@ def process_document(
     Returns:
         Tuple of (chunks, chunk_embeddings)
     """
-    pass
+    # Chunk the document using config settings
+    chunks = chunk_document(
+        doc_text,
+        chunk_size=rag_config.CHUNK_SIZE,
+        overlap=rag_config.OVERLAP
+    )
+
+    # Encode chunks
+    chunk_embeddings = encode_chunks(chunks, sbert_model)
+
+    return chunks, chunk_embeddings
 
 
 # =============================================================================
