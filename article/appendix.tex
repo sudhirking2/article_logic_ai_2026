@@ -137,9 +137,7 @@ Our OpenIE extraction pipeline is configured with the following annotators, appl
     \item \texttt{ssplit}: Sentence splitting
     \item \texttt{pos}: Part-of-speech tagging
     \item \texttt{lemma}: Lemmatization
-    \item \texttt{ner}: Named entity recognition
     \item \texttt{depparse}: Dependency parsing
-    \item \texttt{coref}: Coreference resolution
     \item \texttt{natlog}: Natural logic annotations
     \item \texttt{openie}: Open information extraction
 \end{enumerate}
@@ -173,7 +171,7 @@ To address this, we implement a dependency parse fallback mechanism. When OpenIE
 \begin{center}
 \texttt{(Alice; studies; hard)}
 \end{center}
-These fallback triples are marked with lower confidence (0.7--0.8) compared to OpenIE triples (typically 0.9--1.0).
+Fallback triples are marked with \texttt{source='stanza\_depparse'} for provenance tracking.
 
 \subsubsection{Output Format}
 
