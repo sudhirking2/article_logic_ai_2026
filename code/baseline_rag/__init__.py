@@ -9,24 +9,19 @@ Modules:
     config: Configuration settings
     evaluator: Evaluation metrics
     reasoner: LLM reasoning module
+
+Usage:
+    from baseline_rag.chunker import chunk_document
+    from baseline_rag.retriever import load_sbert_model, encode_chunks
 """
 
-from baseline_rag.chunker import chunk_document, tokenize, detokenize
-from baseline_rag.retriever import (
-    load_sbert_model,
-    encode_chunks,
-    encode_query,
-    retrieve,
-    compute_cosine_similarity
-)
+# Lazy imports to avoid ImportError when dependencies aren't installed
+# Use explicit imports in your code: from baseline_rag.chunker import chunk_document
 
 __all__ = [
-    'chunk_document',
-    'tokenize',
-    'detokenize',
-    'load_sbert_model',
-    'encode_chunks',
-    'encode_query',
-    'retrieve',
-    'compute_cosine_similarity',
+    'chunker',
+    'retriever',
+    'config',
+    'evaluator',
+    'reasoner',
 ]
