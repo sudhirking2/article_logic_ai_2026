@@ -3,47 +3,107 @@
   "primitive_props": [
     {
       "id": "P_1",
-      "translation": "Dani attended the lecture.",
-      "evidence": "“either attend the lecture or study for her upcoming exam.” / “it was clear that she did not attend the lecture.”",
-      "explanation": "This is a single, concrete event claim (attended vs. not attended) with no internal logical structure."
+      "translation": "I was volunteering at the charity event.",
+      "evidence": "Sentence 1: \"where I was both volunteering and running the marathon\"",
+      "explanation": "This is a single, truth-evaluable claim about the speaker's activity (volunteering) with no logical connectives."
     },
     {
       "id": "P_2",
-      "translation": "Dani studied for her upcoming exam.",
-      "evidence": "“either attend the lecture or study for her upcoming exam.”",
-      "explanation": "This is a single, concrete event claim (studied vs. not studied) with no internal logical structure."
+      "translation": "I was running the marathon (at the charity event).",
+      "evidence": "Sentence 1: \"where I was both volunteering and running the marathon\"",
+      "explanation": "This is a single, truth-evaluable claim about the speaker's activity (running the marathon) with no logical connectives."
+    },
+    {
+      "id": "P_3",
+      "translation": "There was confusion about my participation.",
+      "evidence": "Sentence 1: \"there was some confusion about my participation\"",
+      "explanation": "This is an atomic claim about the existence of confusion; it does not embed any explicit logical structure."
+    },
+    {
+      "id": "P_4",
+      "translation": "It was unknown whether I would be running the marathon.",
+      "evidence": "Sentence 2: \"It was unknown whether I would be running the marathon\"",
+      "explanation": "This is an atomic epistemic-status claim (unknownness) about a single proposition (that I would run)."
+    },
+    {
+      "id": "P_5",
+      "translation": "It was unknown whether I would be solely volunteering for the charity event.",
+      "evidence": "Sentence 2: \"or solely volunteering for the charity event\" (within \"It was unknown whether...\")",
+      "explanation": "This is an atomic epistemic-status claim (unknownness) about a single proposition (that I would solely volunteer)."
+    },
+    {
+      "id": "P_6",
+      "translation": "I would be solely volunteering for the charity event (i.e., my participation would be only volunteering).",
+      "evidence": "Sentence 2: \"solely volunteering for the charity event\"",
+      "explanation": "This is treated as a single status/proposition explicitly mentioned in the text; it is used as one alternative in the uncertainty description."
     }
   ],
   "hard_constraints": [
     {
       "id": "H_1",
-      "formula": "(P_1 ∨ P_2)",
-      "translation": "Dani would do one of the two: attend the lecture or study for the upcoming exam.",
-      "evidence": "“all we knew was that she would do one of the two.”",
-      "reasoning": "The text explicitly commits that at least one of the two actions will occur."
+      "formula": "P_1",
+      "translation": "I was volunteering at the charity event.",
+      "evidence": "Sentence 1: \"where I was both volunteering...\"",
+      "reasoning": "The text directly asserts volunteering as part of what the speaker was doing."
     },
     {
       "id": "H_2",
-      "formula": "¬P_1",
-      "translation": "Dani did not attend the lecture.",
-      "evidence": "“it was clear that she did not attend the lecture.”",
-      "reasoning": "This is stated as a definite fact (“it was clear”)."
+      "formula": "P_2",
+      "translation": "I was running the marathon.",
+      "evidence": "Sentence 1: \"...and running the marathon\"",
+      "reasoning": "The text explicitly states the speaker was running the marathon (even though later text contradicts this)."
     },
     {
       "id": "H_3",
-      "formula": "((P_1 ∨ P_2) ∧ ¬P_1) ⟹ P_2",
-      "translation": "Given she would do one of the two and she did not attend the lecture, she studied for her upcoming exam.",
-      "evidence": "Combines: “she would do one of the two” + “she did not attend the lecture.”",
-      "reasoning": "Since the only allowed options given are {attend, study} and attending is ruled out while at least one must happen, studying follows."
+      "formula": "P_3",
+      "translation": "There was confusion about my participation.",
+      "evidence": "Sentence 1: \"there was some confusion about my participation\"",
+      "reasoning": "This is stated as a fact about the situation."
     },
     {
       "id": "H_4",
-      "formula": "¬(P_1 ∧ P_2)",
-      "translation": "Dani did not both attend the lecture and study for her upcoming exam (the options are presented as a choice between alternatives).",
-      "evidence": "“Dani had a choice: either attend the lecture or study for her upcoming exam.”",
-      "reasoning": "The phrase “had a choice: either A or B” is most naturally read as presenting mutually exclusive alternatives in this context."
+      "formula": "P_4",
+      "translation": "It was unknown whether I would be running the marathon.",
+      "evidence": "Sentence 2: \"It was unknown whether I would be running the marathon\"",
+      "reasoning": "The text directly asserts an 'unknown whether' condition regarding running."
+    },
+    {
+      "id": "H_5",
+      "formula": "P_5",
+      "translation": "It was unknown whether I would be solely volunteering for the charity event.",
+      "evidence": "Sentence 2: \"It was unknown whether I would be running the marathon or solely volunteering...\"",
+      "reasoning": "The 'unknown whether' construction covers the alternative of solely volunteering as well."
+    },
+    {
+      "id": "H_6",
+      "formula": "¬P_2",
+      "translation": "I was not running the marathon.",
+      "evidence": "Sentence 3: \"it turned out that I was not running the marathon\"",
+      "reasoning": "The text explicitly concludes that, despite the uncertainty, the speaker was not running. This creates a direct inconsistency with H_2, reflecting the text as written."
     }
   ],
-  "soft_constraints": []
+  "soft_constraints": [
+    {
+      "id": "S_1",
+      "formula": "P_2 ∨ P_6",
+      "translation": "Either I would be running the marathon or I would be solely volunteering.",
+      "evidence": "Sentence 2: \"unknown whether I would be running the marathon or solely volunteering\"",
+      "reasoning": "The 'whether A or B' framing commonly presupposes that A or B is the relevant set of possibilities (at least one obtains), but the text does not strictly assert that one must be true, so this is treated as soft."
+    },
+    {
+      "id": "S_2",
+      "formula": "¬(P_2 ∧ P_6)",
+      "translation": "It is not the case that I both ran the marathon and solely volunteered.",
+      "evidence": "Common-sense/lexical meaning of \"solely\" (only volunteering).",
+      "reasoning": "\"Solely volunteering\" typically excludes simultaneously running the marathon; this exclusivity is strongly suggested by word meaning but not explicitly formalized in the text."
+    },
+    {
+      "id": "S_3",
+      "formula": "(P_1 ∧ ¬P_2) ⟹ P_6",
+      "translation": "If I volunteered and did not run the marathon, then my participation was solely volunteering.",
+      "evidence": "Common-sense interpretation connecting volunteering + not running to the described alternative \"solely volunteering.\"",
+      "reasoning": "This captures a natural intended inference, but the text does not explicitly equate (volunteering and not running) with \"solely volunteering\" (there could be other roles), so it is soft."
+    }
+  ]
 }
 ```

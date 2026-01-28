@@ -1,0 +1,16 @@
+{
+  "total_examples": 40,
+  "propositional": {
+    "failures": 0,
+    "error_rate": 0.0
+  },
+  "fol": {
+    "failures": 0,
+    "error_rate": 0.0
+  },
+  "comparison": {
+    "absolute_difference": 0,
+    "percentage_point_difference": 0.0,
+    "conclusion": "Propositional has more errors"
+  }
+}
