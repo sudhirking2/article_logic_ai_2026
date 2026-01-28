@@ -7,8 +7,11 @@ Uses SBERT retrieval + LLM logprob extraction to compute probability scores.
 
 See weights_how_it_works.md for detailed algorithm explanation.
 
-Usage (CLI):
-    python weights.py document.pdf logified.json --api-key sk-...
+Usage (from repo root):
+    python code/from_text_to_logic/weights.py document.pdf logified.json --api-key sk-...
+
+Usage (from code directory):
+    python from_text_to_logic/weights.py document.pdf logified.json --api-key sk-...
 
 Usage (Python):
     from from_text_to_logic.weights import assign_weights
@@ -28,11 +31,13 @@ import argparse
 from pathlib import Path
 from typing import Dict, Any, List
 
-# Add code directory to Python path (for imports to work from anywhere)
-script_dir = Path(__file__).resolve().parent
-code_dir = script_dir.parent
-if str(code_dir) not in sys.path:
-    sys.path.insert(0, str(code_dir))
+# Add code directory to Python path (for imports to work from any location)
+_script_dir = Path(__file__).resolve().parent
+_code_dir = _script_dir.parent
+if str(_code_dir) not in sys.path:
+    sys.path.insert(0, str(_code_dir))
+if str(_script_dir) not in sys.path:
+    sys.path.insert(0, str(_script_dir))
 
 import numpy as np
 from openai import OpenAI
