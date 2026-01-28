@@ -188,7 +188,7 @@ class LogicSolver:
                 # UNSAT: Query is inconsistent
                 return SolverResult(
                     answer="FALSE",
-                    confidence=1.0,
+                    confidence=0.0,  # Q cannot be true
                     model=None,
                     explanation="Query is inconsistent with the knowledge base (KB ∧ Q is unsatisfiable)"
                 )
