@@ -862,3 +862,18 @@ Variant: $P \to \neg Q, Q \vdash \neg P$ & 2 & 100\% (2/2) \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{remark}[Interpretation of Logic-LM++ Results]
+\label{rem:logiclm-interpretation}
+The tables above reveal several important insights about the Logic-LM++ baseline:
+
+\textbf{(1) Formalization is the bottleneck, not solving.} Table~\ref{tab:logiclm-time} shows that solving takes only 0.002 seconds on average ($<0.1\%$ of total time), while formalization and refinement dominate. This confirms that the symbolic reasoning component is efficient once the logical structure is correctly extracted---the challenge lies in accurate NL-to-logic translation.
+
+\textbf{(2) Question polarity strongly affects accuracy.} Table~\ref{tab:logiclm-polarity} reveals a striking asymmetry: negative queries (``Does this entail $\neg P$?'') achieve 80\% accuracy, while positive queries (``Does this entail $P$?'') achieve only 20\%. This occurs because modus tollens naturally concludes $\neg P$ from premises $P \to Q$ and $\neg Q$. When the system correctly formalizes the problem, it proves $\neg P$---answering negative queries correctly but incorrectly answering ``yes'' to positive queries (since the solver proves $\neg P$, not $P$).
+
+\textbf{(3) Predicate misalignment is the primary failure mode.} Table~\ref{tab:logiclm-formalization} shows that when the LLM correctly identifies the modus tollens structure ($P \to Q, \neg Q$), accuracy reaches 83.3\%. However, in 30\% of cases (6/20), the LLM introduces a redundant predicate $R$ (e.g., ``decided against pizza'') instead of recognizing it as $\neg Q$ (``did not order pizza''). This breaks the logical chain: with premises $\{P \to Q, R\}$, the conclusion $\neg P$ cannot be derived.
+
+\textbf{(4) The backtracking agent correctly prevents degradation.} All 20 examples triggered REVERT decisions, indicating that refinement candidates did not improve upon the initial formalization. This validates the backtracking agent's design: it successfully prevents accepting syntactically correct but semantically inferior refinements.
+
+\textbf{(5) Implications for Logify comparison.} The 50\% accuracy ceiling on modus tollens---a fundamental reasoning pattern---highlights the limitations of per-query formalization approaches. Logify's ``logify once, query many'' paradigm addresses this by constructing a reusable logical structure upfront, amortizing formalization errors across multiple queries and enabling self-refinement with richer context.
+\end{remark}
