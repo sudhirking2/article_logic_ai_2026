@@ -24,6 +24,27 @@ from reasoner import reason_with_cot
 from evaluator import evaluate, format_results, normalize_label
 
 
+LOGICBENCH_PROMPT_TEMPLATE = """You are a precise logical reasoning assistant. Given a set of premises and a question, determine whether the statement in the question is true or false based solely on the given premises.
+
+Premises:
+{retrieved_chunks}
+
+Question: {query}
+
+Instructions:
+1. Carefully read all the premises provided
+2. Identify the logical relationships and implications
+3. Reason step-by-step to determine if the statement follows from the premises
+4. Answer True if the statement logically follows, False if it contradicts the premises, or Unknown if it cannot be determined
+
+Format your response as:
+**Reasoning:** [Your step-by-step logical analysis]
+**Answer:** [True/False/Unknown]
+
+Begin your analysis:
+"""
+
+
 def preprocess_text(text):
     """
     Preprocess text before chunking.
@@ -112,7 +133,7 @@ def run_logicbench_experiment(logic_type, reasoning_patterns=None, max_examples_
 
         retrieved_chunks = retrieve(query_embedding, chunk_embeddings, chunks, k=config.TOP_K)
 
-        result = reason_with_cot(query, retrieved_chunks, model_name, config.COT_PROMPT_TEMPLATE, config.TEMPERATURE)
+        result = reason_with_cot(query, retrieved_chunks, model_name, LOGICBENCH_PROMPT_TEMPLATE, config.TEMPERATURE)
         pred = normalize_label(result['answer'])
 
         predictions.append(pred)
