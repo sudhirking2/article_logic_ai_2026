@@ -4,9 +4,11 @@ We propose a neuro-symbolic framework for logical reasoning over long-form docum
 
 \section{Introduction}
 
-Given a long document---a medical guideline, a legal contract, a technical specification---users need to ask questions, check consistency, and determine whether a given query is entailed, contradicted, or undetermined by the document. 
-Large language models (LLMs) offer fluent interfaces but struggle with such reasoning.
-They hallucinate facts \cite{ji2023hallucination}, preferring external knowledge instead of the input document; miss information in long contexts \cite{liu2024lost}, prioritizing the start and end of inputs but neglecting the middle; and cannot guarantee faithful inference \cite{pan2023logiclm}, producing plausible but logically unsound conclusions.
+Reliable reasoning over text remains a core challenge in AI.
+Given a document---a contract, medical guideline, or technical specification---users need to determine whether a query is entailed, contradicted, or underdetermined by the text.
+Large language models (LLMs) provide natural-language interfaces for such tasks, but they conflate two fundamentally different problems: \emph{language semantics} (extracting meaning from text) and \emph{logical reasoning} (deriving valid conclusions from premises stated in the text).
+This conflation is the source of their unreliability.
+LLMs hallucinate facts, preferring external knowledge to the input document~\citep{ji2023hallucination}; miss information in long contexts, prioritizing the start and end while neglecting the middle~\citep{liu2024lost}; and produce plausible but logically unsound conclusions~\citep{wei2022chain}.
 
 A common mitigation is retrieval-augmented generation (RAG), where relevant
 passages are retrieved and fed to an LLM at query time. But when logical
