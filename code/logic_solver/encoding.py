@@ -335,32 +335,20 @@ class LogicEncoder:
         """
         Encode the logified structure as WCNF.
 
-        Hard constraints with weights are encoded as soft constraints with high weight.
-        Hard constraints without weights are encoded as hard clauses (infinite weight).
+        Hard constraints are always encoded as hard clauses (infinite weight).
+        Weights on hard constraints are ignored for clause hardness.
 
         Returns:
             WCNF object with hard and soft constraints
         """
-        # Encode hard constraints
+        # Encode hard constraints - always as hard clauses (ignore weights)
         for constraint in self.structure.get('hard_constraints', []):
             formula = constraint['formula']
             clauses = self.parser.parse(formula)
 
-            # Check if hard constraint has a weight (from weights.py)
-            if 'weight' in constraint:
-                # Encode as soft constraint with very high base weight
-                # Hard constraints should have higher weight than soft constraints
-                weight = self._extract_weight(constraint, default=0.99)
-                int_weight = self._weight_to_int(weight)
-                # Scale up hard constraint weights by 10x to maintain higher priority
-                int_weight = min(int_weight * 10, 100000)
-
-                for clause in clauses:
-                    self.wcnf.append(clause, weight=int_weight)
-            else:
-                # No weight: encode as hard clause (infinite weight)
-                for clause in clauses:
-                    self.wcnf.append(clause)  # Hard clause
+            # Always add as hard clause (infinite weight)
+            for clause in clauses:
+                self.wcnf.append(clause)  # Hard clause
 
         # Encode soft constraints (weighted)
         for constraint in self.structure.get('soft_constraints', []):
