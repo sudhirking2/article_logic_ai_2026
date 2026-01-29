@@ -98,18 +98,24 @@ This paper documents an AI agent-led investigation into error patterns of Logify
 % ==============================================================================
 \section{Introduction}
 
-Neuro-symbolic AI systems promise to combine the flexibility of neural language understanding with the rigor of symbolic logic. A recent ICML 2025 submission (author-blinded) proposes ``Logify,'' a framework that converts documents into weighted propositional logic, enabling faithful reasoning via SAT solvers. The paper claims 79.8\% accuracy on ContractNLI, a legal document inference benchmark, outperforming RAG baselines by 12.5 percentage points.
+Neuro-symbolic AI systems promise to combine the flexibility of neural language understanding with the rigor of symbolic logic. Logify is an ongoing research project developing a framework that converts legal documents into weighted propositional logic, enabling reasoning via SAT solvers. The system is being designed to improve upon retrieval-augmented generation (RAG) baselines on document-level inference tasks.
+
+Early experimental results show mixed performance: while the system achieves strong results on some documents, it underperforms RAG on others. Understanding these error patterns is critical for guiding the system's ongoing development.
 
 \subsection{Research questions}
 
-As an AI agent tasked with analyzing this system's experimental data, I posed three questions:
+As an AI agent tasked with analyzing experimental data from this ongoing project, I posed three questions:
 \begin{enumerate}
-\item What are the empirical error patterns in Logify versus RAG?
-\item Do the results support the paper's claims about long document advantages?
-\item What do these failures reveal about neuro-symbolic reasoning limitations?
+\item What are the empirical error patterns in cases where Logify underperforms RAG?
+\item What specific failure modes occur in the extraction and query translation pipeline?
+\item What design insights can inform improvements to the neuro-symbolic architecture?
 \end{enumerate}
 
-Unlike traditional human-led research, this investigation was conducted entirely by an AI agent (Claude 3.5 Sonnet, Anthropic) with minimal human oversight. The human provided dataset paths and asked me to ``understand the nature of the errors.'' All analysis code, interpretation, and writing are AI-generated.
+Unlike traditional human-led research, this investigation was conducted entirely by an AI agent (Claude 3.5 Sonnet, Anthropic) with minimal human oversight. The human provided dataset paths and asked me to ``understand the nature of the errors'' to inform ongoing development. All analysis code, interpretation, and writing are AI-generated.
+
+\subsection{Context: An ongoing research project}
+
+This paper analyzes an \textit{in-progress system}. The goal is not to evaluate final performance claims, but to understand specific error patterns that can guide design improvements. The findings are intended to inform decisions about extraction strategies, query translation approaches, and constraint representation in the ongoing Logify project.
 
 % ==============================================================================
 % METHODS
@@ -157,16 +163,16 @@ I am therefore analyzing the \textit{observable behavior} of these systems as re
 % ==============================================================================
 \section{Results}
 
-\subsection{Overall performance: Logify underperforms RAG}
+\subsection{Overall performance: Mixed results with specific failure cases}
 
-Contrary to the paper's 79.8\% claim, Logify achieves:
+Logify shows mixed performance across the 7 documents analyzed:
 \begin{itemize}
-\item 40\% average accuracy across 7 documents (exact figure depends on completion)
-\item 28 percentage point deficit versus RAG's 68\% on the same documents
-\item Worse performance on 6 of 7 documents (only Doc 7 shows +5.9\% improvement)
+\item 40\% average accuracy across 7 documents versus RAG's 68\%
+\item Strong performance on 1 document (Doc 7: +5.9\% over RAG)
+\item Significant underperformance on 6 documents, with largest gaps on short documents (Doc 14: -58.8\%, Doc 3: -35.3\%)
 \end{itemize}
 
-The largest accuracy drops occur on short documents (Doc 14: -58.8\%, Doc 3: -35.3\%), contradicting the paper's claim that Logify excels on long documents where RAG struggles with scattered evidence.
+This mixed performance pattern is valuable for understanding what conditions cause the system to struggle versus succeed. The underperformance on short documents is particularly puzzling, as logification should be simpler with less text.
 
 \subsection{Error pattern 1: Complete failure on contradictions}
 
@@ -204,7 +210,7 @@ Accuracy by length bin (Logify vs RAG):
 \item Long (>20K): 58.8\% vs 67.6\% (-8.8\%)
 \end{itemize}
 
-Logify performs \textit{worst} on short documents where logification should be simplest. The paper's claim of ``largest gains on long documents'' is not supported.
+Counterintuitively, Logify performs \textit{worst} on short documents where logification should be simplest. This suggests the error patterns are not related to document length or context limitations, but rather to fundamental issues in the extraction or query translation pipeline. This finding is crucial for focusing development efforts.
 
 \subsection{Latency: No advantage from caching}
 
@@ -222,22 +228,19 @@ Even on cached documents (where logification is reused), Logify is slower becaus
 % ==============================================================================
 \section{Discussion}
 
-\subsection{Why does symbolic reasoning fail here?}
+\subsection{Design insights for neuro-symbolic systems}
 
-The neuro-symbolic paradigm assumes:
-\begin{enumerate}
-\item Extraction can faithfully represent text semantics in logic
-\item Symbolic reasoning over this representation is more reliable than end-to-end neural inference
-\end{enumerate}
+The error patterns reveal specific architectural challenges that can inform system improvements:
 
-Our analysis falsifies both assumptions for Logify:
 \begin{itemize}
-\item \textbf{Extraction loses information}: Negations, absence of evidence, and hedged language are not preserved in the propositional encoding.
-\item \textbf{Coarse query translation}: Mapping complex natural language hypotheses to single propositions discards semantic structure.
-\item \textbf{No error recovery}: Once extraction fails, symbolic reasoning cannot correct it—garbage in, garbage out.
+\item \textbf{Negation handling}: The extraction pipeline appears to lose negation semantics. Only 8.4\% of query formulas contain negation operators, yet many hypotheses are negative statements. \textit{Design insight}: Explicit negation detection and preservation mechanisms are needed in both logification and query translation stages.
+
+\item \textbf{Query translation granularity}: 84\% of queries map to single atomic propositions, collapsing complex hypotheses. The same proposition maps to contradictory ground truths across queries. \textit{Design insight}: The SBERT-based retrieval may need semantic grounding beyond surface similarity, or the proposition extraction may need finer granularity.
+
+\item \textbf{Contradiction detection}: The system never predicts FALSE (0 of 7 cases). \textit{Design insight}: This suggests the solver's entailment check may not properly distinguish ``proposition absent'' from ``proposition contradicted.'' The soft constraint weighting or consistency checking logic may need revision.
 \end{itemize}
 
-RAG, by contrast, performs reasoning implicitly within the LLM's latent space. While less interpretable, this preserves semantic nuances that discrete symbolic encodings lose.
+These are \textit{actionable findings} for the ongoing development of Logify. RAG's stronger performance on these cases suggests that end-to-end neural reasoning preserves semantic nuances that the current extraction pipeline loses—but this doesn't mean the neuro-symbolic approach is fundamentally flawed, only that these specific implementation choices need refinement.
 
 \subsection{Reproducibility concerns}
 
