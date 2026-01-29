@@ -1,49 +1,124 @@
 # Interface with User
 
-**Natural language query translation and result interpretation**
+**Natural language query translation and result interpretation for neuro-symbolic reasoning**
 
 ## Overview
 
-Bridges natural language and propositional logic.
+This module bridges natural language and propositional logic, enabling users to query logified documents using natural language hypotheses. It uses SBERT-based retrieval to find relevant propositions and LLM-powered translation to convert hypotheses into propositional formulas.
 
 ## Files
 
 | File | Purpose | Status |
 |------|---------|--------|
 | `translate.py` | Query → formula translation | ✅ Implemented |
+| `README.md` | This documentation | ✅ Current |
+| `HOW_TO_USE.md` | Quick start guide | ✅ Current |
 
 ## Main Module: `translate.py`
 
 ### Features
 
-✅ **Yes/No Question Handling**
-- Auto-detects: "Is...", "Can...", "Does...", "Will..."
-- Converts to declarative statements using LLM
+#### Yes/No Question Handling
+- Auto-detects question patterns: "Is...", "Can...", "Does...", "Will...", "Should...", "May..."
+- Converts questions to declarative statements using LLM before translation
+- Example: "Can the receiving party share information?" → "The receiving party can share information"
 
-✅ **SBERT-Based Retrieval**
-- Retrieves top-k propositions (default k=20)
+#### SBERT-Based Retrieval
+- Uses `all-MiniLM-L6-v2` by default for efficient semantic search
+- Retrieves top-k most relevant propositions (default k=20)
+- Supports any sentence-transformer model
 
-✅ **LLM Translation**
-- Translates to propositional formula
-- Supports reasoning models (gpt-5.2, o1, o3)
+#### LLM Translation
+- Translates natural language to propositional formulas
+- Supports reasoning models (gpt-5.2, o1, o3) and standard models (gpt-4o, gpt-4-turbo)
+- Includes concrete examples in prompt for better reliability
+- Automatic retry logic for transient failures
+- Fallback formula extraction for non-JSON responses
+
+#### Robust Error Handling
+- Validates proposition IDs exist in the document
+- Multiple retry attempts with increasing temperature
+- Regex-based formula extraction as fallback
+- Clear error messages for debugging
 
 ## Quick Start
 
+### Command Line
+
 ```bash
-python translate.py "Is Alice a student?" logified.json --api-key sk-xxx
+# Basic usage
+python translate.py "The receiving party shall not disclose confidential information" \
+    logified_weighted.json --api-key sk-or-v1-xxx
+
+# With custom model
+python translate.py "Some information may be shared with employees" \
+    logified.json --api-key sk-xxx --model gpt-4o
+
+# Quiet mode (JSON output only)
+python translate.py "Is reverse engineering allowed?" \
+    logified.json --api-key sk-xxx --quiet
 ```
 
-## Python API
+### Python API
 
 ```python
 from interface_with_user.translate import translate_query
 
+# Basic translation
 result = translate_query(
-    query="Is Alice a student?",
+    query="The receiving party shall not reverse engineer any confidential information",
     json_path="logified_weighted.json",
-    api_key="sk-xxx"
+    api_key="sk-or-v1-xxx"
 )
+
+print(f"Formula: {result['formula']}")
+print(f"Translation: {result['translation']}")
+print(f"Reasoning: {result.get('reasoning', result.get('explanation', 'N/A'))}")
 ```
+
+## Output Format
+
+```json
+{
+    "formula": "P_9",
+    "translation": "The receiving party shall not reverse engineer information",
+    "reasoning": "P_9 directly captures the prohibition on reverse engineering",
+    "query": "The receiving party shall not reverse engineer any confidential information",
+    "original_query": "Can reverse engineering be done?"
+}
+```
+
+## API Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `query` | str | (required) | Natural language query/hypothesis |
+| `json_path` | str | (required) | Path to logified JSON with `primitive_props` |
+| `api_key` | str | (required) | OpenRouter or OpenAI API key |
+| `model` | str | `"gpt-5.2"` | LLM model for translation |
+| `temperature` | float | `0.1` | Sampling temperature |
+| `reasoning_effort` | str | `"medium"` | For reasoning models |
+| `max_tokens` | int | `64000` | Maximum response tokens |
+| `k` | int | `20` | Number of propositions to retrieve |
+
+## Error Handling
+
+The module includes robust error handling:
+
+1. **Empty Response**: Retries with increased temperature
+2. **JSON Parse Failure**: Extracts JSON from response, falls back to regex formula extraction
+3. **Missing Formula**: Clear error message
+4. **Invalid Proposition IDs**: Warns but continues
+
+## Troubleshooting
+
+### "Failed to translate hypothesis to formula"
+
+This error occurs when the LLM doesn't return a valid formula. Solutions:
+
+1. Use `gpt-4o` or `gpt-5.2` for better reliability (smaller models may fail)
+2. Rephrase ambiguous hypotheses to be more specific
+3. Check that the logified JSON contains relevant propositions
 
 ## Dependencies
 

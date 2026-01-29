@@ -38,6 +38,8 @@ Usage (Python):
 
 import sys
 import os
+import re
+import time as time_module
 from pathlib import Path
 
 # Add code directory to Python path (for imports to work from anywhere)
@@ -309,9 +311,12 @@ def build_prompt(query: str, retrieved_chunks: List[Dict], logified_structure: D
     """
     # Format the propositions for the prompt
     props_text = ""
+    prop_ids = []
     for chunk in retrieved_chunks:
+        prop_id = chunk['id']
+        prop_ids.append(prop_id)
         props_text += f"""
-{chunk['id']}: {chunk['translation']}
+{prop_id}: {chunk['translation']}
   Evidence: {chunk['evidence']}
 """
 
@@ -339,34 +344,6 @@ def build_prompt(query: str, retrieved_chunks: List[Dict], logified_structure: D
                     else:
                         constraints_text += f"- {formula}\n"
 
-    prompt_old = f"""
-    You are a logic translator. Given a natural language query and a set of atomic propositions, translate the query into a propositional formula.
-
-AVAILABLE PROPOSITIONS:
-{props_text}
-
-USER QUERY:
-"{query}"
-
-TASK:
-Translate the user query into a propositional formula using ONLY the proposition IDs listed above (P_1, P_2, etc.).
-
-Use these logical connectives:
-- ∧ (AND)
-- ∨ (OR)
-- ¬ (NOT)
-- ⟹ (IMPLIES)
-- ⟺ (IFF / biconditional)
-
-If the query cannot be expressed using the available propositions, use the closest approximation and explain.
-
-OUTPUT FORMAT (JSON only, no other text):
-{{
-    "formula": "<propositional formula using P_1, P_2, etc.>",
-    "translation": "<natural language translation of your formula>",
-    "query": "{query}",
-    "explanation": "<1-2 sentence reasoning for the formula chosen>"
-}}"""
     # Build constraints section if available
     constraints_section = ""
     if constraints_text:
@@ -375,55 +352,100 @@ ESTABLISHED CONSTRAINTS:
 {constraints_text}
 """
 
-    prompt = f"""
-You are a logic translator for Natural Language Inference (NLI). Given a hypothesis and a set of atomic propositions from a legal document, translate the hypothesis into a propositional formula that can be checked for ENTAILMENT.
+    # Create available IDs string for the prompt
+    available_ids = ", ".join(prop_ids[:10])
+    if len(prop_ids) > 10:
+        available_ids += f", ... ({len(prop_ids)} total)"
 
-AVAILABLE PROPOSITIONS:
+    prompt = f"""You are a logic translator for Natural Language Inference (NLI). Given a hypothesis and a set of atomic propositions from a legal document, translate the hypothesis into a propositional formula.
+
+=== AVAILABLE PROPOSITIONS ===
 {props_text}
 {constraints_section}
-HYPOTHESIS TO CHECK:
+=== HYPOTHESIS TO CHECK ===
 "{query}"
 
-TASK:
-Translate the hypothesis into a propositional formula. The formula will be evaluated against the document's constraints to determine:
+=== TASK ===
+Translate the above hypothesis into a propositional formula using ONLY these proposition IDs: {available_ids}
+
+The formula will be evaluated to determine:
 - TRUE: The hypothesis is entailed (follows from the document)
-- FALSE: The hypothesis is contradicted (negation follows from the document)  
+- FALSE: The hypothesis is contradicted (negation follows from the document)
 - UNCERTAIN: Neither entailment nor contradiction can be determined
 
-TRANSLATION GUIDELINES:
+=== EXAMPLES ===
 
-1. **"Shall" / "Must" obligations** → Use the proposition directly
-   - "Party shall do X" → P_i (where P_i represents doing X)
-   - "Party shall not do X" → ¬P_i
+Example 1 - Simple match:
+Hypothesis: "The receiving party shall keep information confidential"
+If P_6 states "The Receiving Party shall not disclose Confidential Information..."
+Output: {{"formula": "P_6", "translation": "The receiving party shall not disclose confidential information", "reasoning": "P_6 directly captures the confidentiality obligation"}}
 
-2. **"May" / "Can" permissions** → Check if the action is allowed
-   - "Party may do X" → P_i (the proposition that X is permitted/possible)
-   - If no explicit permission exists, the formula should reflect what would make it true
+Example 2 - Negation:
+Hypothesis: "The receiving party shall not reverse engineer any information"
+If P_9 states "The Receiving Party shall not alter, modify, disassemble, reverse engineer..."
+Output: {{"formula": "P_9", "translation": "The receiving party shall not reverse engineer information", "reasoning": "P_9 prohibits reverse engineering, matching the hypothesis"}}
 
-3. **Conditional statements** → Use implication
-   - "If A then B" → P_a ⟹ P_b
+Example 3 - Conjunction:
+Hypothesis: "All confidential information must be marked and returned"
+If P_4 = "Information shall be marked" and P_11 = "Information must be returned"
+Output: {{"formula": "P_4 ∧ P_11", "translation": "Information is marked AND returned", "reasoning": "Both conditions must hold for 'all...must be marked and returned'"}}
 
-4. **Existential claims ("some", "any")** → Use disjunction if multiple propositions apply
-   - "Some X satisfies Y" → P_1 ∨ P_2 ∨ ... (any relevant proposition being true suffices)
+Example 4 - Disjunction:
+Hypothesis: "Some information may be destroyed or returned"
+If P_11 = "must return information" and P_12 = "may destroy information"
+Output: {{"formula": "P_11 ∨ P_12", "translation": "Information is returned OR destroyed", "reasoning": "'Some...may' suggests either option satisfies the hypothesis"}}
 
-5. **Universal claims ("all", "every", "any")** → Use conjunction
-   - "All X must Y" → P_1 ∧ P_2 ∧ ...
+=== TRANSLATION GUIDELINES ===
 
-6. **Negations** → Apply ¬ carefully
-   - "shall not" → ¬P (negation of the action)
-   - "no right to" → ¬P (negation of the right)
+1. "Shall"/"Must" obligations → Use proposition directly: P_i
+2. "Shall not" prohibitions → The proposition already captures the negation, use: P_i (if P_i states "shall not X")
+3. "May"/"Can" permissions → Use proposition for the permission: P_i
+4. Conditionals "If A then B" → Use implication: P_a ⟹ P_b
+5. "Some"/"Any" (existential) → Use disjunction: P_1 ∨ P_2
+6. "All"/"Every" (universal) → Use conjunction: P_1 ∧ P_2
 
-IMPORTANT: Choose the simplest formula that captures the hypothesis meaning. If a single proposition directly states what the hypothesis claims, use just that proposition.
+IMPORTANT: Choose the SIMPLEST formula. If one proposition captures the hypothesis, use just that proposition.
 
-OUTPUT FORMAT (JSON only):
-{{
-    "formula": "<propositional formula using P_1, P_2, etc.>",
-    "translation": "<what your formula means in plain English>",
-    "reasoning": "<why this formula captures the hypothesis for entailment checking>"
-}}
-    """
+=== OUTPUT FORMAT ===
+Return ONLY a JSON object (no other text):
+{{"formula": "<formula using {available_ids}>", "translation": "<plain English meaning>", "reasoning": "<brief explanation>"}}
+"""
 
     return prompt
+
+
+def extract_formula_from_text(response_text: str, available_prop_ids: List[str] = None) -> Optional[str]:
+    """
+    Attempt to extract a formula from non-JSON LLM response.
+
+    This is a fallback when the LLM doesn't return proper JSON but may have
+    included a formula somewhere in its response.
+
+    Args:
+        response_text: Raw LLM response
+        available_prop_ids: List of valid proposition IDs (e.g., ['P_1', 'P_2', ...])
+
+    Returns:
+        Extracted formula string or None if extraction fails
+    """
+    # Pattern to match formulas like P_1, P_1 ∧ P_2, ¬P_3, P_1 ⟹ P_2, etc.
+    # Includes Unicode logical operators and ASCII alternatives
+    formula_pattern = r'[¬~!]?\s*P_\d+(?:\s*[∧∨⟹⟺&|→↔\-\>]+\s*[¬~!]?\s*P_\d+)*'
+
+    # First, try to find formula in "formula": "..." pattern
+    formula_field_match = re.search(r'"formula"\s*:\s*"([^"]+)"', response_text)
+    if formula_field_match:
+        candidate = formula_field_match.group(1).strip()
+        if re.match(r'^[¬~!]?\s*P_\d+', candidate):
+            return candidate
+
+    # Try to find standalone formulas
+    matches = re.findall(formula_pattern, response_text)
+    if matches:
+        # Return the longest match (most likely to be complete)
+        return max(matches, key=len).strip()
+
+    return None
 
 
 def call_llm(
@@ -432,12 +454,15 @@ def call_llm(
     model: str = "gpt-5.2",
     temperature: float = 0.1,
     reasoning_effort: str = "medium",
-    max_tokens: int = 64000
+    max_tokens: int = 64000,
+    max_retries: int = 2,
+    retry_delay: float = 1.0
 ) -> Dict[str, Any]:
     """
     Call LLM to translate query to propositional formula.
 
     Uses same API pattern as logic_converter.py for consistency.
+    Includes retry logic for transient failures.
 
     Args:
         prompt: The formatted prompt
@@ -446,9 +471,14 @@ def call_llm(
         temperature: Sampling temperature (default: 0.1)
         reasoning_effort: For reasoning models (default: medium)
         max_tokens: Max response tokens (default: 64000)
+        max_retries: Number of retries on failure (default: 2)
+        retry_delay: Seconds to wait between retries (default: 1.0)
 
     Returns:
-        Parsed JSON response dict
+        Parsed JSON response dict with at minimum a 'formula' field
+
+    Raises:
+        ValueError: If LLM response cannot be parsed after all retries
     """
     # Detect OpenRouter keys and use appropriate base URL
     if api_key.startswith('sk-or-v1-') or api_key.startswith('sk-or-'):
@@ -485,7 +515,7 @@ def call_llm(
             api_params = {
                 "model": model,
                 "messages": [
-                    {"role": "developer", "content": "You are a precise logic translator."},
+                    {"role": "developer", "content": "You are a precise logic translator. Always respond with valid JSON only."},
                     {"role": "user", "content": prompt}
                 ],
                 "reasoning_effort": reasoning_effort,
@@ -496,38 +526,72 @@ def call_llm(
         api_params = {
             "model": model,
             "messages": [
-                {"role": "system", "content": "You are a precise logic translator."},
+                {"role": "system", "content": "You are a precise logic translator. Always respond with valid JSON only, no additional text."},
                 {"role": "user", "content": prompt}
             ],
             "temperature": temperature,
             "max_tokens": max_tokens
         }
 
-    # Call the API
-    response = client.chat.completions.create(**api_params)
+    last_error = None
+    last_response_text = ""
 
-    response_text = response.choices[0].message.content
-    if response_text is None:
-        raise ValueError("LLM returned empty response")
+    for attempt in range(max_retries + 1):
+        try:
+            # Call the API
+            response = client.chat.completions.create(**api_params)
 
-    response_text = response_text.strip()
+            response_text = response.choices[0].message.content
+            if response_text is None:
+                raise ValueError("LLM returned empty response")
 
-    # Parse JSON response
-    try:
-        result = json.loads(response_text)
-        return result
-    except json.JSONDecodeError as e:
-        # Try to extract JSON from response
-        if "{" in response_text and "}" in response_text:
-            json_start = response_text.find("{")
-            json_end = response_text.rfind("}") + 1
-            json_text = response_text[json_start:json_end]
+            response_text = response_text.strip()
+            last_response_text = response_text
+
+            # Parse JSON response
             try:
-                result = json.loads(json_text)
-                return result
-            except json.JSONDecodeError:
-                pass
-        raise ValueError(f"Failed to parse LLM response as JSON: {e}\nResponse: {response_text}")
+                result = json.loads(response_text)
+                # Validate that we have a formula field
+                if 'formula' in result and result['formula']:
+                    return result
+                else:
+                    raise ValueError("Response missing 'formula' field")
+            except json.JSONDecodeError as e:
+                # Try to extract JSON from response (LLM may have added extra text)
+                if "{" in response_text and "}" in response_text:
+                    json_start = response_text.find("{")
+                    json_end = response_text.rfind("}") + 1
+                    json_text = response_text[json_start:json_end]
+                    try:
+                        result = json.loads(json_text)
+                        if 'formula' in result and result['formula']:
+                            return result
+                    except json.JSONDecodeError:
+                        pass
+
+                # Last resort: try to extract formula from raw text
+                extracted_formula = extract_formula_from_text(response_text)
+                if extracted_formula:
+                    return {
+                        "formula": extracted_formula,
+                        "translation": "(extracted from non-JSON response)",
+                        "reasoning": "(formula extracted via regex fallback)"
+                    }
+
+                last_error = ValueError(f"Failed to parse LLM response as JSON: {e}")
+
+        except Exception as e:
+            last_error = e
+
+        # Retry with delay if not the last attempt
+        if attempt < max_retries:
+            time_module.sleep(retry_delay)
+            # Increase temperature slightly on retry to get different response
+            if not is_reasoning_model and "temperature" in api_params:
+                api_params["temperature"] = min(0.5, api_params["temperature"] + 0.1)
+
+    # All retries exhausted
+    raise ValueError(f"Failed to get valid formula after {max_retries + 1} attempts. Last error: {last_error}\nLast response: {last_response_text[:500]}")
 
 
 def translate_query(
@@ -627,6 +691,13 @@ def translate_query(
         for i, chunk in enumerate(retrieved[:5]):
             print(f"    {i+1}. {chunk['id']} (sim={chunk['similarity']:.3f}): {chunk['translation'][:60]}...")
 
+    # Validate we have propositions to work with
+    if not retrieved:
+        raise ValueError("No propositions retrieved - cannot translate query without available propositions")
+
+    # Get valid proposition IDs for validation
+    valid_prop_ids = {chunk['id'] for chunk in chunks}
+
     # Build prompt
     prompt = build_prompt(query, retrieved, logified_structure)
 
@@ -643,6 +714,16 @@ def translate_query(
         max_tokens=max_tokens
     )
 
+    # Validate the formula contains valid proposition IDs
+    formula = result.get('formula', '')
+    if formula:
+        # Extract P_N patterns from formula
+        formula_props = re.findall(r'P_\d+', formula)
+        invalid_props = [p for p in formula_props if p not in valid_prop_ids]
+        if invalid_props and verbose:
+            print(f"  Warning: Formula contains proposition IDs not in document: {invalid_props}")
+            # Don't fail, just warn - the LLM might have hallucinated but formula may still be useful
+
     # Add original query if it was converted
     if original_query != query:
         result['original_query'] = original_query
@@ -655,7 +736,7 @@ def translate_query(
             print(f"  Converted Query: {result['query']}")
         print(f"  Formula: {result.get('formula', 'N/A')}")
         print(f"  Translation: {result.get('translation', 'N/A')}")
-        print(f"  Explanation: {result.get('explanation', 'N/A')}")
+        print(f"  Explanation: {result.get('explanation', result.get('reasoning', 'N/A'))}")
 
     return result
 
