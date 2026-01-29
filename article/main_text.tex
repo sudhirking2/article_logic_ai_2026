@@ -97,7 +97,7 @@ The module outputs a JSON structure with rich provenance metadata. After Stage 3
     "reasoning": "...",
     "weight": [0.82, 0.45, 0.65]}]}
 \end{verbatim}
-The \texttt{weight} field contains $[\text{prob\_yes\_orig}, \text{prob\_yes\_neg}, \text{confidence}]$ as described above. See Appendix~\ref{sec:implementation} for specific details on implementation.
+The \textit{weight} field contains the probability of YES for the original soft constraint, the negated soft constraint, and the weight value as described above. See Appendix~\ref{sec:implementation} for specific details on implementation.
 
 
 \subsection{Logic Solver}
