@@ -39,46 +39,54 @@
 
 % Packages
 \usepackage[utf8]{inputenc}
-\usepackage[margin=1in]{geometry}
-\usepackage{times}
-\usepackage{setspace}
-\usepackage{titlesec}
+\usepackage[margin=1in]{geometry} % Standard A4 margins
+\usepackage{times} % Times New Roman
+\usepackage{setspace} % For 1.5 spacing
+\usepackage{titlesec} % Section formatting
 \usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
-\usepackage{booktabs}
+\usepackage{booktabs} % Professional tables
 \usepackage{caption}
+\usepackage{enumitem} % Control list spacing
+
+% Configure list spacing to match document
+\setlist{nosep, leftmargin=*, before={\parskip=6pt}, after={\parskip=6pt}}
 
 % Font and spacing
-\setstretch{1.5}
+\setstretch{1.5} % 1.5 line spacing throughout
+\setlength{\parskip}{6pt} % Spacing before paragraphs: 6pt
 
-% Title formatting
+% Section formatting (numbering OFF)
+\setcounter{secnumdepth}{0}
+
+% Header 1: 16pt, bold, spacing before 24
 \titleformat{\section}
   {\normalfont\fontsize{16}{19.2}\bfseries\raggedright}
-  {\thesection}{1em}{}
+  {\thesection}{0em}{}
 \titlespacing*{\section}{0pt}{24pt}{6pt}
 
+% Header 2: 14pt, bold, spacing before 10
 \titleformat{\subsection}
   {\normalfont\fontsize{14}{16.8}\bfseries\raggedright}
-  {\thesubsection}{1em}{}
+  {\thesubsection}{0em}{}
 \titlespacing*{\subsection}{0pt}{10pt}{6pt}
 
+% Header 3: 12pt, bold, spacing before 10
 \titleformat{\subsubsection}
   {\normalfont\fontsize{12}{14.4}\bfseries\raggedright}
-  {\thesubsection}{1em}{}
+  {\thesubsubsection}{0em}{}
 \titlespacing*{\subsubsection}{0pt}{10pt}{6pt}
-
-\setcounter{secnumdepth}{0}
 
 \begin{document}
 
 % ==============================================================================
-% TITLE
+% TITLE (18pt, centered, bold per template)
 % ==============================================================================
-{\fontsize{18}{21.6}\selectfont
 \begin{center}
-\textbf{Understanding Error Patterns in Neuro-Symbolic Legal Reasoning: An AI Agent's Investigation of Mixed-Performance Cases}
-\end{center>
+{\fontsize{18}{21.6}\selectfont\bfseries
+Understanding Error Patterns in Neuro-Symbolic Legal Reasoning: An AI Agent's Investigation of Mixed-Performance Cases
 }
+\end{center}
 
 \vspace{12pt}
 
