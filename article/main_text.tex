@@ -22,7 +22,7 @@ To handle large documents, we propose a different approach: \emph{logify} the do
     demonstrating consistent gains over RAG and neuro-symbolic baselines, with
     the largest improvements on long documents (Section~\ref{sec:experiments}). 
 \end{enumerate}
-All our code, files, and data are avaialable on GitHub (insert ananonizmed link). 
+All our code, files, and data are available on GitHub (insert anonymized link). 
 
 \subsection{Related Work}
 \label{sec:related_work}
@@ -60,20 +60,20 @@ Our architecture follows a modular design with three components: (1) \texttt{fro
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.95\linewidth]{article/structure.jpeg}
-    \caption{The document is processed once through \emph{logify} to obtain a propositional calculus consisting of propositional variables, hard constraints, and weighted of soft constraints. At query time, the user's question is translated to a propositional formula, and we a employ a MaxSat solver to determine entailment, contraidcition, or uncertainty.}
+    \caption{The document is processed once through \emph{logify} to obtain a propositional calculus consisting of propositional variables, hard constraints, and weighted of soft constraints. At query time, the user's question is translated to a propositional formula, and we employ a MaxSAT solver to determine entailment, contradiction, or uncertainty.}
     \label{fig:arch}
 \end{figure}
 
 \subsection{From Text to Logic}
 \label{sec:from_text_to_logic}
 
-We  implement the extraction of natural language text into a weighted logified structure in three stages.
+We implement the extraction of natural language text into a weighted logified structure in three stages.
 
 \subsubsection{Relation Triple Extraction}
 We use Stanford CoreNLP's OpenIE system \cite{angeli2015openie} via the Stanza Python interface \cite{qi2020stanza} to extract subject-predicate-object triples from the text.  We first apply native Stanza coreference resolution to ensure that triples consistently refer to canonical entities rather than pronouns (e.g. replacing "they" with "Alice"). As a fallback, we use Stanza's dependency parse for sentences where OpenIE fails (e.g., intransitive verbs with adverbs).
 
 \subsubsection{LLM-Based Logic Conversion}
-We input the original text $T$ and its extracted triples to GPT-5.2 (with medium reasoning effort by default) using a few-shot CoT prompt. The LLM uses the relation triples as hints to identify atomic propositions $\mathcal{P}(T):=\{P_1, P_2, \dots, P_n\}$, and two classes of propositional formulas over $\mathcal{P}(T)$ called hard constraints $\mathcal{C}(T):=\{H_1, H_2, \dots, H_m\}$ and soft constraints $\mathcal{S}(T):=\{S_1, S_2, \dots, S_k\}$, along with their translation to natural language.  Hard constraints represent obligatory requirements enforced by the text, and soft cosntraints reprepsent defeasible tendicies that may hold. Note, our prompt also extract hard constraints based on common-sense relationships between the atomic propositions (see Appendix reference).
+We input the original text $T$ and its extracted triples to GPT-5.2 (with medium reasoning effort by default) using a few-shot CoT prompt. The LLM uses the relation triples as hints to identify atomic propositions $\mathcal{P}(T):=\{P_1, P_2, \dots, P_n\}$, and two classes of propositional formulas over $\mathcal{P}(T)$ called hard constraints $\mathcal{C}(T):=\{H_1, H_2, \dots, H_m\}$ and soft constraints $\mathcal{S}(T):=\{S_1, S_2, \dots, S_k\}$, along with their translation to natural language.  Hard constraints represent obligatory requirements enforced by the text, and soft constraints represent defeasible tendencies that may hold. Note, our prompt also extract hard constraints based on common-sense relationships between the atomic propositions (see Appendix reference).
 
 \subsubsection{Weight Assignment}
 We assign confidence weights to all soft constraints using an evidence-based retrieval and LLM verification pipeline. For each constraint $Q$, we: (1) chunk the original document and pre-compute SBERT embeddings \cite{reimers2019sbert} (model: \texttt{all-MiniLM-L6-v2}); (2) retrieve the top-$k$ chunks most similar to the constraint's natural language translation ($k=10$ by default); (3) prompt an LLM with the retrieved chunks, asking the YES/NO question: ``Does this document excerpt provide clear evidence supporting this claim?''; (4) extract logprobs for YES and NO tokens from the response; (5) repeat for the \emph{negated} constraint $\neg Q$; and (6) compute confidence via binary softmax: $w(Q) = P(\text{YES} \mid Q) / (P(\text{YES} \mid Q) + P(\text{YES} \mid \neg Q))$. This produces a weight $w(Q) \in [0,1]$ reflecting how strongly the document supports $Q$.
