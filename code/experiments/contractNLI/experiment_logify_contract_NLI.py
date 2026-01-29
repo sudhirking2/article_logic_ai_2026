@@ -344,7 +344,7 @@ def run_experiment(
             ground_truth = get_ground_truth_label(choice)
             amount_evidence = len(evidence_spans)
 
-            # Query
+            # Query (uses query_model)
             if logified_structure is not None:
                 json_path = str(get_cached_logified_path(doc_id))
                 query_result = query_hypothesis(
@@ -352,7 +352,7 @@ def run_experiment(
                     logified_structure=logified_structure,
                     json_path=json_path,
                     api_key=api_key,
-                    model=model,
+                    model=query_model,
                     temperature=temperature,
                     reasoning_effort=reasoning_effort,
                     max_tokens=query_max_tokens,
@@ -460,10 +460,11 @@ def main():
         default=os.environ.get("OPENROUTER_API_KEY"),
         help="API key for LLM calls (default: OPENROUTER_API_KEY env var)"
     )
+    # Note: Logification model is fixed to LOGIFY_MODEL (openai/gpt-5.2) and cannot be changed
     parser.add_argument(
-        "--model",
-        default="gpt-5-nano",
-        help="Model for logification and query (default: gpt-5-nano)"
+        "--query-model",
+        default="openai/gpt-4o",
+        help="Model for query translation (default: openai/gpt-4o). Logification uses fixed model: openai/gpt-5.2"
     )
     parser.add_argument(
         "--weights-model",
@@ -529,7 +530,7 @@ def main():
         run_experiment(
             dataset_path=args.dataset_path,
             api_key=args.api_key,
-            model=args.model,
+            query_model=args.query_model,
             weights_model=args.weights_model,
             temperature=args.temperature,
             reasoning_effort=args.reasoning_effort,
