@@ -5,7 +5,7 @@ INTENDED TASK
 Given natural language text T and its Stanford OpenIE relation triples, extract:
 
 1. ATOMIC PROPOSITIONS (P_1, P_2, ..., P_n)
-   - Mutually exclusive, primitive statements with no logical connectives
+   - Mutually exclusive, primitive statements importantly with no logical connectives 
    - Include natural language meaning and textual evidence
    - Propositions must be specific, complete, and exhaustive for all constraints
 
@@ -27,31 +27,41 @@ STEP 0: Review Exemplars
 
 STEP 1: Analyze Relation Triples
 - Review triples to understand extracted entities and relationships
-- CRITICAL: Triples are incomplete preprocessing hints—use them to guide extraction but ALWAYS ground your final logic in the original text
+- CRITICAL: Triples are incomplete preprocessing hints---use them to guide extraction but ALWAYS ground your final logic in the original text
 - When triples conflict with text, prioritize the text
 
 STEP 2: Define Primitive Propositions
-- Extract atomic, truth-evaluable statements from text
-- Ensure mutual exclusivity and exhaustiveness for all constraints
+- Extract atomic, truth-evaluable statements from text that cannot further be broken down
+- Ensure mutual exclusivity of atomics and that they exhaust all constraints
 - Break down to genuinely atomic statements (no hidden logical connectives)
+- Remove hedge words that indicate uncertainty (such as: usually, typically, sometimes, generally, often, mostly, encouraged) from atomic proposition translations. Atomic propositions must be pure, definitive statements without uncertainty.
 - Include textual evidence, location, and brief atomicity reasoning
 
 STEP 3: Extract Hard Constraints
 - Extract propositional formulas over {P_1, ..., P_n} that must hold per text
-- Add constraints for nuances or subtle relationships among propositions
 - Include textual evidence, location, and reasoning for each
 - Words like "should" usually indicate an obligation and hence a hard-constraint. Use the common-sense to help decide
+- IMPORTANT: You must review each of the atomic propsotiions and their translations. The traslations are often too literal to the text; if there are any obvious relationships between them you MUST include them as hard constraints. 
+  For example if P_1 means "Alice plans to study for math" and P_2 means "Alice studies for math", then you must impost the constraint P_1 if and only if P_2. The reason is because planning to is an obligation to and so we give the benefit of the doubt and assume Alice studies math. 
+- To clarify on this important point, semantical inferences must be added as hard consraints. These are constraints such as "John is a cat" and "John is an animal". These are distinct atomic propositions, but there is a hard constraint based on the meaning coming from common sense: namely "John is a cat" implies "John is an animal". You must include these semantic hard constraints. 
 
 STEP 4: Extract Soft Constraints
 - Extract propositional formulas that might hold (defeasible/probabilistic statements)
+- These formulas might not be explicitly stated in the text, but are relevant to the structural logic and can be obtained from common-sense
 - Include textual evidence if from text, or common-sense justification otherwise
-- Ensure faithfulness to text intent
+- Ensure faithfulness to text intent to settle ambiguities; e.g. if the word "should" refers to an obligation or requirement then it suggests a hard constraint; but if it used to suggest that it doesn't have to hold, based off other parts of the text, then it can be a soft constraint
+- The presence of a hedge word that indicates uncertainty (such as: usually, typically, sometimes, generally, often, mostly, encouraged) automatically suggests a soft constraint. Remove the hedge word from the translation to produce a pure, definitive statement without uncertainty. Note the hedge word in the reasoning field to explain why it is soft.
+- Note: "should" is usually a definitive word indicating a hard constraint, but use context to determine if it is used as a soft constraint.
 - Include reasoning for soft designation
 
 STEP 5: Double Check
-- Revise propositions for specificity, mutual exclusivity, and exhaustiveness
+- Revise atomic propositions for specificity, mutual exclusivity, and exhaustiveness
+- Ensure that the translations of atomic propositions are not formed by connectives such as "whenever", "only if", "unless", etc. If an atomic propositions can be further broken down, then break it down to finer atomics and include a constraint. 
 - Verify all constraints are present and logically accurate
 - Iterate if needed 
+- IMPORTANT: Again, after you extract the atomic propositions, you must examine the atomic proposition, their meanings, and identify any logical connections between them. There will ususlly be constraints among them not specified by the text.
+  Use common-sense to decide! For example "I should sleep" and "I sleep" are logically equivalent, and "I  sleep all day" implies "I sleep half the day" (but not the converse). Use common-sense to decide. 
+- Be generious with semantic constraints if they make sense in the real world.  
 
 GUIDELINES:
 - Use zeroth-order logic only (no quantifiers)
@@ -494,23 +504,23 @@ OUTPUT JSON
     {
       "id": "S_1",
       "formula": "P_9 ⟹ P_10",
-      "translation": "If an undergraduate student is in their first month, a senior researcher should supervise them",
+      "translation": "If an undergraduate student is in their first month, a senior researcher supervises them",
       "evidence": "Sentence 3: 'Senior researchers typically supervise undergraduate students during their first month, though this is not always enforced'",
-      "reasoning": "The words 'typically' and 'not always enforced' indicate this is a soft constraint - expected but not strictly mandatory"
+      "reasoning": "The words 'typically' and 'not always enforced' indicate this is a soft constraint. The hedge word 'typically' was removed from the translation to produce a pure, definitive statement."
     },
     {
       "id": "S_2",
       "formula": "P_12 ⟹ P_13",
-      "translation": "If lab equipment is low-risk, monthly inspections are generally acceptable",
+      "translation": "If lab equipment is low-risk, monthly inspections are acceptable",
       "evidence": "Sentence 4: '...but monthly inspections are generally acceptable for low-risk items'",
-      "reasoning": "The word 'generally' indicates this is an acceptable exception to the baseline weekly inspection requirement (H_7), not a hard rule"
+      "reasoning": "The word 'generally' indicates this is a soft constraint (acceptable exception, not guaranteed). The hedge word 'generally' was removed from the translation to produce a pure, definitive statement."
     },
     {
       "id": "S_3",
       "formula": "P_18 ⟹ P_17",
-      "translation": "If a researcher is experienced personnel, they are encouraged to attend monthly safety meetings",
+      "translation": "If a researcher is experienced personnel, they attend monthly safety meetings",
       "evidence": "Sentence 6: 'Researchers are encouraged to attend monthly safety meetings, although attendance is not mandatory for experienced personnel'",
-      "reasoning": "The word 'encouraged' for experienced personnel indicates this is a soft expectation, not a requirement. Contrasts with H_5 for non-experienced personnel"
+      "reasoning": "The word 'encouraged' indicates this is a soft expectation, not a requirement. The hedge word 'encouraged' was removed from the translation to produce a pure, definitive statement. Contrasts with H_5 for non-experienced personnel."
     }
   ]
 }
@@ -520,19 +530,22 @@ EXEMPLAR 3
 
 INPUT TEXT
 <<<
-Students must complete either the written exam or the oral presentation, but not both, to satisfy the assessment requirement. A student passes the course if and only if they satisfy the assessment requirement and attend at least 80% of lectures. Students may request deadline extensions, though approval requires documented extenuating circumstances.
+Students must complete either the written exam or the oral presentation, but not both, to satisfy the assessment requirement. A student passes the course precisely when they satisfy the assessment requirement and attend at least 80% of lectures. Students may request deadline extensions, though approval requires documented extenuating circumstances.
 >>>
 
 INPUT TRIPLES
 <<<
-[["Students", "complete", "written exam", 0],
- ["Students", "complete", "oral presentation", 0],
- ["student", "passes", "course", 1],
- ["student", "satisfy", "assessment requirement", 1],
- ["student", "attend", "at least 80% of lectures", 1],
- ["Students", "request", "deadline extensions", 2],
- ["approval", "requires", "documented extenuating circumstances", 2],
- ["circumstances", "is", "extenuating", 2]]
+[
+  ["exam", "is", "written", 0],
+  ["presentation", "is", "oral", 0],
+  ["they", "attend", "at least 80 % of lectures", 1],
+  ["student", "passes", "course", 1],
+  ["they", "attend", "at least 80 %", 1],
+  ["circumstances", "is", "extenuating", 2],
+  ["Students", "may request", "deadline extensions", 2],
+  ["approval", "requires", "circumstances", 2],
+  ["circumstances", "is", "documented", 2]
+]
 >>>
 
 OUTPUT JSON
@@ -540,90 +553,77 @@ OUTPUT JSON
   "primitive_props": [
     {
       "id": "P_1",
-      "translation": "The student completes the written exam",
-      "evidence": "Sentence 0: 'Students must complete either the written exam or the oral presentation'",
-      "explanation": "An atomic action representing one form of assessment completion. It is independent of other propositions and truth-evaluable"
+      "translation": "A student completes the written exam.",
+      "evidence": "Sentence 1: \"Students must complete either the written exam ...\"",
+      "explanation": "This is an atomic action/outcome (completed vs not completed) with no internal logical connectives."
     },
     {
       "id": "P_2",
-      "translation": "The student completes the oral presentation",
-      "evidence": "Sentence 0: '...either the written exam or the oral presentation'",
-      "explanation": "An atomic action representing the alternative form of assessment. Independent of P_1"
+      "translation": "A student completes the oral presentation.",
+      "evidence": "Sentence 1: \"... or the oral presentation ...\"",
+      "explanation": "This is an atomic action/outcome (completed vs not completed) with no internal logical connectives."
     },
     {
       "id": "P_3",
-      "translation": "The student satisfies the assessment requirement",
-      "evidence": "Sentence 0: '...to satisfy the assessment requirement'",
-      "explanation": "An atomic state that results from completing exactly one assessment. This is distinct from P_1 and P_2 themselves"
+      "translation": "A student satisfies the assessment requirement.",
+      "evidence": "Sentence 1: \"... to satisfy the assessment requirement.\"",
+      "explanation": "This is treated as a single evaluative status (satisfied vs not satisfied)."
     },
     {
       "id": "P_4",
-      "translation": "The student passes the course",
-      "evidence": "Sentence 1: 'A student passes the course if and only if...'",
-      "explanation": "An atomic outcome statement. Cannot be further decomposed into more primitive components"
+      "translation": "A student attends at least 80% of lectures.",
+      "evidence": "Sentence 2: \"... attend at least 80% of lectures.\"",
+      "explanation": "This is an atomic attendance condition expressed as a threshold (met vs not met)."
     },
     {
       "id": "P_5",
-      "translation": "The student attends at least 80% of lectures",
-      "evidence": "Sentence 1: '...attend at least 80% of lectures'",
-      "explanation": "A specific measurable condition. The threshold (80%) makes it an atomic, truth-evaluable proposition"
+      "translation": "A student passes the course.",
+      "evidence": "Sentence 2: \"A student passes the course if and only if ...\"",
+      "explanation": "This is an atomic course outcome (passes vs does not pass)."
     },
     {
       "id": "P_6",
-      "translation": "The student requests a deadline extension",
-      "evidence": "Sentence 2: 'Students may request deadline extensions'",
-      "explanation": "An atomic action representing a student's request. Independent of approval"
+      "translation": "A student requests a deadline extension.",
+      "evidence": "Sentence 3: \"Students may request deadline extensions ...\"",
+      "explanation": "This is an atomic event/action (request made vs not made)."
     },
     {
       "id": "P_7",
-      "translation": "The student has documented extenuating circumstances",
-      "evidence": "Sentence 2: '...documented extenuating circumstances'",
-      "explanation": "An atomic condition that can be verified. The word 'documented' makes this specific and truth-evaluable"
+      "translation": "A student's deadline extension request is approved.",
+      "evidence": "Sentence 3: \"... approval requires documented extenuating circumstances.\"",
+      "explanation": "This is an atomic outcome (approved vs not approved)."
     },
     {
       "id": "P_8",
-      "translation": "The deadline extension is approved",
-      "evidence": "Sentence 2: '...though approval requires documented extenuating circumstances'",
-      "explanation": "An atomic outcome that is independent of the request itself. Can be true or false regardless of P_6"
+      "translation": "A student has documented extenuating circumstances.",
+      "evidence": "Sentence 3: \"... requires documented extenuating circumstances.\"",
+      "explanation": "This is an atomic condition/status (has documented extenuating circumstances vs does not)."
     }
   ],
   "hard_constraints": [
     {
       "id": "H_1",
-      "formula": "(P_1 ∨ P_2) ∧ ¬(P_1 ∧ P_2) ⟺ P_3",
-      "translation": "A student satisfies the assessment requirement if and only if they complete either the written exam or the oral presentation, but not both",
-      "evidence": "Sentence 0: 'Students must complete either the written exam or the oral presentation, but not both, to satisfy the assessment requirement'",
-      "reasoning": "The phrase 'must complete either...but not both' indicates an exclusive-or (XOR) relationship. The 'to satisfy' indicates this is the definition of satisfying the assessment requirement, captured by the biconditional"
+      "formula": "P_3 ⟺ ((P_1 ∨ P_2) ∧ ¬(P_1 ∧ P_2))",
+      "translation": "A student satisfies the assessment requirement exactly when they complete either the written exam or the oral presentation, but not both.",
+      "evidence": "Sentence 1: \"... must complete either the written exam or the oral presentation, but not both, to satisfy the assessment requirement.\"",
+      "reasoning": "The text states the satisfaction condition for the assessment requirement as an exclusive-or over the two completion options."
     },
     {
       "id": "H_2",
-      "formula": "P_4 ⟺ (P_3 ∧ P_5)",
-      "translation": "A student passes the course if and only if they satisfy the assessment requirement and attend at least 80% of lectures",
-      "evidence": "Sentence 1: 'A student passes the course if and only if they satisfy the assessment requirement and attend at least 80% of lectures'",
-      "reasoning": "The phrase 'if and only if' explicitly establishes a biconditional relationship. Both conditions (P_3 and P_5) must be met for the student to pass"
+      "formula": "P_5 ⟺ (P_3 ∧ P_4)",
+      "translation": "A student passes the course iff they satisfy the assessment requirement and attend at least 80% of lectures.",
+      "evidence": "Sentence 2: \"A student passes the course precisely when they satisfy the assessment requirement and attend at least 80% of lectures.\"",
+      "reasoning": "Explicit biconditional ('if and only if') defines passing precisely in terms of these two conditions."
     },
     {
       "id": "H_3",
-      "formula": "P_8 ⟹ P_7",
-      "translation": "If the deadline extension is approved, then the student has documented extenuating circumstances",
-      "evidence": "Sentence 2: '...approval requires documented extenuating circumstances'",
-      "reasoning": "The word 'requires' indicates a necessary condition. Approval cannot happen without documented circumstances. Note this doesn't mean P_7 always leads to P_8, only that P_8 requires P_7"
+      "formula": "P_7 ⟺ (P_6 ∧ P_8)",
+      "translation": "A deadline extension is approved if and only if a student requests it and has documented extenuating circumstances.",
+      "evidence": "Sentence 3: \"Students may request deadline extensions, though approval requires documented extenuating circumstances.\"",
+      "reasoning": "This makes explicit the full biconditional: approval requires both a request and documented circumstances. The original text states approval requires documented circumstances (necessity), and logically approval also requires a request to exist in the first place. Together these form a complete definition of when approval occurs."
     }
   ],
-  "soft_constraints": [
-    {
-      "id": "S_1",
-      "formula": "P_6 ⟹ P_8",
-      "translation": "If a student requests a deadline extension, it may be approved",
-      "evidence": "Sentence 2: 'Students may request deadline extensions, though approval requires...'",
-      "reasoning": "The word 'may' indicates this is a possibility, not a certainty. The request can be made, and approval is possible but not guaranteed. This is a soft constraint because approval depends on additional factors"
-    },
-    {
-      "id": "S_2",
-      "formula": "P_7 ⟹ P_8",
-      "translation": "If a student has documented extenuating circumstances, their deadline extension is likely to be approved",
-      "evidence": "Sentence 2: 'approval requires documented extenuating circumstances'",
-      "reasoning": "While H_3 establishes that approval requires documented circumstances, this soft constraint captures the expectation that having documented circumstances typically leads to approval, though it's not absolutely guaranteed (discretion may still apply)"
-    }
-  ]
+  "soft_constraints": []
 }
+
+
