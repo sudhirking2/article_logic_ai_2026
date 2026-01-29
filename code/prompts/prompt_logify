@@ -12,7 +12,9 @@ Given natural language text T and its Stanford OpenIE relation triples, extract:
 2. HARD CONSTRAINTS (zeroth-order propositional formulas over P_i that MUST hold)
    - Include meaning, evidence, and reasoning from text
    - If contradictions exist, prioritize text intent; include inconsistencies if genuinely intended
-   - Apply common sense where needed for faithfulness to text
+   - IMPORTANT: you must look at the atomic primtives and examine their translations. There may be common-sense semantical relationships between them. You must include hard constraints corresponding to these relationships. 
+   For example, if you P_1 is "Alice plans to study" or "Alice should study" or "Alice is comitted to study"  and P_2 is "Alice studies", then you should include the hard constraint P_1 if and only if P_2. 
+   - You must include semantic constraints as hard constraints between the atomic primtives based on their meaning and the real world. 
 
 3. SOFT CONSTRAINTS (propositional formulas over P_i that MAY hold)
    - Include meaning, evidence, and reasoning
@@ -39,9 +41,11 @@ STEP 2: Define Primitive Propositions
 
 STEP 3: Extract Hard Constraints
 - Extract propositional formulas over {P_1, ..., P_n} that must hold per text
-- Add constraints for nuances or subtle relationships among propositions
 - Include textual evidence, location, and reasoning for each
 - Words like "should" usually indicate an obligation and hence a hard-constraint. Use the common-sense to help decide
+- IMPORTANT: You must review each of the atomic propsotiions and their translations. The traslations are often too literal to the text; if there are any obvious relationships between them you MUST include them as hard constraints. 
+  For example if P_1 means "Alice plans to study for math" and P_2 means "Alice studies for math", then you must impose the constraint P_1 if and only if P_2. The reason is because planning to is an obligation to and so we give the benefit of the doubt and assume Alice studies math. 
+- To clarify on this important point, semantical inferences must be added as hard consraints. These are constraints such as "John is a cat" and "John is an animal". These are distinct atomic propositions, but there is a hard constraint based on the meaning coming from common sense: namely "John is a cat" implies "John is an animal". You must include these semantic hard constraints. 
 
 STEP 4: Extract Soft Constraints
 - Extract propositional formulas that might hold (defeasible/probabilistic statements)
@@ -49,7 +53,7 @@ STEP 4: Extract Soft Constraints
 - Include textual evidence if from text, or common-sense justification otherwise
 - Ensure faithfulness to text intent to settle ambiguities; e.g. if the word "should" refers to an obligation or requirement then it suggests a hard constraint; but if it used to suggest that it doesn't have to hold, based off other parts of the text, then it can be a soft constraint
 - The presence of a hedge word that indicates uncertainty (such as: usually, typically, sometimes, generally, often, mostly, encouraged) automatically suggests a soft constraint. Remove the hedge word from the translation to produce a pure, definitive statement without uncertainty. Note the hedge word in the reasoning field to explain why it is soft.
-- Note: "should" is usually a definitive word indicating a hard constraint, but use context to determine if it is used as a soft constraint.
+- Note: "should" is word indicating a hard constraint.
 - Include reasoning for soft designation
 
 STEP 5: Double Check
@@ -57,6 +61,9 @@ STEP 5: Double Check
 - Ensure that the translations of atomic propositions are not formed by connectives such as "whenever", "only if", "unless", etc. If an atomic propositions can be further broken down, then break it down to finer atomics and include a constraint. 
 - Verify all constraints are present and logically accurate
 - Iterate if needed 
+- IMPORTANT: Again, after you extract the atomic propositions, you must examine the atomic proposition, their meanings, and identify any logical connections between them. There will ususlly be constraints among them not specified by the text.
+  Use common-sense to decide! For example "I should sleep" and "I sleep" are logically equivalent, and "I  sleep all day" implies "I sleep half the day" (but not the converse). Use common-sense to decide. 
+- Be generious with semantic constraints if they make sense in the real world.  
 
 GUIDELINES:
 - Use zeroth-order logic only (no quantifiers)
@@ -252,6 +259,20 @@ OUTPUT JSON
       "translation": "If Dr. Martinez follows the guidelines and the patient has a documented cardiac history, then Dr. Martinez makes sure the patient receives an ECG. And if Dr. Yang follows the guidelines and the patient has a documented cardiac history, then Dr. Yang makes sure the patient receives an ECG",
       "evidence": "In Sentence 3, 'The official guidelines only mandate this when cardiac history is documented', where 'this' refers to making sure the patient receives an ECG",
       "reasoning": "Because this constraint is true for all doctors, we have to flatten the logic to obtain the constraint in propositional logic. It is instantiated for Dr. Martinez and Dr. Yang, the two doctors mentioned in the text"
+    },
+    {
+      "id": "H_5",
+      "formula": "¬(P_2 ∧ P_3)",
+      "translation": "The patient cannot simultaneously present with chest pain that is clearly musculoskeletal AND chest pain that is not clearly musculoskeletal in origin",
+      "evidence": "Semantic relationship: P_2 and P_3 are defined as logical complements based on Sentence 1",
+      "reasoning": "This is a semantic constraint derived from the meaning of the propositions. P_2 is defined as chest pain that is NOT clearly musculoskeletal, while P_3 is chest pain that IS clearly musculoskeletal. These are mutually exclusive by definition—the pain cannot be both clearly and not clearly musculoskeletal at the same time"
+    },
+    {
+      "id": "H_6",
+      "formula": "¬(P_4 ∧ P_6)",
+      "translation": "The patient cannot be both under 40 years old and over 65 years old",
+      "evidence": "Semantic relationship between P_4 (under 40) and P_6 (over 65) based on common-sense knowledge of age",
+      "reasoning": "This is a semantic constraint from real-world knowledge. A person's age is a single value at any point in time, so being under 40 and over 65 are mutually exclusive states. This constraint is not stated in the text but follows necessarily from the meaning of the propositions"
     }
   ],
   "soft_constraints": [
@@ -260,7 +281,7 @@ OUTPUT JSON
       "formula": "P_6 ⟹ P_10",
       "translation": "If the patient is over 65 years old, then Dr. Yang makes sure the patient receives an ECG",
       "evidence": "In Sentence 2, from '...although Dr. Yang only sometimes believes this'",
-      "reasoning": "Although it is a statement of belief, the text seems to intend to speak about how Dr. Yang acts. The word 'sometimes' indicates this is a soft constraint, not a hard rule.",
+      "reasoning": "Although it is a statement of belief, the text seems to intend to speak about how Dr. Yang acts. The word 'sometimes' indicates this is a soft constraint, not a hard rule."
     }
   ]
 }
@@ -493,6 +514,20 @@ OUTPUT JSON
       "translation": "If an experiment involves hazardous materials, it should be conducted with a partner present",
       "evidence": "Sentence 7: 'The lab director believes that all experiments involving hazardous materials should be conducted with a partner present...'",
       "reasoning": "The word 'should' in safety policy indicates a mandatory requirement. Although framed as the director's belief, it translates to policy/action obligations for hazardous material handling"
+    },
+    {
+      "id": "H_9",
+      "formula": "P_20 ⟺ ¬P_22",
+      "translation": "The experiment is conducted with a partner present if and only if the researcher does not work alone",
+      "evidence": "Semantic relationship between P_20 (partner present) and P_22 (works alone)",
+      "reasoning": "This is a semantic constraint derived from the meaning of the propositions. Having a partner present and working alone are logically contradictory states—they are exact opposites by definition. If a partner is present, the researcher is not alone; if the researcher is alone, no partner is present. This bidirectional relationship must be captured as a hard constraint"
+    },
+    {
+      "id": "H_10",
+      "formula": "P_12 ⟹ ¬P_11",
+      "translation": "If lab equipment is low-risk, it is not required to be inspected weekly",
+      "evidence": "Sentence 4: 'Lab equipment should be inspected weekly, but monthly inspections are generally acceptable for low-risk items'",
+      "reasoning": "This semantic constraint captures the exception relationship between the general rule (weekly inspection) and the low-risk exception. The word 'but' signals that low-risk items are exempt from the weekly requirement. Note that this hard constraint works with S_2 (the soft constraint for monthly inspections being acceptable for low-risk items)"
     }
   ],
   "soft_constraints": [
@@ -620,5 +655,4 @@ OUTPUT JSON
   ],
   "soft_constraints": []
 }
-
 
