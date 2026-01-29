@@ -27,8 +27,12 @@ from typing import List, Dict, Any
 try:
     import tensorflow_datasets as tfds
     HAS_TFDS = True
-except ImportError:
+except ImportError as e:
     HAS_TFDS = False
+    TFDS_ERROR = str(e)
+except Exception as e:
+    HAS_TFDS = False
+    TFDS_ERROR = str(e)
 
 
 # Paths
@@ -163,7 +167,8 @@ def main():
     args = parser.parse_args()
 
     if not HAS_TFDS:
-        print("Error: tensorflow_datasets not installed.")
+        print("Error: tensorflow_datasets import failed.")
+        print(f"Error details: {TFDS_ERROR}")
         print("Install with: pip install tensorflow_datasets tensorflow")
         return 1
 
