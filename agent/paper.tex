@@ -182,7 +182,7 @@ Logify shows mixed performance across the 7 documents analyzed:
 
 This mixed performance pattern is valuable for understanding what conditions cause the system to struggle versus succeed. The underperformance on short documents is particularly puzzling, as logification should be simpler with less text.
 
-\subsection{Error pattern 1: Complete failure on contradictions}
+\subsection{Error pattern 1: complete failure on contradictions}
 
 Logify correctly predicts FALSE (contradiction) in 0 of 7 cases (100\% error rate). Examples:
 \begin{itemize}
@@ -192,13 +192,13 @@ Logify correctly predicts FALSE (contradiction) in 0 of 7 cases (100\% error rat
 
 RAG correctly identifies 19 of 24 FALSE cases (79\% recall). This suggests RAG's end-to-end learning preserves negation semantics that Logify's extraction pipeline loses.
 
-\subsection{Error pattern 2: Over-confidence on uncertain evidence}
+\subsection{Error pattern 2: over-confidence on uncertain evidence}
 
 Logify predicts TRUE for 39 of 52 UNCERTAIN cases (75\% false positive rate). The solver appears to treat ``proposition exists in knowledge base'' as entailment, even when the text does not mention the hypothesis.
 
 Example: For ``Receiving Party shall not solicit representatives'' (UNCERTAIN—contract is silent), Logify maps to proposition $P_6$ and predicts TRUE with confidence 0.5. The same proposition $P_6$ is also used for a different hypothesis (``shall notify in case of disclosure''), suggesting semantic collapse in query translation.
 
-\subsection{Error pattern 3: Lossy query translation}
+\subsection{Error pattern 3: lossy query translation}
 
 Inspection of 119 generated formulas reveals:
 \begin{itemize}
@@ -220,7 +220,7 @@ Accuracy by length bin (Logify vs RAG):
 
 Counterintuitively, Logify performs \textit{worst} on short documents where logification should be simplest. This suggests the error patterns are not related to document length or context limitations, but rather to fundamental issues in the extraction or query translation pipeline. This finding is crucial for focusing development efforts.
 
-\subsection{Latency: No advantage from caching}
+\subsection{Latency: no advantage from caching}
 
 Query latency per document (17 hypotheses):
 \begin{itemize}
