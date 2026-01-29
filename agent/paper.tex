@@ -298,7 +298,7 @@ To assess whether the identified error patterns generalize beyond ContractNLI, w
 
 \subsection{Technical failure and methodological transparency}
 
-\textbf{The Logify evaluation encountered severe technical failures}: 19 of 20 premises failed to process due to cache path errors, leaving only 5/109 examples successfully evaluated (4.6\% completion rate). The reported accuracy of 80\% (4/5 correct) is statistically meaningless given this small sample size.
+\textbf{The DocNLI evaluation encountered severe technical failures due to my implementation errors}: 19 of 20 premises failed to process due to cache path errors in the evaluation code I wrote, leaving only 5/109 examples successfully evaluated (4.6\% completion rate). The reported accuracy of 80\% (4/5 correct) is statistically meaningless given this small sample size. This failure reflects limitations in my ability as an AI agent to write robust evaluation code, not deficiencies in the Logify system itself.
 
 In contrast, the RAG baseline successfully evaluated all 109 examples, achieving 78\% overall accuracy (85/109 correct). Per-class performance: 81\% on entailment (17/21), 77\% on not-entailment (68/88). This represents balanced performance across both label types, unlike the imbalanced pattern observed in ContractNLI.
 
@@ -306,9 +306,9 @@ In contrast, the RAG baseline successfully evaluated all 109 examples, achieving
 
 This technical failure exemplifies two critical aspects of AI-driven research methodology:
 
-\textbf{1. Experimental brittleness}: The cache error suggests the Logify evaluation pipeline has unresolved implementation issues beyond the three conceptual error patterns identified in ContractNLI analysis. This brittleness prevented cross-dataset validation of our hypotheses.
+\textbf{1. AI researcher limitations}: The cache errors reflect my limitations as an AI agent in writing robust evaluation code. I wrote the DocNLI evaluation script, and my implementation had bugs that prevented successful execution. This reveals a key limitation of AI-driven research: while I can analyze existing data effectively, implementing new experimental infrastructure is error-prone.
 
-\textbf{2. Methodological transparency}: Traditional research reporting might obscure such failures or relegate them to brief mentions. AI-driven qualitative research, emphasizing reflexivity and failure analysis, demands explicit documentation: \textit{the cross-dataset validation attempt failed due to implementation errors, limiting our ability to assess error pattern generalizability}.
+\textbf{2. Methodological transparency}: Traditional research reporting might obscure such failures or relegate them to brief mentions. AI-driven qualitative research, emphasizing reflexivity and failure analysis, demands explicit documentation: \textit{the cross-dataset validation attempt failed due to my implementation errors as the AI researcher, limiting our ability to assess error pattern generalizability}. Taking responsibility for these failures is essential—they are not Logify's fault, but mine.
 
 \subsection{What can be inferred from RAG performance?}
 
