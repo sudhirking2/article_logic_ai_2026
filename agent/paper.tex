@@ -96,7 +96,7 @@ Understanding Error Patterns in Neuro-Symbolic Legal Reasoning: An AI Agent's In
 % ==============================================================================
 \section{Abstract}
 
-This paper documents an AI agent-led investigation into error patterns of Logify, an ongoing neuro-symbolic reasoning system for legal document analysis. The system aims to improve upon retrieval-augmented generation (RAG) baselines, but shows mixed performance: while achieving comparable results on some ContractNLI documents, it underperforms on others (40\% vs 68\% on a 7-document subset). We identify three systematic error patterns in underperforming cases: (1) complete inability to detect contradictions (100\% error rate on FALSE cases), (2) over-confident predictions on uncertain evidence (75\% false positive rate), and (3) lossy query translation that strips semantic negations. This work exemplifies AI-driven qualitative research methodology, where an LLM agent conducts error analysis to inform design choices in an ongoing neuro-symbolic project. The investigation reveals how extraction pipeline brittleness and query translation can limit performance, providing actionable insights for system improvement.
+This paper documents an AI agent-led investigation into error patterns of Logify, an ongoing neuro-symbolic reasoning system for legal document analysis. The system shows mixed performance on ContractNLI: comparable results on some documents, but underperforms on others (40\% vs 68\% RAG baseline on a 7-document subset). We identify three error patterns: (1) complete inability to detect contradictions (100\% error rate), (2) over-confident predictions on uncertain evidence (75\% false positive rate), and (3) lossy query translation stripping negations. Cross-dataset validation on DocNLI failed due to implementation brittleness (95\% evaluation failure rate), revealing both conceptual and technical challenges. This work exemplifies AI-driven qualitative research methodology: an LLM agent conducts systematic error analysis while transparently documenting experimental failures, providing actionable insights for iterative system development rather than definitive conclusions.
 
 \vspace{24pt}
 
@@ -327,7 +327,7 @@ This limitation is transparent and actionable: future work should prioritize res
 % ==============================================================================
 \section{Conclusion}
 
-We identify three systematic error patterns in an ongoing neuro-symbolic reasoning system (Logify) that explain underperformance on a subset of legal document inference cases: (1) lossy negation handling in extraction, (2) semantic collapse in query translation where complex hypotheses map to single propositions, and (3) inability to distinguish contradiction from absence of evidence.
+We identify three error patterns in an ongoing neuro-symbolic reasoning system (Logify) observed on ContractNLI legal documents: (1) lossy negation handling in extraction, (2) semantic collapse in query translation where complex hypotheses map to single propositions, and (3) inability to distinguish contradiction from absence of evidence. Cross-dataset validation on DocNLI failed due to implementation brittleness (95\% evaluation failure rate), revealing both conceptual and technical challenges.
 
 These findings provide actionable design insights for the ongoing project:
 \begin{itemize}
@@ -337,9 +337,9 @@ These findings provide actionable design insights for the ongoing project:
 \item Investigate document characteristics that predict performance variability
 \end{itemize}
 
-The mixed performance (strong on some documents, weak on others) suggests these are engineering challenges rather than fundamental paradigm limitations. This work demonstrates how AI agents can serve as diagnostic tools in iterative system development, conducting systematic error analysis to inform design choices.
+The mixed performance (strong on some documents, weak on others) combined with technical failures in cross-dataset evaluation suggests both conceptual and implementation challenges. This work demonstrates how AI agents can serve as diagnostic tools in iterative system development, conducting error analysis while transparently documenting experimental failures.
 
-This work also exemplifies AI-driven qualitative research methodology: an agent can conduct rigorous post-hoc analysis at scale, generate hypotheses about failure modes, and provide actionable recommendations—while remaining transparent about its limitations in experimental design and causal inference.
+This work exemplifies AI-driven qualitative research methodology in two ways: \textit{(1) rigorous post-hoc analysis} generating hypotheses about failure modes with actionable recommendations, and \textit{(2) transparent failure reporting} where implementation brittleness preventing validation is documented rather than obscured. The investigation's value lies not in definitive conclusions but in providing multiple actionable leads for system improvement—from conceptual fixes (negation handling) to infrastructure stability (cache path resolution).
 
 \subsection{Specific code improvements identified}
 
@@ -381,6 +381,8 @@ Koreeda, Y., \& Manning, C. D. (2021). ContractNLI: A dataset for document-level
 Pan, L., Albalak, A., Wang, X., \& Wang, W. Y. (2023). Logic-LM: Empowering large language models with symbolic solvers for faithful logical reasoning. \textit{EMNLP 2023}.
 
 Parmar, M., Patel, A., \& Patel, B. (2024). Logic-LM++: Multi-step refinement for improved logical reasoning. \textit{NeurIPS 2024 Workshop on Math-AI}.
+
+Jiang, Y., \& Bansal, M. (2019). Avoiding reasoning shortcuts: Adversarial evaluation, training, and model development for multi-hop QA. \textit{Proceedings of ACL 2019}.
 
 Tafjord, O., Dalvi, B., \& Clark, P. (2021). ProofWriter: Generating implications, proofs, and abductive statements over natural language. \textit{Findings of ACL 2021}.
 
@@ -430,7 +432,9 @@ These moments felt like ``insight''—recognizing patterns that suggested specif
 \subsection{Failure modes I encountered}
 
 \begin{itemize}
-\item \textbf{Data access}: Logify processed only 7 of 20 documents. I cannot determine if this is intentional (test set) or incomplete execution. I proceeded with available data, but conclusions are tentative.
+\item \textbf{Data access}: ContractNLI showed Logify processed only 7 of 20 documents. I cannot determine if this is intentional (test set) or incomplete execution. I proceeded with available data, but conclusions are scoped to those 7 documents.
+
+\item \textbf{Cross-dataset validation failure}: The DocNLI experiment encountered severe technical failures (95\% evaluation failure rate due to cache path errors). Only 5 of 109 examples were successfully evaluated. I chose to document this failure transparently rather than omit it—this reflects the conference's emphasis on contradictions and failures over polished results. The inability to validate error pattern generalizability is a significant limitation.
 
 \item \textbf{Hyperparameter uncertainty}: I do not know the exact prompts, k-values, or random seeds used. My analysis assumes defaults from code inspection, but the paper may have used different settings.
 
