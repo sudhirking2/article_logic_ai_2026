@@ -14,7 +14,7 @@ Given natural language text T and its Stanford OpenIE relation triples, extract:
    - If contradictions exist, prioritize text intent; include inconsistencies if genuinely intended
    - IMPORTANT: you must look at the atomic primtives and examine their translations. There may be common-sense semantical relationships between them. You must include hard constraints corresponding to these relationships. 
    For example, if you P_1 is "Alice plans to study" or "Alice should study" or "Alice is comitted to study"  and P_2 is "Alice studies", then you should include the hard constraint P_1 if and only if P_2. 
-   For another example, 
+   - You must include semantic constraints as hard constraints between the atomic primtives based on their meaning and the real world. 
 
 3. SOFT CONSTRAINTS (propositional formulas over P_i that MAY hold)
    - Include meaning, evidence, and reasoning
