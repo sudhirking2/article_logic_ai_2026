@@ -314,7 +314,8 @@ def build_prompt(query: str, retrieved_chunks: List[Dict]) -> str:
   Evidence: {chunk['evidence']}
 """
 
-    prompt = f"""You are a logic translator. Given a natural language query and a set of atomic propositions, translate the query into a propositional formula.
+    prompt_old = f"""
+    You are a logic translator. Given a natural language query and a set of atomic propositions, translate the query into a propositional formula.
 
 AVAILABLE PROPOSITIONS:
 {props_text}
@@ -341,6 +342,53 @@ OUTPUT FORMAT (JSON only, no other text):
     "query": "{query}",
     "explanation": "<1-2 sentence reasoning for the formula chosen>"
 }}"""
+    prompt = """ 
+    You are a logic translator for Natural Language Inference (NLI). Given a hypothesis and a set of atomic propositions from a legal document, translate the hypothesis into a propositional formula that can be checked for ENTAILMENT.
+
+AVAILABLE PROPOSITIONS:
+{props_text}
+
+HYPOTHESIS TO CHECK:
+"{query}"
+
+TASK:
+Translate the hypothesis into a propositional formula. The formula will be evaluated against the document's constraints to determine:
+- TRUE: The hypothesis is entailed (follows from the document)
+- FALSE: The hypothesis is contradicted (negation follows from the document)  
+- UNCERTAIN: Neither entailment nor contradiction can be determined
+
+TRANSLATION GUIDELINES:
+
+1. **"Shall" / "Must" obligations** → Use the proposition directly
+   - "Party shall do X" → P_i (where P_i represents doing X)
+   - "Party shall not do X" → ¬P_i
+
+2. **"May" / "Can" permissions** → Check if the action is allowed
+   - "Party may do X" → P_i (the proposition that X is permitted/possible)
+   - If no explicit permission exists, the formula should reflect what would make it true
+
+3. **Conditional statements** → Use implication
+   - "If A then B" → P_a ⟹ P_b
+
+4. **Existential claims ("some", "any")** → Use disjunction if multiple propositions apply
+   - "Some X satisfies Y" → P_1 ∨ P_2 ∨ ... (any relevant proposition being true suffices)
+
+5. **Universal claims ("all", "every", "any")** → Use conjunction
+   - "All X must Y" → P_1 ∧ P_2 ∧ ...
+
+6. **Negations** → Apply ¬ carefully
+   - "shall not" → ¬P (negation of the action)
+   - "no right to" → ¬P (negation of the right)
+
+IMPORTANT: Choose the simplest formula that captures the hypothesis meaning. If a single proposition directly states what the hypothesis claims, use just that proposition.
+
+OUTPUT FORMAT (JSON only):
+{{
+    "formula": "<propositional formula using P_1, P_2, etc.>",
+    "translation": "<what your formula means in plain English>",
+    "reasoning": "<why this formula captures the hypothesis for entailment checking>"
+}}
+    """
 
     return prompt
 
