@@ -53,12 +53,75 @@ Worst Logify performance:
 
 These are all UNCERTAIN ground truth hypotheses where Logify over-predicts TRUE.
 
+\subsection{Root Cause Analysis: Formula Mapping Failures}
+
+Detailed examination of Logify's generated formulas reveals the core problem:
+
+\begin{enumerate}
+\item \textbf{Over-simplified translation:} 84\% of queries map to single propositions (e.g., ``P\_6'')
+  with no logical connectives. The query translation collapses complex natural language
+  hypotheses into atomic propositions.
+
+\item \textbf{Same formula, different hypotheses:} Formula ``P\_6'' is used for BOTH:
+  \begin{itemize}
+  \item ``shall not solicit representatives'' (UNCERTAIN)
+  \item ``shall notify in case of disclosure'' (UNCERTAIN)
+  \end{itemize}
+  This indicates the retrieval-based query translation is matching surface similarity
+  rather than semantic content.
+
+\item \textbf{Formula reuse with contradictory ground truths:} P\_15 maps to 4 different
+  hypotheses with ground truths: TRUE, FALSE, FALSE, UNCERTAIN. This is impossible if
+  the logification were correct—the same proposition cannot simultaneously be entailed
+  and contradicted by the same document.
+
+\item \textbf{Missing negation semantics:} Only 8.4\% of formulas contain negation ($\neg$),
+  but many hypotheses are negative statements (``shall NOT''). The query translator
+  appears to strip negations, causing FALSE cases to be predicted as TRUE or UNCERTAIN.
+\end{enumerate}
+
+\subsection{Document Length: Opposite of Paper Claims}
+
+The main paper claims ``largest gains on long documents.'' Our data shows the opposite:
+
+\begin{itemize}
+\item Short (<10K): RAG 70.6\%, Logify 29.4\% (\textbf{-41.2\%})
+\item Medium (10-20K): RAG 66.7\%, Logify 39.2\% (-27.5\%)
+\item Long (>20K): RAG 67.6\%, Logify 58.8\% (-8.8\%)
+\end{itemize}
+
+Logify performs \textbf{worst on short documents} (where logification should be easiest)
+and least-bad on long documents (but still 8.8\% worse than RAG).
+
+\subsection{Latency: No Advantage Despite Caching}
+
+Query latency per document:
+\begin{itemize}
+\item RAG average: 294s per document
+\item Logify average: 519s per document (1.76x slower!)
+\end{itemize}
+
+Even on cached documents (Doc 3, Doc 7), Logify is slower than RAG. The ``logify once, query many''
+advantage does not materialize because query translation itself is expensive.
+
 \subsection{Implications for Qualitative AI Research}
 
 This represents a \textbf{failure of the neuro-symbolic paradigm} in this deployment:
 \begin{enumerate}
 \item The extraction pipeline loses critical information (negations, absences)
+\item The query translation is too coarse-grained (single propositions)
 \item The symbolic reasoning cannot recover from extraction errors
 \item RAG's end-to-end learning better handles ambiguity and absence of evidence
+\item The paper's claims about long document advantages are not supported by the data
 \end{enumerate}
+
+\textbf{Critical methodological observation:} The main paper reports 79.8\% accuracy on
+ContractNLI, but our replication achieves only 39.2\% on the same 7 documents processed
+so far. This suggests either:
+\begin{itemize}
+\item Different hyperparameters or models were used
+\item Cherry-picked documents for the paper results
+\item Errors in our replication (though code matches paper description)
+\item The paper results may not be reproducible
+\end{itemize}
 
