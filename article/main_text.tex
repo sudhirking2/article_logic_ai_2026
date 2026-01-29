@@ -54,7 +54,7 @@ We use Boolean polynomial rings, computable via tools like PolyBoRi
 assumption-based truth maintenance system (ATMS) \cite{deKleer1986} compactly 
 represents multiple consistent assignments under evolving constraints—conceptually 
 parallel to our notion of ring homomorphisms $\phi: R(T) \to \mathbb{F}_2$ 
-as a connsistent assignment.
+as a consistent assignment.
 
 \paragraph{Weighted reasoning and model counting.}
 When soft constraints carry confidences, we connect to weighted Max-SAT 
@@ -67,7 +67,7 @@ principled route to ranking readings by plausibility and quantifying underdeterm
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.95\linewidth]{article/structure.jpeg}
-    \caption{The document is processed once through a three-stage pipeline: (1) we extract relational triples from Stanfrod OpenIE, (2) we pass the text and triples to an LLM (GPT-5.2) once to extract atomic propositions,  hard constraints, and soft constraints, and (3) we asign weights via SBERT retrieval and LLM verification. At query time, the user's question is translated to a propositional formula (using SBERT retrieval over the translations of the atomic propositions), and the MaxSAT solver determines entailment, contradiction, or uncertainty.}
+    \caption{The document is processed once through a three-stage pipeline: (1) we extract relational triples from Stanford OpenIE, (2) we pass the text and triples to an LLM (GPT-5.2) once to extract atomic propositions,  hard constraints, and soft constraints, and (3) we assign weights via SBERT retrieval and LLM verification. At query time, the user's question is translated to a propositional formula (using SBERT retrieval over the translations of the atomic propositions), and the MaxSAT solver determines entailment, contradiction, or uncertainty.}
     \label{fig:arch}
 \end{figure}
 
@@ -86,13 +86,13 @@ This module implements the extraction of natural language text into the weighted
 \subsubsection{Three-Stage Extraction Pipeline}
 
 \paragraph{Stage 1: Relation Triple Extraction.}
-We use Stanford CoreNLP's OpenIE system \cite{angeli2015openie} via the Stanza Python interface \cite{qi2020stanza} to extract subject-predicate-object triples from the text. This provides structured relational information that can help guide proposition identification. We first apply native Stanza coreference resolution to handle pronominal references (e.g. replacing "They" with "Alice"), to ensure that triples consistently refer to canonical entities rather than pronouns. As a fallback, we use Stanza's dependency parse for sentences where OpenIE fails to extract triples (e.g., intransitive verbs with adverbs). Triples are formatted as co \texttt{[subject, predicate, object]}. Implementation details are provided in Appendix~\ref{sec:openie}.
+We use Stanford CoreNLP's OpenIE system \cite{angeli2015openie} via the Stanza Python interface \cite{qi2020stanza} to extract subject-predicate-object triples from the text. This provides structured relational information that can help guide proposition identification. We first apply native Stanza coreference resolution to handle pronominal references (e.g. replacing "They" with "Alice"), to ensure that triples consistently refer to canonical entities rather than pronouns. As a fallback, we use Stanza's dependency parse for sentences where OpenIE fails to extract triples (e.g., intransitive verbs with adverbs). Triples are formatted as \texttt{[subject, predicate, object]}. Implementation details are provided in Appendix~\ref{sec:openie}.
 
 \paragraph{Stage 2: LLM-Based Logic Conversion.}
 The original text $T$  and the extracted triples are jointly provided to a large language model (e.g., GPT-4o, GPT-5.2, or o3-mini). For reasoning models (GPT-5.x, o1, o3), we configure the reasoning effort level (low/medium/high) and use the \texttt{developer} role for system instructions; for standard models, we use \texttt{system} role with temperature control. The LLM performs semantic analysis to identify atomic propositions $\mathcal{P}(T)$, hard constraints $\mathcal{C}(T)$, and soft constraints $\mathcal{S}(T)$---crucially, soft constraints are extracted \emph{without} weights at this stage. The prompt includes few-shot examples demonstrating the expected extraction format (Appendices~\ref{sec:prompt} and \ref{sec:exemplar}).
 
 \paragraph{Stage 3: Weight Assignment.}
-The final stage assigns confidence weights to all constraints using an evidence-based retrieval and LLM verification pipeline. For each constraint $Q$, we: (1) chunk the original document and pre-compute SBERT embeddings \cite{reimers2019sbert} (model: \texttt{all-MiniLM-L6-v2}); (2) retrieve the top-$k$ chunks most similar to the constraint's natural language translation ($k=10$ by default); (3) prompt an LLM with the retrieved chunks, asking a YES/NO verification question: ``Does this document excerpt provide clear evidence supporting this claim?''; (4) extract logprobs for YES and NO tokens from the response; (5) repeat for the \emph{negated} constraint: ``It is not the case that [Q]''; and (6) compute confidence via binary softmax: $w(Q) = P(\text{YES} \mid Q) / (P(\text{YES} \mid Q) + P(\text{YES} \mid \neg Q) + \epsilon)$. This produces a weight $w(Q) \in (0,1)$ reflecting how strongly the document supports $Q$. The separation is deliberate: the LLM identifies \emph{which} constraints are defeasible based on linguistic cues, while the weight assignment module quantifies \emph{how strongly} the text supports each constraint. Implementation details are provided in Appendix~\ref{sec:weights}.
+The final stage assigns confidence weights to all constraints using an evidence-based retrieval and LLM verification pipeline. For each constraint $Q$, we: (1) chunk the original document and pre-compute SBERT embeddings \cite{reimers2019sbert} (model: \texttt{all-MiniLM-L6-v2}); (2) retrieve the top-$k$ chunks most similar to the constraint's natural language translation ($k=10$ by default); (3) prompt an LLM with the retrieved chunks, asking a YES/NO verification question: ``Does this document excerpt provide clear evidence supporting this claim?''; (4) extract logprobs for YES and NO tokens from the response; (5) repeat for the \emph{negated} constraint: ``It is not the case that [Q]''; and (6) compute confidence via binary softmax: $w(Q) = P(\text{YES} \mid Q) / (P(\text{YES} \mid Q) + P(\text{YES} \mid \neg Q) + \epsilon)$, where $\epsilon$ is a small constant for numerical stability. This produces a weight $w(Q) \in (0,1)$ reflecting how strongly the document supports $Q$. The separation is deliberate: the LLM identifies \emph{which} constraints are defeasible based on linguistic cues, while the weight assignment module quantifies \emph{how strongly} the text supports each constraint. Implementation details are provided in Appendix~\ref{sec:weights}.
 
 \subsubsection{Proposition Extraction}
 Given text $T$, we extract atomic propositions $\mathcal{P}(T) = \{P_1, \ldots, P_n\}$. Each proposition is paired with its natural language meaning, forming a \emph{schema}:
@@ -315,7 +315,7 @@ Hard constraints are encoded as polynomial equations over $\mathbb{F}_2$. The en
 P \land Q &\mapsto PQ \\
 P \lor Q &\mapsto P + Q + PQ \\
 \neg P &\mapsto 1 + P \\
-P \rightarrow Q &\mapsto P(1+Q)
+P \rightarrow Q &\mapsto 1 + P + PQ
 \end{align*}
 Let $\mathcal{I}_{\mathcal{C}}(T)$ be the ideal generated by these encodings. A constraint $C$ being ``enforced'' corresponds to its polynomial lying in the ideal.
 
