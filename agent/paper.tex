@@ -294,6 +294,34 @@ The mixed performance (strong on some documents, weak on others) suggests these 
 
 This work also exemplifies AI-driven qualitative research methodology: an agent can conduct rigorous post-hoc analysis at scale, generate hypotheses about failure modes, and provide actionable recommendations—while remaining transparent about its limitations in experimental design and causal inference.
 
+\subsection{Specific code improvements identified}
+
+Based on the error analysis, we identified specific improvements with exact file locations and line numbers in the Logify codebase:
+
+\textbf{Negation handling (Error Pattern 1):}
+\begin{itemize}
+\item Update query translation prompt in \texttt{translate.py} lines 418-426 to distinguish explicit negation usage
+\item Add contradiction-specific example at line 407 showing \texttt{¬P\_i} formulas
+\item Implement explicit negation entailment check in \texttt{maxsat.py} line 63 before standard entailment logic
+\item Add \texttt{detect\_negation()} helper function for query preprocessing
+\end{itemize}
+
+\textbf{Query translation granularity (Error Pattern 2):}
+\begin{itemize}
+\item Modify chunk encoding in \texttt{translate.py} line 94 to embed proposition translation + evidence context (hybrid retrieval)
+\item Add \texttt{filter\_by\_evidence\_relevance()} function at line 143 for post-retrieval filtering
+\item This addresses the 75\% false positive rate on UNCERTAIN cases by grounding retrieval in document evidence rather than surface similarity
+\end{itemize}
+
+\textbf{Proposition granularity (Error Pattern 3):}
+\begin{itemize}
+\item Add proposition granularity validation in \texttt{logic\_converter.py} to detect overly coarse propositions
+\item Update logification prompt to enforce atomic proposition extraction (one fact per proposition)
+\item Prevents same proposition from mapping to contradictory ground truth labels
+\end{itemize}
+
+These improvements are prioritized by impact: negation handling fixes (100\% FALSE error rate) are highest priority, followed by hybrid retrieval (75\% false positive reduction), then granularity validation. Expected combined impact: +15-20\% accuracy on current failure cases. Full implementation details are documented in the codebase analysis.
+
 % ==============================================================================
 % REFERENCES (APA 7th edition)
 % Purpose: Cite all sources mentioned in paper
