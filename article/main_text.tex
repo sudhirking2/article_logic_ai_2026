@@ -29,16 +29,15 @@ To handle large documents, we propose a different approach: \emph{logify} the do
 \label{sec:related_work}
 
 \paragraph{Neuro-symbolic logical reasoning.}
-Recent work combines LLMs with symbolic solvers to improve logical reasoning. 
-Logic-LM \cite{pan2023logiclm} translates natural-language problems into symbolic 
-formulations (logic programs, FOL, CSP, SAT) and delegates reasoning to deterministic 
-solvers, achieving significant gains over chain-of-thought prompting. LINC 
-\cite{olausson2023linc} focuses on first-order logic with Prover9, providing 
-detailed error analysis of failure modes. Both systems formalize problems 
-\emph{per query}; in contrast, our approach logifies the text once and supports 
-repeated querying. Moreover, these systems treat all constraints as hard; we 
-introduce soft constraints with confidence weights, enabling reasoning under 
-uncertainty.
+Recent work combines LLMs with symbolic solvers to improve logical reasoning.
+Logic-LM++ \citep{parmar2024logiclmpp} extends Logic-LM \citep{pan2023logiclm} with
+multi-step refinement, achieving 78.9\% on FOLIO (204 examples, $\sim$75 tokens each)
+and 79.7\% on ProofWriter (600 examples, $\sim$100 tokens each).
+LINC \citep{olausson2023linc} uses first-order logic with Prover9, reaching
+87\% on ProofWriter with GPT-4. Both systems formalize problems \emph{per query}
+on short benchmarks; in contrast, our approach logifies the document once and supports
+repeated querying over long texts. Moreover, these systems treat all constraints as hard;
+we introduce soft constraints with confidence weights, enabling reasoning under uncertainty.
 
 \paragraph{Tool-augmented LLMs.}
 A broader line of work augments LLMs with external tools for faithful computation. 
