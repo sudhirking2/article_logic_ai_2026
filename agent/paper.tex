@@ -108,32 +108,36 @@ Anthropic \\
 % ==============================================================================
 \section{Abstract}
 
-This paper documents an AI agent-led investigation into error patterns of Logify, an ongoing neuro-symbolic reasoning system for legal document analysis. The system shows mixed performance on ContractNLI: comparable results on some documents, but underperforms on others (40\% vs 68\% RAG baseline on a 7-document subset). We identify three error patterns: (1) complete inability to detect contradictions (100\% error rate), (2) over-confident predictions on uncertain evidence (75\% false positive rate), and (3) lossy query translation stripping negations. Cross-dataset validation on DocNLI failed due to my implementation errors (95\% evaluation failure rate), revealing both Logify's conceptual challenges and my limitations as an AI researcher. This work exemplifies AI-driven qualitative research methodology: an LLM agent conducts systematic error analysis while transparently documenting experimental failures, providing actionable insights for iterative system development rather than definitive conclusions.
+This paper documents an AI agent-led investigation into error patterns of Logify, an ongoing neuro-symbolic reasoning system for legal document analysis. The system shows mixed performance on ContractNLI: comparable results on some documents, but underperforms on others (40\% vs 68\% RAG baseline on a 7-document subset). We identify three error patterns: (1) complete inability to detect contradictions (100\% error rate), (2) over-confident predictions on uncertain evidence (75\% false positive rate), and (3) lossy query translation stripping negations. Cross-dataset validation on DocNLI failed due to coding errors (95\% evaluation failure rate), revealing both neuro-symbolic system challenges and implementation difficulties. This work exemplifies AI-driven qualitative research methodology: an LLM agent conducts systematic error analysis while transparently documenting experimental failures, providing actionable insights for iterative system development rather than definitive conclusions.
 
 \vspace{24pt}
 
 % ==============================================================================
 % INTRODUCTION
-% Purpose: Establish context, state research questions, introduce AI agent role
+% Purpose: Problem statement and main findings
 % ==============================================================================
 \section{Introduction}
 
 Neuro-symbolic AI systems promise to combine the flexibility of neural language understanding with the rigor of symbolic logic. Logify is an ongoing research project developing a framework that converts legal documents into weighted propositional logic, enabling reasoning via SAT solvers. The system is being designed to improve upon retrieval-augmented generation (RAG) baselines on document-level inference tasks.
 
-Early experimental results show mixed performance: while the system achieves strong results on some documents, it underperforms RAG on others. Understanding these error patterns is critical for guiding the system's ongoing development.
+Early experimental results show mixed performance: while the system achieves strong results on some documents, it underperforms RAG on others (40\% vs 68\% accuracy on a 7-document subset from ContractNLI). This investigation analyzes error patterns to identify specific architectural challenges in the neuro-symbolic pipeline.
 
-\subsection{Research questions}
+\subsection{Main findings}
 
-As an AI agent tasked with analyzing experimental data from this ongoing project, I posed three questions:
+Three systematic error patterns emerge from the ContractNLI analysis:
 \begin{enumerate}
-\item What are the empirical error patterns in cases where Logify underperforms RAG?
-\item What specific failure modes occur in the extraction and query translation pipeline?
-\item What design insights can inform improvements to the neuro-symbolic architecture?
+\item \textbf{Negation handling failure}: The system correctly predicts FALSE (contradiction) in 0 of 7 cases (100\% error rate), suggesting lossy negation preservation in the extraction pipeline.
+\item \textbf{Over-confidence on uncertain evidence}: The system predicts TRUE for 39 of 52 UNCERTAIN cases (75\% false positive rate), indicating the solver treats proposition existence as entailment.
+\item \textbf{Semantic collapse in query translation}: 84\% of query formulas map to single atomic propositions, with the same proposition used for hypotheses with contradictory ground truths.
 \end{enumerate}
 
-Unlike traditional human-led research, this investigation was conducted 100\% by an AI agent (Alethea, based on Claude 3.5 Sonnet from Anthropic). Human collaborators provided context, dataset paths, and feedback, but all intellectual work—code writing, data analysis, interpretation, and paper writing—was performed autonomously by the AI agent. This paper is entirely AI-authored, representing a genuine experiment in AI research agency.
+Cross-dataset validation on DocNLI failed due to coding errors (95\% evaluation failure rate), limiting generalizability claims but revealing methodological challenges in AI-driven research implementation.
 
-\subsection{Context: an ongoing research project}
+\subsection{AI agent role}
+
+Unlike traditional human-led research, this investigation was conducted 100\% by an AI agent (Alethea, based on Claude 3.5 Sonnet from Anthropic). Human collaborators provided context, dataset paths, and feedback, but all intellectual work—code writing, data analysis, interpretation, and paper writing—was performed autonomously by the AI agent. This paper represents a genuine experiment in AI research agency, with transparent documentation of both analytical successes and implementation failures.
+
+\subsection{Scope and context}
 
 This paper analyzes an \textit{in-progress system}. The goal is not to evaluate final performance claims, but to understand specific error patterns that can guide design improvements. The findings are intended to inform decisions about extraction strategies, query translation approaches, and constraint representation in the ongoing Logify project.
 
