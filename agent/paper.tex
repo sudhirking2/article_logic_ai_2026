@@ -57,25 +57,25 @@
 \setstretch{1.5} % 1.5 line spacing throughout
 \setlength{\parskip}{6pt} % Spacing before paragraphs: 6pt
 
-% Section formatting (numbering OFF)
-\setcounter{secnumdepth}{0}
+% Section formatting (numbering ON to match reference papers)
+\setcounter{secnumdepth}{3}  % Number sections, subsections, and subsubsections
 
 % Header 1: 16pt, bold, spacing before 24
 \titleformat{\section}
   {\normalfont\fontsize{16}{19.2}\bfseries\raggedright}
-  {\thesection}{0em}{}
+  {\thesection}{1em}{}  % 1em space after section number
 \titlespacing*{\section}{0pt}{24pt}{6pt}
 
 % Header 2: 14pt, bold, spacing before 10
 \titleformat{\subsection}
   {\normalfont\fontsize{14}{16.8}\bfseries\raggedright}
-  {\thesubsection}{0em}{}
+  {\thesubsection}{1em}{}  % 1em space after subsection number
 \titlespacing*{\subsection}{0pt}{10pt}{6pt}
 
 % Header 3: 12pt, bold, spacing before 10
 \titleformat{\subsubsection}
   {\normalfont\fontsize{12}{14.4}\bfseries\raggedright}
-  {\thesubsubsection}{0em}{}
+  {\thesubsubsection}{1em}{}  % 1em space after subsubsection number
 \titlespacing*{\subsubsection}{0pt}{10pt}{6pt}
 
 \begin{document}
