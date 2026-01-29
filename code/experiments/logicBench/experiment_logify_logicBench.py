@@ -234,14 +234,15 @@ def run_logify(text: str, sample_id: str, api_key: str,
 
 
 def run_query(query: str, logified_structure: Dict, api_key: str,
-              model: str = "gpt-4o", verbose: bool = True) -> Tuple[str, float, float, Optional[str]]:
+              model: str = "gpt-4o", verbose: bool = True) -> Tuple[str, float, float, Optional[str], Optional[str]]:
     """
     Run query translation and solving.
 
     Returns:
-        (predicted_answer, confidence, latency_sec, error)
+        (predicted_answer, confidence, latency_sec, error, formula)
     """
     start_time = time.time()
+    formula = None
 
     try:
         # Save structure to temp file for translate_query
@@ -285,7 +286,7 @@ def run_query(query: str, logified_structure: Dict, api_key: str,
             if verbose:
                 print(f"      Result: {solver_result.answer} (confidence={solver_result.confidence:.3f})")
 
-            return solver_result.answer, solver_result.confidence, latency, None
+            return solver_result.answer, solver_result.confidence, latency, None, formula
 
         finally:
             if os.path.exists(temp_json_path):
@@ -296,7 +297,7 @@ def run_query(query: str, logified_structure: Dict, api_key: str,
         error_msg = str(e)
         if verbose:
             print(f"      [QUERY ERROR] {error_msg}")
-        return "UNCERTAIN", 0.5, latency, error_msg
+        return "UNCERTAIN", 0.5, latency, error_msg, formula
 
 
 def run_experiment(
@@ -373,7 +374,7 @@ def run_experiment(
             for j, qa in enumerate(sample['qa_pairs']):
                 print(f"  Question {j+1}/{len(sample['qa_pairs'])}: {qa['query'][:60]}...")
 
-                predicted_answer, confidence, query_latency, query_error = run_query(
+                predicted_answer, confidence, query_latency, query_error, formula = run_query(
                     query=qa['query'],
                     logified_structure=logified_structure,
                     api_key=api_key,
@@ -383,6 +384,7 @@ def run_experiment(
 
                 result['questions'].append({
                     'query': qa['query'],
+                    'formula': formula,
                     'predicted_answer': predicted_answer,
                     'confidence': confidence,
                     'ground_truth': qa['ground_truth'],
@@ -394,6 +396,7 @@ def run_experiment(
             for qa in sample['qa_pairs']:
                 result['questions'].append({
                     'query': qa['query'],
+                    'formula': None,
                     'predicted_answer': 'UNCERTAIN',
                     'confidence': 0.0,
                     'ground_truth': qa['ground_truth'],
