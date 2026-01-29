@@ -21,10 +21,25 @@ Evaluate whether Logify can correctly classify document-hypothesis pairs from th
 For each document in ContractNLI (first 20 documents):
     1. Logify(document.text) → cached weighted JSON
     2. For each of 17 hypotheses:
-        a. Query(hypothesis) → (prediction, confidence)
-        b. Extract ground truth and evidence count from annotations
-        c. Store result
+        a. Translate(hypothesis) → (formula, query_mode)
+        b. If query_mode == "consistency":
+              Solve via check_consistency(formula)  # "May X?" queries
+           Else:
+              Solve via query(formula)              # "Shall X?" queries
+        c. Extract ground truth and evidence count from annotations
+        d. Store result
 ```
+
+### Query Modes
+
+The translator detects the semantic type of each hypothesis:
+
+| Query Mode   | Hypothesis Keywords                          | Solver Method         | Semantics                    |
+|--------------|----------------------------------------------|----------------------|------------------------------|
+| `entailment` | "shall", "must", "is required", "shall not"  | `solver.query()`      | Is X necessarily true?       |
+| `consistency`| "may", "can", "could", "is allowed"          | `solver.check_consistency()` | Is X possible/permitted? |
+
+This distinction is critical: "may" questions ask about *permission* (is it allowed?), not *obligation* (is it required?). Using entailment for permission queries incorrectly returns UNCERTAIN.
 
 ### Label Mapping
 
@@ -47,6 +62,8 @@ Each result record contains:
   "confidence": <float 0.0-1.0>,
   "ground_truth": "TRUE|FALSE|UNCERTAIN",
   "amount_evidence": <int>,
+  "formula": "<propositional formula>",
+  "query_mode": "entailment|consistency",
   "error": null | "<error message>"
 }
 ```
