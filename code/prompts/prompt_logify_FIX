@@ -12,7 +12,9 @@ Given natural language text T and its Stanford OpenIE relation triples, extract:
 2. HARD CONSTRAINTS (zeroth-order propositional formulas over P_i that MUST hold)
    - Include meaning, evidence, and reasoning from text
    - If contradictions exist, prioritize text intent; include inconsistencies if genuinely intended
-   - Apply common sense where needed for faithfulness to text
+   - IMPORTANT: you must look at the atomic primtives and examine their translations. There may be common-sense semantical relationships between them. You must include hard constraints corresponding to these relationships. 
+   For example, if you P_1 is "Alice plans to study" or "Alice should study" or "Alice is comitted to study"  and P_2 is "Alice studies", then you should include the hard constraint P_1 if and only if P_2. 
+   - You must include semantic constraints as hard constraints between the atomic primtives based on their meaning and the real world. 
 
 3. SOFT CONSTRAINTS (propositional formulas over P_i that MAY hold)
    - Include meaning, evidence, and reasoning
@@ -42,7 +44,7 @@ STEP 3: Extract Hard Constraints
 - Include textual evidence, location, and reasoning for each
 - Words like "should" usually indicate an obligation and hence a hard-constraint. Use the common-sense to help decide
 - IMPORTANT: You must review each of the atomic propsotiions and their translations. The traslations are often too literal to the text; if there are any obvious relationships between them you MUST include them as hard constraints. 
-  For example if P_1 means "Alice plans to study for math" and P_2 means "Alice studies for math", then you must impost the constraint P_1 if and only if P_2. The reason is because planning to is an obligation to and so we give the benefit of the doubt and assume Alice studies math. 
+  For example if P_1 means "Alice plans to study for math" and P_2 means "Alice studies for math", then you must impose the constraint P_1 if and only if P_2. The reason is because planning to is an obligation to and so we give the benefit of the doubt and assume Alice studies math. 
 - To clarify on this important point, semantical inferences must be added as hard consraints. These are constraints such as "John is a cat" and "John is an animal". These are distinct atomic propositions, but there is a hard constraint based on the meaning coming from common sense: namely "John is a cat" implies "John is an animal". You must include these semantic hard constraints. 
 
 STEP 4: Extract Soft Constraints
@@ -51,7 +53,7 @@ STEP 4: Extract Soft Constraints
 - Include textual evidence if from text, or common-sense justification otherwise
 - Ensure faithfulness to text intent to settle ambiguities; e.g. if the word "should" refers to an obligation or requirement then it suggests a hard constraint; but if it used to suggest that it doesn't have to hold, based off other parts of the text, then it can be a soft constraint
 - The presence of a hedge word that indicates uncertainty (such as: usually, typically, sometimes, generally, often, mostly, encouraged) automatically suggests a soft constraint. Remove the hedge word from the translation to produce a pure, definitive statement without uncertainty. Note the hedge word in the reasoning field to explain why it is soft.
-- Note: "should" is usually a definitive word indicating a hard constraint, but use context to determine if it is used as a soft constraint.
+- Note: "should" is word indicating a hard constraint.
 - Include reasoning for soft designation
 
 STEP 5: Double Check
