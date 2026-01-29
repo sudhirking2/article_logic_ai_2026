@@ -178,7 +178,7 @@ def run_logify(text: str, sample_id: str, api_key: str,
                 model=model,
                 temperature=0.1,
                 reasoning_effort="medium",
-                max_tokens=128000
+                max_tokens=16000  # Reduced to stay within context limits
             )
 
             try:
@@ -261,7 +261,7 @@ def run_query(query: str, logified_structure: Dict, api_key: str,
                 model=model,
                 temperature=0.1,
                 reasoning_effort="medium",
-                max_tokens=64000,
+                max_tokens=4000,  # Reduced - formula output is small
                 k=20,
                 verbose=False
             )
