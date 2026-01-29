@@ -220,7 +220,7 @@ def query_hypothesis(
 def run_experiment(
     dataset_path: str,
     api_key: str,
-    query_model: str = "openai/gpt-4o",
+    query_model: str = "openai/gpt-5-nano",
     weights_model: str = "gpt-4o",
     temperature: float = 0.1,
     reasoning_effort: str = "medium",
@@ -275,6 +275,7 @@ def run_experiment(
     results = {
         "metadata": {
             "timestamp": timestamp,
+            "logify_model": LOGIFY_MODEL,
             "query_model": query_model,
             "weights_model": weights_model,
             "temperature": temperature,
@@ -471,8 +472,8 @@ def main():
     # Note: Logification model is fixed to LOGIFY_MODEL (openai/gpt-5.2) and cannot be changed
     parser.add_argument(
         "--query-model",
-        default="openai/gpt-4o",
-        help="Model for query translation (default: openai/gpt-4o). Logification uses fixed model: openai/gpt-5.2"
+        default="openai/gpt-5-nano",
+        help="Model for query translation (default: openai/gpt-5-nano). Logification uses fixed model: openai/gpt-5.2"
     )
     parser.add_argument(
         "--weights-model",
