@@ -139,7 +139,7 @@ The query **must be true** given the knowledge base.
 ### FALSE (Contradicted)
 The query **cannot be true** given the knowledge base.
 - The query contradicts hard constraints
-- Confidence: 1.0
+- Confidence: 0.0 (Q cannot be true)
 - Example: If KB contains "P_1 => P_2" and query is "P_1 & ~P_2"
 
 ### UNCERTAIN

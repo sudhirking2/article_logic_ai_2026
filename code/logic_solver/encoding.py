@@ -4,10 +4,6 @@ encoding.py - Convert logified structure to SAT encoding
 
 This module converts the logified JSON structure (propositions, hard/soft constraints)
 into a format suitable for PySAT's RC2 MaxSAT solver.
-
-Soft constraints are encoded using selector literals (indicator variables) to ensure
-each constraint contributes exactly its weight when violated.
-Reference: Ignatiev et al. "RC2: an Efficient MaxSAT Solver" (JSAT 2019)
 """
 
 import re
@@ -94,7 +90,7 @@ class FormulaParser:
         left, tokens = self._parse_implies(tokens)
 
         while tokens and tokens[0] == '<=>':
-            tokens = tokens[1:]  # consume '<=>'
+            tokens = tokens[1:]  # consume '<='
             right, tokens = self._parse_implies(tokens)
             # A <=> B is (A => B) & (B => A)
             left = ('&', ('=>', left, right), ('=>', right, left))
@@ -277,7 +273,6 @@ class LogicEncoder:
         self.prop_to_var: Dict[str, int] = {}  # P_1 -> 1, P_2 -> 2, etc.
         self.var_to_prop: Dict[int, str] = {}  # Reverse mapping
         self.wcnf = WCNF()
-        self._next_var = 1  # Track next available variable for selector literals
 
         # Build proposition mapping
         self._build_prop_mapping()
@@ -291,74 +286,91 @@ class LogicEncoder:
             prop_id = prop['id']
             self.prop_to_var[prop_id] = i
             self.var_to_prop[i] = prop_id
-        # Set next available variable after all propositions
-        self._next_var = len(self.prop_to_var) + 1
+
+    def _extract_weight(self, constraint: Dict[str, Any], default: float = 0.5) -> float:
+        """
+        Extract weight from constraint, handling both float and array formats.
+
+        Args:
+            constraint: Constraint dict with optional 'weight' field
+            default: Default weight if not provided
+
+        Returns:
+            Weight as float
+        """
+        weight_raw = constraint.get('weight', default)
+
+        # Handle weight array from weights.py: [prob_yes_orig, prob_yes_neg, confidence]
+        # Extract the third element (confidence) if it's an array
+        if isinstance(weight_raw, list):
+            if len(weight_raw) >= 3:
+                return weight_raw[2]  # Use confidence (third element)
+            else:
+                return default  # Fallback if array is too short
+        else:
+            return weight_raw  # Use as-is if it's already a float
+
+    def _weight_to_int(self, weight: float) -> int:
+        """
+        Convert probability weight to integer weight for MaxSAT.
+
+        Uses log-odds scaling: w / (1-w) * 1000
+
+        Args:
+            weight: Probability weight in [0, 1]
+
+        Returns:
+            Integer weight for MaxSAT
+        """
+        if weight >= 1.0:
+            return 10000  # Very high weight
+        elif weight <= 0.0:
+            return 1  # Very low weight
+        else:
+            # Log-odds ratio scaled to integer
+            log_odds = weight / (1 - weight)
+            return max(1, int(log_odds * 1000))
 
     def encode(self) -> WCNF:
         """
         Encode the logified structure as WCNF.
 
-        Uses selector literals for soft constraints to ensure each constraint
-        contributes exactly its weight when violated.
+        Hard constraints with weights are encoded as soft constraints with high weight.
+        Hard constraints without weights are encoded as hard clauses (infinite weight).
 
         Returns:
             WCNF object with hard and soft constraints
         """
-        # Encode hard constraints (infinite weight)
+        # Encode hard constraints
         for constraint in self.structure.get('hard_constraints', []):
             formula = constraint['formula']
             clauses = self.parser.parse(formula)
-            for clause in clauses:
-                self.wcnf.append(clause)  # Hard clause (no weight = infinite)
 
-        # Encode soft constraints using selector literals
-        # Reference: Ignatiev et al. "RC2: an Efficient MaxSAT Solver" (JSAT 2019)
-        #
-        # Each soft constraint gets a selector variable r_i, with:
-        #   - Hard clauses: r_i => phi (i.e., -r_i \/ clause for each clause in phi)
-        #   - Soft clause: [r_i] with the constraint's weight
-        #
-        # This ensures each constraint contributes exactly its weight when violated,
-        # regardless of how many CNF clauses the formula expands to.
+            # Check if hard constraint has a weight (from weights.py)
+            if 'weight' in constraint:
+                # Encode as soft constraint with very high base weight
+                # Hard constraints should have higher weight than soft constraints
+                weight = self._extract_weight(constraint, default=0.99)
+                int_weight = self._weight_to_int(weight)
+                # Scale up hard constraint weights by 10x to maintain higher priority
+                int_weight = min(int_weight * 10, 100000)
+
+                for clause in clauses:
+                    self.wcnf.append(clause, weight=int_weight)
+            else:
+                # No weight: encode as hard clause (infinite weight)
+                for clause in clauses:
+                    self.wcnf.append(clause)  # Hard clause
+
+        # Encode soft constraints (weighted)
         for constraint in self.structure.get('soft_constraints', []):
             formula = constraint['formula']
-            weight_raw = constraint.get('weight', 0.5)  # Default weight if not provided
-
-            # Handle weight array from weights.py: [prob_yes_orig, prob_yes_neg, confidence]
-            # Extract the third element (confidence) if it's an array
-            if isinstance(weight_raw, list):
-                if len(weight_raw) >= 3:
-                    weight = weight_raw[2]  # Use confidence (third element)
-                else:
-                    weight = 0.5  # Fallback if array is too short
-            else:
-                weight = weight_raw  # Use as-is if it's already a float
-
-            # Convert weight to integer weight for MaxSAT
-            # We use log-odds: w / (1-w) and scale by 1000
-            if weight >= 1.0:
-                int_weight = 10000  # Very high weight
-            elif weight <= 0.0:
-                int_weight = 1  # Very low weight
-            else:
-                # Log-odds ratio scaled to integer
-                log_odds = weight / (1 - weight)
-                int_weight = max(1, int(log_odds * 1000))
+            weight = self._extract_weight(constraint, default=0.5)
+            int_weight = self._weight_to_int(weight)
 
             clauses = self.parser.parse(formula)
-
-            # Create selector variable for this constraint
-            selector = self._next_var
-            self._next_var += 1
-
-            # Add hard clauses: selector => clause (i.e., -selector \/ clause)
-            # If selector is true, all clauses must be satisfied
             for clause in clauses:
-                self.wcnf.append([-selector] + clause)
-
-            # Add single soft clause: prefer selector = true
-            # The solver pays int_weight cost to set selector = false (violate constraint)
-            self.wcnf.append([selector], weight=int_weight)
+                self.wcnf.append(clause, weight=int_weight)
 
         return self.wcnf
 

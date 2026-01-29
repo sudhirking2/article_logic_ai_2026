@@ -91,12 +91,15 @@ class LogicSolver:
 
             if not is_sat:
                 # UNSAT: Query is entailed by hard constraints alone
+                # Compute how strongly soft constraints support Q being true
+                soft_confidence = self._compute_confidence_for_entailment(query_formula)
                 return SolverResult(
                     answer="TRUE",
-                    confidence=1.0,
+                    confidence=soft_confidence,
                     model=None,
                     explanation="Query is entailed by the hard constraints (KB ∧ ¬Q is unsatisfiable)"
                 )
+
 
             # SAT with hard constraints: Check soft constraints
             # Use RC2 to find optimal model considering soft constraints
@@ -117,12 +120,15 @@ class LogicSolver:
 
             if consistency_result.answer == "FALSE":
                 # Q is inconsistent with KB, so ¬Q is entailed
+                # Compute how strongly soft constraints support Q being true
+                soft_confidence = self._compute_confidence_for_entailment(query_formula)
                 return SolverResult(
                     answer="FALSE",
-                    confidence=1.0,
+                    confidence=soft_confidence,
                     model=model,
                     explanation="Query is contradicted by the knowledge base"
                 )
+
 
             # Query is neither entailed nor contradicted
             # Compute confidence based on soft constraints
@@ -182,7 +188,7 @@ class LogicSolver:
                 # UNSAT: Query is inconsistent
                 return SolverResult(
                     answer="FALSE",
-                    confidence=1.0,
+                    confidence=0.0,  # Q cannot be true
                     model=None,
                     explanation="Query is inconsistent with the knowledge base (KB ∧ Q is unsatisfiable)"
                 )
@@ -227,11 +233,14 @@ class LogicSolver:
 
             if consistency_result.answer == "FALSE":
                 # Query is inconsistent (contradicted)
+                # Compute how strongly soft constraints support Q being true
+                soft_confidence = self._compute_confidence_for_entailment(query_formula)
                 return SolverResult(
                     answer="FALSE",
-                    confidence=1.0,
+                    confidence=soft_confidence,
                     explanation="Query is contradicted by the knowledge base"
                 )
+
             else:
                 # Check if consistency had an error
                 if "Error" in consistency_result.explanation:
@@ -391,11 +400,8 @@ class LogicSolver:
         satisfied_weight = 0.0
 
         for constraint in self.structure.get('soft_constraints', []):
-            # Weight is [prob_yes_orig, prob_yes_neg, confidence] - use third element
-            weight_raw = constraint.get('weight', [0.5, 0.5, 0.5])
-            weight = weight_raw[2]
+            weight = constraint.get('weight', 0.5)
             formula = constraint['formula']
-
 
             try:
                 # Check if this soft constraint is satisfied by the model
