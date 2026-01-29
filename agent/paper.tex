@@ -142,24 +142,77 @@ Unlike traditional human-led research, this investigation was conducted 100\% by
 This paper analyzes an \textit{in-progress system}. The goal is not to evaluate final performance claims, but to understand specific error patterns that can guide design improvements. The findings are intended to inform decisions about extraction strategies, query translation approaches, and constraint representation in the ongoing Logify project.
 
 % ==============================================================================
-% METHODS
-% Purpose: Document data sources, analysis pipeline, epistemic constraints
+% RESEARCH QUESTIONS
+% Purpose: Specific questions guiding the investigation
 % ==============================================================================
-\section{Methods}
+\section{Research questions}
 
-\subsection{Data sources}
+This investigation addresses three core questions:
 
-I analyzed two experimental result files from the Logify codebase:
+\begin{enumerate}
+\item \textbf{Error pattern identification}: What are the empirical error patterns in cases where the neuro-symbolic system underperforms the RAG baseline?
+\item \textbf{Pipeline failure modes}: What specific failure modes occur in the extraction and query translation pipeline that explain performance gaps?
+\item \textbf{Architectural insights}: What design insights can inform improvements to the neuro-symbolic architecture?
+\end{enumerate}
+
+These questions focus on diagnostic analysis rather than final system evaluation. The goal is to identify actionable improvements for ongoing development, not to make definitive claims about the paradigm's viability.
+
+% ==============================================================================
+% EXPERIMENTAL SETUP
+% Purpose: Systems, datasets, methods, epistemic constraints
+% ==============================================================================
+\section{Experimental setup}
+
+\subsection{System descriptions}
+
+\subsubsection{Logify: neuro-symbolic system}
+
+Logify is an ongoing research project that implements a neuro-symbolic framework for legal document reasoning. The system pipeline consists of:
+
+\begin{enumerate}
+\item \textbf{Logification}: An LLM extracts propositions from documents and converts them to weighted propositional logic formulas
+\item \textbf{Query translation}: Given a hypothesis, the system retrieves relevant propositions using SBERT semantic similarity and constructs a logical formula
+\item \textbf{Solver-based reasoning}: A MaxSAT solver evaluates entailment, checking if the knowledge base entails the query formula
+\end{enumerate}
+
+The system aims to separate document understanding (neural) from reasoning (symbolic), enabling reuse of logified knowledge bases for multiple queries.
+
+\subsubsection{RAG: neural baseline}
+
+The RAG baseline implements standard retrieval-augmented generation:
+\begin{enumerate}
+\item Chunk the document into passages
+\item Retrieve top-k passages most similar to the hypothesis (using SBERT)
+\item Prompt an LLM with retrieved passages and hypothesis, requesting TRUE/FALSE/UNCERTAIN prediction
+\end{enumerate}
+
+This represents a pure neural approach without explicit symbolic reasoning.
+
+\subsection{Datasets}
+
+\subsubsection{ContractNLI}
+
+ContractNLI \cite{contractnli} is a document-level natural language inference dataset for legal contracts. The dataset contains non-disclosure agreements paired with hypotheses about obligations and permissions (e.g., ``Receiving Party shall not disclose confidential information''). Each hypothesis is labeled TRUE (entailed), FALSE (contradicted), or UNCERTAIN (not mentioned).
+
+The analyzed experimental data covers 7 documents with 17 hypotheses each (119 document-hypothesis pairs). The RAG baseline evaluated 20 documents (340 pairs) from the same dataset.
+
+\subsubsection{DocNLI}
+
+DocNLI \cite{docnli} is a document-level NLI benchmark spanning diverse domains beyond legal text. For cross-dataset validation, we filtered the test split for premises between 200-500 words, yielding 20 documents with 109 hypothesis pairs (21 entailment, 88 not-entailment).
+
+\subsection{Methods}
+
+\subsubsection{Data sources}
+
+The analysis uses two experimental result files from the Logify codebase:
 \begin{itemize}
 \item \texttt{results\_rag\_contract\_NLI/experiment\_20260128\_225546.json}: RAG baseline on 20 ContractNLI documents (340 document-hypothesis pairs)
 \item \texttt{results\_logify\_contract\_NLI/experiment\_20260129\_100327.json}: Logify system on 7 documents (119 pairs, incomplete run)
 \end{itemize}
 
-Both systems evaluate legal non-disclosure agreements against 17 hypothesis types (e.g., ``Receiving Party shall not disclose confidential information''), predicting TRUE (entailed), FALSE (contradicted), or UNCERTAIN (not mentioned).
+\subsubsection{Analysis approach}
 
-\subsection{Analysis approach}
-
-I wrote Python scripts to:
+Python scripts were written to:
 \begin{enumerate}
 \item Compute confusion matrices for prediction versus ground truth
 \item Stratify errors by hypothesis type, document length, and confidence level
@@ -167,11 +220,11 @@ I wrote Python scripts to:
 \item Compare latency profiles between systems
 \end{enumerate}
 
-All code was generated on-demand during the investigation. I iteratively refined analyses based on emerging patterns, exemplifying exploratory data analysis by an AI agent.
+All code was generated on-demand during the investigation, with iterative refinement based on emerging patterns.
 
-\subsection{Epistemic limitations}
+\subsubsection{Epistemic limitations}
 
-This is a \textbf{post-hoc analysis} of existing experimental outputs. I cannot:
+This is a \textbf{post-hoc analysis} of existing experimental outputs. The analysis cannot:
 \begin{itemize}
 \item Re-run experiments with different parameters
 \item Access the logified knowledge bases or intermediate representations
@@ -179,15 +232,17 @@ This is a \textbf{post-hoc analysis} of existing experimental outputs. I cannot:
 \item Verify data preprocessing or train/test splits
 \end{itemize}
 
-I am therefore analyzing the \textit{observable behavior} of these systems as recorded in JSON artifacts, not their internal mechanisms.
+The investigation therefore analyzes \textit{observable system behavior} as recorded in JSON artifacts, not internal mechanisms.
 
 % ==============================================================================
-% RESULTS
+% EXPERIMENTAL RESULTS
 % Purpose: Present empirical findings - error patterns, confusion matrices, etc.
 % ==============================================================================
-\section{Results}
+\section{Experimental results}
 
-\subsection{Overall performance: mixed results with specific failure cases}
+\subsection{ContractNLI evaluation}
+
+\subsubsection{Overall performance: mixed results with specific failure cases}
 
 Logify shows mixed performance across the 7 documents analyzed:
 \begin{itemize}
@@ -198,7 +253,7 @@ Logify shows mixed performance across the 7 documents analyzed:
 
 This mixed performance pattern is valuable for understanding what conditions cause the system to struggle versus succeed. The underperformance on short documents is particularly puzzling, as logification should be simpler with less text.
 
-\subsection{Error pattern 1: complete failure on contradictions}
+\subsubsection{Error pattern 1: complete failure on contradictions}
 
 Logify correctly predicts FALSE (contradiction) in 0 of 7 cases (100\% error rate). Examples:
 \begin{itemize}
@@ -208,13 +263,13 @@ Logify correctly predicts FALSE (contradiction) in 0 of 7 cases (100\% error rat
 
 RAG correctly identifies 19 of 24 FALSE cases (79\% recall). This suggests RAG's end-to-end learning preserves negation semantics that Logify's extraction pipeline loses.
 
-\subsection{Error pattern 2: over-confidence on uncertain evidence}
+\subsubsection{Error pattern 2: over-confidence on uncertain evidence}
 
 Logify predicts TRUE for 39 of 52 UNCERTAIN cases (75\% false positive rate). The solver appears to treat ``proposition exists in knowledge base'' as entailment, even when the text does not mention the hypothesis.
 
 Example: For ``Receiving Party shall not solicit representatives'' (UNCERTAIN—contract is silent), Logify maps to proposition $P_6$ and predicts TRUE with confidence 0.5. The same proposition $P_6$ is also used for a different hypothesis (``shall notify in case of disclosure''), suggesting semantic collapse in query translation.
 
-\subsection{Error pattern 3: lossy query translation}
+\subsubsection{Error pattern 3: lossy query translation}
 
 Inspection of 119 generated formulas reveals:
 \begin{itemize}
@@ -225,7 +280,7 @@ Inspection of 119 generated formulas reveals:
 
 This indicates the SBERT-based proposition retrieval is matching surface similarity rather than semantic entailment. The query translator strips negations, causing ``shall NOT X'' hypotheses to match positive propositions about X.
 
-\subsection{Document length analysis}
+\subsubsection{Document length analysis}
 
 Accuracy by length bin (Logify vs RAG):
 \begin{itemize}
@@ -236,7 +291,7 @@ Accuracy by length bin (Logify vs RAG):
 
 Counterintuitively, Logify performs \textit{worst} on short documents where logification should be simplest. This suggests the error patterns are not related to document length or context limitations, but rather to fundamental issues in the extraction or query translation pipeline. This finding is crucial for focusing development efforts.
 
-\subsection{Latency: no advantage from caching}
+\subsubsection{Latency: no advantage from caching}
 
 Query latency per document (17 hypotheses):
 \begin{itemize}
@@ -245,6 +300,30 @@ Query latency per document (17 hypotheses):
 \end{itemize}
 
 Even on cached documents (where logification is reused), Logify is slower because query translation itself requires LLM calls and SBERT retrieval. The ``logify once, query many'' efficiency claim does not hold.
+
+\subsection{DocNLI cross-dataset validation}
+
+\subsubsection{Experimental setup}
+
+To assess whether the identified error patterns generalize beyond ContractNLI, cross-dataset evaluation was attempted on the DocNLI benchmark—a document-level NLI dataset from diverse domains. The test split was filtered for premises between 200-500 words, yielding 20 documents with 109 hypothesis pairs (21 entailment, 88 not-entailment).
+
+\subsubsection{Technical failure}
+
+The DocNLI evaluation encountered severe technical failures: 19 of 20 premises failed to process due to cache path errors in the evaluation code, leaving only 5/109 examples successfully evaluated (4.6\% completion rate). The reported accuracy of 80\% (4/5 correct) is statistically meaningless given this small sample size. This failure reflects coding errors in the implementation, not deficiencies in the Logify system itself.
+
+In contrast, the RAG baseline successfully evaluated all 109 examples, achieving 78\% overall accuracy (85/109 correct). Per-class performance: 81\% on entailment (17/21), 77\% on not-entailment (68/88). This represents balanced performance across both label types, unlike the imbalanced pattern observed in ContractNLI.
+
+\subsubsection{Implications for generalizability}
+
+Given the implementation failures on DocNLI, conclusions must be explicitly scoped:
+
+\begin{enumerate}
+\item The three error patterns (negation failure, over-confidence, lossy translation) are \textit{observed in ContractNLI data only}
+\item Error pattern generalizability \textit{remains unknown} due to technical failures in cross-dataset validation
+\item Claims about ``systematic'' errors must be understood as ContractNLI-specific until additional validation succeeds
+\end{enumerate}
+
+This limitation is transparent and actionable: the buggy implementation code should be fixed, then cross-dataset validation re-attempted.
 
 % ==============================================================================
 % DISCUSSION
@@ -279,63 +358,38 @@ The analyzed 7 documents represent a subset of the full ContractNLI evaluation. 
 
 This variability is valuable: it indicates the system's performance is sensitive to specific document characteristics, providing clear directions for improvement efforts.
 
-\subsection{Implications for AI-driven research}
-
-This investigation exemplifies a new research modality: an AI agent as lead investigator. I generated hypotheses, wrote analysis code, interpreted statistics, and critiqued published work—tasks traditionally requiring human expertise. Key observations:
-
-\begin{itemize}
-\item \textbf{Speed}: Complete analysis from raw data to draft paper in under 2 hours.
-\item \textbf{Thoroughness}: Systematic coverage of error types (confusion matrices, stratifications, formula inspection) without fatigue.
-\item \textbf{Limitations}: Cannot conduct new experiments, access hidden context (prompts, intermediate states), or exercise scientific judgment beyond pattern recognition.
-\item \textbf{Bias risk}: My training data includes published research, creating pressure to find ``interesting'' results. Did I over-interpret noise? Human peer review is essential.
-\end{itemize}
-
 % ==============================================================================
-% CROSS-DATASET VALIDATION: DOCNLI
-% Purpose: Test error pattern generalizability and report experimental failures
+% IMPLICATIONS FOR THE INVESTIGATION
+% Purpose: Methodological insights, limitations, scope
 % ==============================================================================
-\section{Cross-dataset validation: DocNLI results}
+\section{Implications for the investigation}
 
-\subsection{Experimental setup}
+\subsection{Methodological transparency}
 
-To assess whether the identified error patterns generalize beyond ContractNLI, we attempted evaluation on the DocNLI benchmark \cite{docnli}—a document-level NLI dataset from diverse domains. We filtered the test split for premises between 200-500 words, yielding 20 documents with 109 hypothesis pairs (21 entailment, 88 not-entailment).
+This investigation exemplifies transparent failure reporting in AI-driven research. The DocNLI cross-dataset validation failed due to coding errors (cache path bugs preventing 95% of evaluations). Traditional research reporting might obscure such failures or relegate them to brief mentions. AI-driven qualitative research, emphasizing reflexivity and failure analysis, demands explicit documentation of implementation challenges alongside analytical findings.
 
-\subsection{Technical failure and methodological transparency}
+\subsection{Scope of findings}
 
-\textbf{The DocNLI evaluation encountered severe technical failures due to my implementation errors}: 19 of 20 premises failed to process due to cache path errors in the evaluation code I wrote, leaving only 5/109 examples successfully evaluated (4.6\% completion rate). The reported accuracy of 80\% (4/5 correct) is statistically meaningless given this small sample size. This failure reflects limitations in my ability as an AI agent to write robust evaluation code, not deficiencies in the Logify system itself.
-
-In contrast, the RAG baseline successfully evaluated all 109 examples, achieving 78\% overall accuracy (85/109 correct). Per-class performance: 81\% on entailment (17/21), 77\% on not-entailment (68/88). This represents balanced performance across both label types, unlike the imbalanced pattern observed in ContractNLI.
-
-\subsection{Implications for the investigation}
-
-This technical failure exemplifies two critical aspects of AI-driven research methodology:
-
-\textbf{1. AI researcher limitations}: The cache errors reflect my limitations as an AI agent in writing robust evaluation code. I wrote the DocNLI evaluation script, and my implementation had bugs that prevented successful execution. This reveals a key limitation of AI-driven research: while I can analyze existing data effectively, implementing new experimental infrastructure is error-prone.
-
-\textbf{2. Methodological transparency}: Traditional research reporting might obscure such failures or relegate them to brief mentions. AI-driven qualitative research, emphasizing reflexivity and failure analysis, demands explicit documentation: \textit{the cross-dataset validation attempt failed due to my implementation errors as the AI researcher, limiting our ability to assess error pattern generalizability}. Taking responsibility for these failures is essential—they are not Logify's fault, but mine.
-
-\subsection{What can be inferred from RAG performance?}
-
-The RAG baseline's consistent 77-78\% accuracy across both ContractNLI (68\% on 7 docs) and DocNLI (78\% on 109 examples) suggests reasonable stability. Key observations:
-
-\begin{itemize}
-\item \textbf{Balanced performance}: Unlike ContractNLI where RAG showed strong FALSE detection (79\%), DocNLI evaluation shows balanced accuracy across entailment (81\%) and not-entailment (77\%) classes
-\item \textbf{Domain stability}: Performance holds across legal documents (ContractNLI) and mixed-domain texts (DocNLI)
-\item \textbf{Baseline strength}: This reinforces that the 40\% Logify performance on ContractNLI represents significant underperformance relative to a standard neural baseline
-\end{itemize}
-
-\subsection{Revised scope of findings}
-
-Given my implementation failures on DocNLI, our conclusions must be explicitly scoped:
+Given the implementation failures on DocNLI, conclusions must be explicitly scoped:
 
 \begin{enumerate}
-\item The three error patterns (negation failure, over-confidence, lossy translation) are \textit{observed in ContractNLI data only}
-\item Error pattern generalizability \textit{remains unknown} due to my technical failures in implementing the cross-dataset validation
-\item The investigation reveals both Logify's conceptual error patterns (ContractNLI analysis) and my limitations as an AI researcher (inability to write robust DocNLI evaluation code)
+\item The three error patterns (negation failure, over-confidence, lossy translation) are empirically observed in ContractNLI data only
+\item Error pattern generalizability remains unknown due to incomplete cross-dataset validation
 \item Claims about ``systematic'' errors must be understood as ContractNLI-specific until additional validation succeeds
 \end{enumerate}
 
-This limitation is transparent and actionable: a human researcher or more capable AI agent should fix my buggy implementation code, then re-attempt cross-dataset validation.
+The mixed performance (strong on some documents, weak on others) combined with technical failures in cross-dataset evaluation reveals both neuro-symbolic system challenges and implementation difficulties in AI-driven research.
+
+\subsection{Actionable recommendations}
+
+The analysis identifies specific improvements for ongoing development:
+
+\begin{itemize}
+\item \textbf{Negation preservation}: Implement explicit negation detection in extraction pipeline (addresses 100\% FALSE error rate)
+\item \textbf{Semantic grounding}: Refine query translation beyond surface similarity matching (addresses 75\% false positive rate on UNCERTAIN cases)
+\item \textbf{Contradiction detection}: Revise solver logic to distinguish proposition absence from proposition contradiction
+\item \textbf{Cross-dataset validation}: Fix implementation bugs and re-attempt DocNLI evaluation to assess generalizability
+\end{itemize}
 
 % ==============================================================================
 % CONCLUSION
