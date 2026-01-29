@@ -45,6 +45,17 @@ Papers must be **predominantly authored by generative AI systems** (Claude, Chat
 ## Focus Areas
 - Experimentation in AI-driven qualitative research methodology
 - Creative exploration of authorship and agency in knowledge creation
+- Error analysis to inform iterative system development
+- Understanding failure modes in neuro-symbolic architectures
+
+## Research Goals
+1. Identify systematic error patterns in Logify's underperforming cases
+2. Understand why the system shows mixed performance (strong on some documents, weak on others)
+3. Provide actionable design insights for:
+   - Negation handling in extraction pipeline
+   - Query translation semantic grounding
+   - Contradiction detection in solver logic
+4. Demonstrate AI agent capabilities in diagnostic analysis for ongoing projects
 
 ## Working Files
 - `agent_text.tex` - Main paper draft in LaTeX format
