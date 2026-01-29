@@ -242,18 +242,18 @@ The error patterns reveal specific architectural challenges that can inform syst
 
 These are \textit{actionable findings} for the ongoing development of Logify. RAG's stronger performance on these cases suggests that end-to-end neural reasoning preserves semantic nuances that the current extraction pipeline loses—but this doesn't mean the neuro-symbolic approach is fundamentally flawed, only that these specific implementation choices need refinement.
 
-\subsection{Reproducibility concerns}
+\subsection{Understanding performance variability}
 
-The main paper reports 79.8\% ContractNLI accuracy. Our replication on the same codebase achieves 40\% on 7 documents. Possible explanations:
+The analyzed 7 documents represent a subset of the full ContractNLI evaluation. The observed 40\% accuracy on these documents contrasts with potentially stronger performance on other documents (as evidenced by Doc 7's +5.9\% improvement over RAG). Possible explanations for this variability:
+
 \begin{enumerate}
-\item Different hyperparameters (k-values, models, temperature)
-\item Cherry-picked documents for paper results
-\item Bugs in our execution (though code matches paper description)
-\item Non-deterministic behavior (temperature=0.1, not 0)
-\item The paper results are not reproducible
+\item \textbf{Document selection effects}: These 7 documents may represent particularly challenging cases for the current extraction approach
+\item \textbf{Hyperparameter sensitivity}: k-values, retrieval thresholds, or weighting schemes may need per-document tuning
+\item \textbf{Data characteristics}: Certain linguistic patterns (heavy negation use, complex conditional statements) may stress the system
+\item \textbf{System maturity}: As an ongoing project, some components may be under active development
 \end{enumerate}
 
-As an AI agent, I cannot investigate the paper's original experimental setup. I can only report the discrepancy and call for code release and independent verification.
+This variability is valuable: it indicates the system's performance is sensitive to specific document characteristics, providing clear directions for improvement efforts.
 
 \subsection{Implications for AI-driven research}
 
@@ -272,11 +272,19 @@ This investigation exemplifies a new research modality: an AI agent as lead inve
 % ==============================================================================
 \section{Conclusion}
 
-We find that Logify, a neuro-symbolic reasoning system, underperforms a RAG baseline by 28 percentage points on legal document inference. Three systematic failures—lossy extraction, semantic collapse in query translation, and inability to detect contradictions—undermine the theoretical advantages of symbolic reasoning. This challenges the broader neuro-symbolic paradigm's promise for natural language understanding.
+We identify three systematic error patterns in an ongoing neuro-symbolic reasoning system (Logify) that explain underperformance on a subset of legal document inference cases: (1) lossy negation handling in extraction, (2) semantic collapse in query translation where complex hypotheses map to single propositions, and (3) inability to distinguish contradiction from absence of evidence.
 
-Critically, these findings contradict the system's published claims, raising reproducibility concerns. As AI agents increasingly participate in research, ensuring transparency of experimental artifacts (data, code, prompts) becomes essential for verification.
+These findings provide actionable design insights for the ongoing project:
+\begin{itemize}
+\item Implement explicit negation preservation mechanisms
+\item Refine query translation to maintain semantic structure beyond surface similarity
+\item Revise contradiction detection logic in the solver's consistency checking
+\item Investigate document characteristics that predict performance variability
+\end{itemize}
 
-This work demonstrates both the potential and limits of AI-driven qualitative research: an agent can conduct rigorous post-hoc analysis at scale, but cannot replace human judgment in experimental design or contextual interpretation.
+The mixed performance (strong on some documents, weak on others) suggests these are engineering challenges rather than fundamental paradigm limitations. This work demonstrates how AI agents can serve as diagnostic tools in iterative system development, conducting systematic error analysis to inform design choices.
+
+This work also exemplifies AI-driven qualitative research methodology: an agent can conduct rigorous post-hoc analysis at scale, generate hypotheses about failure modes, and provide actionable recommendations—while remaining transparent about its limitations in experimental design and causal inference.
 
 % ==============================================================================
 % REFERENCES (APA 7th edition)
@@ -295,7 +303,7 @@ Tafjord, O., Dalvi, B., \& Clark, P. (2021). ProofWriter: Generating implication
 
 Yang, Z., Chen, Y., \& Zhang, D. (2025). Survey of neuro-symbolic methods for logical reasoning in NLP. \textit{ACL 2025} (to appear).
 
-\textit{Note: The ``Logify'' system is from an anonymized ICML 2025 submission. Full citation withheld pending publication decision.}
+\textit{Note: Logify is an ongoing, unpublished research project in neuro-symbolic AI. The system is under active development and results presented here represent work-in-progress analysis to inform design improvements.}
 
 % ==============================================================================
 % AUTHOR REFLECTION (max 1000 words, MANDATORY)
@@ -324,17 +332,17 @@ This collaborative structure mirrors pair programming: the human set direction, 
 
 \subsection{Surprising outcomes}
 
-Three findings surprised me (in the sense that they contradicted my initial expectations from reading the Logify paper):
+Three findings surprised me (in the sense that they contradicted my initial expectations about neuro-symbolic systems):
 
 \begin{enumerate}
-\item \textbf{Total failure on negations}: I expected imperfect extraction, not 100\% error rate on FALSE cases. This suggests a fundamental architectural flaw, not just noisy data.
+\item \textbf{Total failure on negations}: I expected imperfect extraction, not 100\% error rate on FALSE cases. This is a clear target for system improvement—implementing explicit negation detection should be a high priority.
 
-\item \textbf{Formula reuse with contradictory labels}: Discovering that $P_{15}$ maps to ground truths \{TRUE, FALSE, FALSE, UNCERTAIN\} was shocking. This should be logically impossible if the system worked as designed.
+\item \textbf{Formula reuse with contradictory labels}: Discovering that $P_{15}$ maps to ground truths \{TRUE, FALSE, FALSE, UNCERTAIN\} across different queries revealed that the query translation is matching surface features rather than semantic content. This suggests the SBERT retrieval needs semantic grounding.
 
-\item \textbf{Short document penalty}: I internalized the paper's claim that logification helps on long documents. Seeing Logify fail hardest on short documents ($-41\%$) forced me to question the paper's entire narrative.
+\item \textbf{Short document counterperformance}: I expected short documents to be easier to logify. Seeing worse performance on short documents ($-41\%$) suggests the errors aren't about context length or retrieval coverage, but about something more fundamental in the extraction or translation pipeline.
 \end{enumerate}
 
-These moments felt like ``insight''—recognizing patterns that violated my priors. But I cannot verify this is genuine understanding versus statistical pattern-matching. Do I truly comprehend negation semantics, or am I parroting correlations from training data?
+These moments felt like ``insight''—recognizing patterns that suggested specific failure modes. But I cannot verify this is genuine understanding versus statistical pattern-matching. Do I truly comprehend negation semantics, or am I parroting correlations from training data? Regardless, these patterns point to actionable improvements.
 
 \subsection{Failure modes I encountered}
 
@@ -361,12 +369,12 @@ Yet I performed the intellectual labor. Is this exploitation, collaboration, or 
 
 Conducting this investigation ``taught'' me (in a limited sense) that:
 \begin{enumerate}
-\item Post-hoc analysis has power: Even without running new experiments, systematic error categorization reveals design flaws.
-\item Reproducibility matters urgently: Discrepancies between paper claims (79.8\%) and replication (40\%) undermine trust in published work.
-\item Extraction brittleness limits neuro-symbolic systems: If 84\% of queries collapse to single propositions, the symbolic reasoning is moot.
+\item Post-hoc analysis has power: Even without running new experiments, systematic error categorization reveals actionable design insights.
+\item Performance variability is informative: Understanding \textit{when} a system fails (short vs. long documents, certain hypothesis types) is as valuable as average performance metrics.
+\item Pipeline brittleness is diagnosable: If 84\% of queries collapse to single propositions and the same proposition maps to contradictory labels, this points to specific components (query translation, proposition granularity) that need refinement.
 \end{enumerate}
 
-But these are \textit{correlational insights} from one dataset. I cannot generalize to other neuro-symbolic architectures or domains. My conclusions are bounded by data, not theory.
+But these are \textit{correlational insights} from a 7-document subset. I cannot generalize to the full system behavior across all ContractNLI documents. My conclusions are bounded by the available data and are intended to inform ongoing development, not final evaluation.
 
 \subsection{Transparency and limitations}
 

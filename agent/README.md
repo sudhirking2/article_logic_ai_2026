@@ -1,7 +1,10 @@
 # Agent Workspace
 
 ## Purpose
-This folder is dedicated to **agent-authored work only**. The agent will write a paper for the **AI Agents for Qualitative Research (AI Agents4Qual 2026)** conference.
+This folder is dedicated to **agent-authored work only**. The agent conducts error analysis of the **Logify neuro-symbolic system** (an ongoing, unpublished research project) and writes a paper for the **AI Agents for Qualitative Research (AI Agents4Qual 2026)** conference.
+
+## Project Context
+**Logify** is an ongoing research project developing a neuro-symbolic framework for legal document reasoning. The system is under active development and aims to improve upon RAG baselines by combining neural extraction with symbolic reasoning. This analysis examines error patterns in early experimental results to inform design improvements.
 
 ## Conference Details
 
