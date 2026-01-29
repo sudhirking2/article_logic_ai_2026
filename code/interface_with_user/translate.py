@@ -378,29 +378,48 @@ The formula will be evaluated to determine:
 Example 1 - Simple match:
 Hypothesis: "The receiving party shall keep information confidential"
 If P_6 states "The Receiving Party shall not disclose Confidential Information..."
-Output: {{"formula": "P_6", "translation": "The receiving party shall not disclose confidential information", "reasoning": "P_6 directly captures the confidentiality obligation"}}
+Output: {{"formula": "P_6", "query_mode": "entailment", "translation": "The receiving party shall not disclose confidential information", "reasoning": "'Shall' indicates obligation - check if this is entailed"}}
 
 Example 2 - Negation:
 Hypothesis: "The receiving party shall not reverse engineer any information"
 If P_9 states "The Receiving Party shall not alter, modify, disassemble, reverse engineer..."
-Output: {{"formula": "P_9", "translation": "The receiving party shall not reverse engineer information", "reasoning": "P_9 prohibits reverse engineering, matching the hypothesis"}}
+Output: {{"formula": "P_9", "query_mode": "entailment", "translation": "The receiving party shall not reverse engineer information", "reasoning": "'Shall not' is a prohibition - check if this is entailed"}}
 
 Example 3 - Conjunction:
 Hypothesis: "All confidential information must be marked and returned"
 If P_4 = "Information shall be marked" and P_11 = "Information must be returned"
-Output: {{"formula": "P_4 ∧ P_11", "translation": "Information is marked AND returned", "reasoning": "Both conditions must hold for 'all...must be marked and returned'"}}
+Output: {{"formula": "P_4 ∧ P_11", "query_mode": "entailment", "translation": "Information is marked AND returned", "reasoning": "'Must' indicates obligation - check if both conditions are entailed"}}
 
 Example 4 - Disjunction:
 Hypothesis: "Some information may be destroyed or returned"
 If P_11 = "must return information" and P_12 = "may destroy information"
-Output: {{"formula": "P_11 ∨ P_12", "translation": "Information is returned OR destroyed", "reasoning": "'Some...may' suggests either option satisfies the hypothesis"}}
+Output: {{"formula": "P_11 ∨ P_12", "query_mode": "consistency", "translation": "Information is returned OR destroyed", "reasoning": "'Some...may' suggests either option satisfies the hypothesis"}}
+
+Example 5 - Permission (consistency mode):
+Hypothesis: "Receiving Party may share Confidential Information with employees"
+If P_21 states "The Recipient discloses Confidential Information to need-to-know persons"
+Output: {{"formula": "P_21", "query_mode": "consistency", "translation": "Sharing with employees is permitted", "reasoning": "'May' indicates permission - check if this action is allowed (consistent with KB), not required"}}
+
+Example 6 - Conditional obligation:
+Hypothesis: "Receiving Party shall notify Disclosing Party in case disclosure is required by law"
+If P_29 = "Disclosure is required by law" and P_30 = "Recipient gives notice"
+Output: {{"formula": "P_29 ⟹ P_30", "query_mode": "entailment", "translation": "If legally required to disclose, then must notify", "reasoning": "'In case' creates a conditional - check if implication holds"}}
+
+=== QUERY MODE ===
+First, determine the QUERY MODE based on the hypothesis wording:
+
+1. **entailment** (default): The hypothesis claims something MUST be true.
+   - Keywords: "shall", "must", "is required", "will", "is obligated", "shall not"
+
+2. **consistency**: The hypothesis asks if something is ALLOWED or POSSIBLE.
+   - Keywords: "may", "can", "could", "is allowed", "is permitted", "is possible"
 
 === TRANSLATION GUIDELINES ===
 
-1. "Shall"/"Must" obligations → Use proposition directly: P_i
-2. "Shall not" prohibitions → The proposition already captures the negation, use: P_i (if P_i states "shall not X")
-3. "May"/"Can" permissions → Use proposition for the permission: P_i
-4. Conditionals "If A then B" → Use implication: P_a ⟹ P_b
+1. "Shall"/"Must" obligations → Use proposition directly: P_i (mode: entailment)
+2. "Shall not" prohibitions → The proposition already captures the negation, use: P_i (mode: entailment)
+3. "May"/"Can" permissions → Use proposition for the permitted action: P_i (mode: consistency)
+4. Conditionals "If A then B" / "in case" / "when" → Use implication: P_a ⟹ P_b (mode: entailment)
 5. "Some"/"Any" (existential) → Use disjunction: P_1 ∨ P_2
 6. "All"/"Every" (universal) → Use conjunction: P_1 ∧ P_2
 
@@ -408,7 +427,7 @@ IMPORTANT: Choose the SIMPLEST formula. If one proposition captures the hypothes
 
 === OUTPUT FORMAT ===
 Return ONLY a JSON object (no other text):
-{{"formula": "<formula using {available_ids}>", "translation": "<plain English meaning>", "reasoning": "<brief explanation>"}}
+{{"formula": "<formula using {available_ids}>", "query_mode": "<entailment or consistency>", "translation": "<plain English meaning>", "reasoning": "<brief explanation>"}}
 """
 
     return prompt

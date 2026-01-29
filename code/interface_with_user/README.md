@@ -72,15 +72,46 @@ result = translate_query(
 )
 
 print(f"Formula: {result['formula']}")
+print(f"Query Mode: {result['query_mode']}")  # "entailment" or "consistency"
 print(f"Translation: {result['translation']}")
 print(f"Reasoning: {result.get('reasoning', result.get('explanation', 'N/A'))}")
+
+# Use query_mode to select solver method
+from logic_solver import LogicSolver
+
+solver = LogicSolver(logified_structure)
+
+if result['query_mode'] == "consistency":
+    # "May X?" → Check if X is consistent (possible/allowed)
+    solver_result = solver.check_consistency(result['formula'])
+else:
+    # "Shall X?" → Check if X is entailed (required)
+    solver_result = solver.query(result['formula'])
 ```
+
+## Query Modes
+
+The translator detects the semantic type of each hypothesis and outputs a `query_mode`:
+
+| Query Mode   | Hypothesis Keywords                          | Solver Method               | Semantics                    |
+|--------------|----------------------------------------------|----------------------------|------------------------------|
+| `entailment` | "shall", "must", "is required", "shall not"  | `solver.query()`           | Is X necessarily true?       |
+| `consistency`| "may", "can", "could", "is allowed"          | `solver.check_consistency()` | Is X possible/permitted?   |
+
+This distinction is critical: "may" questions ask about *permission* (is it allowed?), not *obligation* (is it required?). Using entailment for permission queries incorrectly returns UNCERTAIN.
+
+### Examples
+
+- **Entailment**: "The receiving party **shall** return all documents" → `query_mode: "entailment"`
+- **Consistency**: "The receiving party **may** share information with employees" → `query_mode: "consistency"`
+- **Conditional**: "The party **shall** notify **in case** of legal requirement" → `query_mode: "entailment"` with formula `P_condition ⟹ P_action`
 
 ## Output Format
 
 ```json
 {
     "formula": "P_9",
+    "query_mode": "entailment",
     "translation": "The receiving party shall not reverse engineer information",
     "reasoning": "P_9 directly captures the prohibition on reverse engineering",
     "query": "The receiving party shall not reverse engineer any confidential information",

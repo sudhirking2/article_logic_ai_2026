@@ -196,14 +196,24 @@ def query_hypothesis(
                 "error": "Failed to translate hypothesis to formula"
             }
 
-        # Solve
+        # Get query mode from translation result (default to entailment)
+        query_mode = translation_result.get('query_mode', 'entailment')
+
+        # Solve using appropriate method based on query mode
         solver = LogicSolver(logified_structure)
-        solver_result = solver.query(formula)
+
+        if query_mode == "consistency":
+            # "May X?" → Check if X is consistent (possible/allowed)
+            solver_result = solver.check_consistency(formula)
+        else:
+            # "Shall X?" → Check if X is entailed (required)
+            solver_result = solver.query(formula)
 
         return {
             "prediction": solver_result.answer,
             "confidence": solver_result.confidence,
             "formula": formula,
+            "query_mode": query_mode,
             "query_latency_sec": time.time() - start_time,
             "error": None
         }
