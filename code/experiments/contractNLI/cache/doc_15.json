@@ -1,0 +1,441 @@
+{
+  "primitive_props": [
+    {
+      "id": "P_1",
+      "translation": "This Agreement is made between The University of Bristol and the other signatory party (the Parties).",
+      "evidence": "Header paragraph: \"This Agreement is made ... between The University of Bristol ... and __________ ... (the \\\"Parties\\\")\"",
+      "explanation": "Atomic party-identification statement; no logical connectives to split."
+    },
+    {
+      "id": "P_2",
+      "translation": "The purpose of this Agreement is to regulate the exchange and subsequent treatment of confidential information received or disclosed to the signatories.",
+      "evidence": "\"THE PURPOSE of this Agreement is to regulate the exchange and subsequent treatment of confidential information...\"",
+      "explanation": "Single stated purpose; treated as one proposition describing the Agreement’s aim."
+    },
+    {
+      "id": "P_3",
+      "translation": "Confidential information includes proprietary materials.",
+      "evidence": "\"the term confidential information includes proprietary materials...\"",
+      "explanation": "Single inclusion claim; no connectives."
+    },
+    {
+      "id": "P_4",
+      "translation": "Confidential information includes specifications.",
+      "evidence": "\"including without limitation specifications...\"",
+      "explanation": "Single category inclusion."
+    },
+    {
+      "id": "P_5",
+      "translation": "Confidential information includes drawings.",
+      "evidence": "\"including without limitation ... drawings...\"",
+      "explanation": "Single category inclusion."
+    },
+    {
+      "id": "P_6",
+      "translation": "Confidential information includes designs.",
+      "evidence": "\"including without limitation ... designs...\"",
+      "explanation": "Single category inclusion."
+    },
+    {
+      "id": "P_7",
+      "translation": "Confidential information includes computer software.",
+      "evidence": "\"including without limitation ... computer software...\"",
+      "explanation": "Single category inclusion."
+    },
+    {
+      "id": "P_8",
+      "translation": "Confidential information includes knowhow.",
+      "evidence": "\"including without limitation ... knowhow.\"",
+      "explanation": "Single category inclusion."
+    },
+    {
+      "id": "P_9",
+      "translation": "Confidential information is disclosed for the purpose of evaluating technology in the described field.",
+      "evidence": "Clause 1: \"The disclosure of confidential information is for the specific purpose of evaluating technology...\"",
+      "explanation": "Single disclosed-purpose statement."
+    },
+    {
+      "id": "P_10",
+      "translation": "Documents or materials are provided on loan for the purposes described in Clause 1.",
+      "evidence": "Clause 1: \"Any specific documents or materials which are necessarily provided on loan...\"",
+      "explanation": "Atomic event-description (loan provision occurs)."
+    },
+    {
+      "id": "P_11",
+      "translation": "Loaned documents or materials are specified in a schedule to this Agreement.",
+      "evidence": "Clause 1: \"...will be specified in a schedule to this Agreement\"",
+      "explanation": "Single specification requirement."
+    },
+    {
+      "id": "P_12",
+      "translation": "The disclosing party requests return of documents or materials provided to the receiving party.",
+      "evidence": "Clause 1: \"...will return these ... to the disclosing party on request.\"",
+      "explanation": "Atomic trigger condition (a request occurs)."
+    },
+    {
+      "id": "P_13",
+      "translation": "The receiving party returns the loaned documents or materials to the disclosing party.",
+      "evidence": "Clause 1: \"...the receiving party will return these...\"",
+      "explanation": "Atomic action/outcome (return occurs)."
+    },
+    {
+      "id": "P_14",
+      "translation": "The Parties mark or otherwise designate confidential information to show it is imparted in confidence.",
+      "evidence": "Clause 2: \"The parties will mark or otherwise designate confidential information...\"",
+      "explanation": "Single required conduct statement; does not decompose without introducing disjunction ('mark' vs 'otherwise designate')."
+    },
+    {
+      "id": "P_15",
+      "translation": "The receiving party takes proper and reasonable measures to maintain confidentiality of the information.",
+      "evidence": "Clause 3(a): \"it will take all proper and reasonable measures to ensure that the confidentiality... is maintained;\"",
+      "explanation": "Atomic obligation content."
+    },
+    {
+      "id": "P_16",
+      "translation": "The receiving party uses the information for a commercial purpose.",
+      "evidence": "Clause 3(b): \"it will not use the information for any commercial purpose...\"",
+      "explanation": "Atomic usage fact; permission handled separately."
+    },
+    {
+      "id": "P_17",
+      "translation": "The receiving party manufactures using the information.",
+      "evidence": "Clause 3(b): \"...or manufacture...\"",
+      "explanation": "Atomic manufacturing fact; permission handled separately."
+    },
+    {
+      "id": "P_18",
+      "translation": "The receiving party has a written licence or other agreement from the disclosing party.",
+      "evidence": "Clause 3(b): \"...without obtaining a written licence or other agreement from the disclosing party;\"",
+      "explanation": "Atomic permission/existence-of-document fact."
+    },
+    {
+      "id": "P_19",
+      "translation": "The receiving party discloses the information to a third party.",
+      "evidence": "Clause 3(c): \"it will not disclose the information to any third party...\"",
+      "explanation": "Atomic disclosure action."
+    },
+    {
+      "id": "P_20",
+      "translation": "The receiving party has written permission from the disclosing party to disclose the information to a third party.",
+      "evidence": "Clause 3(c): \"...without written permission;\"",
+      "explanation": "Atomic permission fact."
+    },
+    {
+      "id": "P_21",
+      "translation": "The receiving party discloses the information to employees other than those covered as permitted recipients.",
+      "evidence": "Clause 3(d): \"it will not disclose the information to employees other than those above...\"",
+      "explanation": "Atomic employee-disclosure action (scope handled via constraints)."
+    },
+    {
+      "id": "P_22",
+      "translation": "Disclosure to those other employees is necessary to fulfil the purposes set out above.",
+      "evidence": "Clause 3(d): \"...except to the extent necessary to fulfil the purposes set out above...\"",
+      "explanation": "Atomic necessity condition."
+    },
+    {
+      "id": "P_23",
+      "translation": "Those other employees are made aware of the confidential nature of the information and the conditions of disclosure in the Agreement.",
+      "evidence": "Clause 3(d): \"...will be made aware of the confidential nature... and the conditions of disclosure herein;\"",
+      "explanation": "Atomic awareness/notice condition (kept as one statement describing the awareness requirement)."
+    },
+    {
+      "id": "P_24",
+      "translation": "The receiving party makes a copy of the information.",
+      "evidence": "Clause 3(e): \"it will not make any copy...\"",
+      "explanation": "Atomic copying action."
+    },
+    {
+      "id": "P_25",
+      "translation": "The receiving party makes an abstract of the information.",
+      "evidence": "Clause 3(e): \"...or abstract of the information...\"",
+      "explanation": "Atomic abstracting action."
+    },
+    {
+      "id": "P_26",
+      "translation": "The receiving party has specific written permission from the disclosing party to copy or abstract the information.",
+      "evidence": "Clause 3(e): \"...without specific written permission from the disclosing party;\"",
+      "explanation": "Atomic permission fact (for copy/abstract)."
+    },
+    {
+      "id": "P_27",
+      "translation": "The receiving party acknowledges the source of the information in any drawing, document, or software incorporating the information.",
+      "evidence": "Clause 3(f): \"it will acknowledge the source... of ... any drawing, document or software incorporating the information.\"",
+      "explanation": "Atomic marking/acknowledgment requirement."
+    },
+    {
+      "id": "P_28",
+      "translation": "The receiving party marks \"Confidential\" on any drawing, document, or software incorporating the information.",
+      "evidence": "Clause 3(f): \"...and will mark \\\"Confidential\\\", any drawing, document or software incorporating the information.\"",
+      "explanation": "Atomic marking requirement."
+    },
+    {
+      "id": "P_29",
+      "translation": "Ownership of drawings, documents, or software is transferred to the receiving party under this Agreement.",
+      "evidence": "Clause 4: \"there is no explicit or implied transfer of ownership to the receiving party...\"",
+      "explanation": "Atomic transfer-of-ownership claim (will be negated by constraints)."
+    },
+    {
+      "id": "P_30",
+      "translation": "Copyright in the drawings, documents, or software is transferred to the receiving party under this Agreement.",
+      "evidence": "Clause 4: \"...or the copyright subsisting in them.\"",
+      "explanation": "Atomic transfer-of-copyright claim (will be negated by constraints)."
+    },
+    {
+      "id": "P_31",
+      "translation": "The information is in the public domain at the time of disclosure.",
+      "evidence": "Clause 4(a): \"information which at the time of disclosure is in the public domain\"",
+      "explanation": "Atomic exception condition."
+    },
+    {
+      "id": "P_32",
+      "translation": "After disclosure, the information becomes part of the public domain through no fault of the recipient.",
+      "evidence": "Clause 4(a): \"...or which after disclosure becomes part of the public domain through no fault of the recipient\"",
+      "explanation": "Atomic exception condition."
+    },
+    {
+      "id": "P_33",
+      "translation": "The recipient party had the information in its possession at the time of disclosure.",
+      "evidence": "Clause 4(b): \"...can show was in its possession at the time of disclosure\"",
+      "explanation": "Atomic exception condition."
+    },
+    {
+      "id": "P_34",
+      "translation": "The information is independently developed by the recipient.",
+      "evidence": "Clause 4(b): \"...or which is independently developed by the recipient...\"",
+      "explanation": "Atomic exception component; additional condition handled separately."
+    },
+    {
+      "id": "P_35",
+      "translation": "The information was not acquired directly or indirectly from the disclosing party.",
+      "evidence": "Clause 4(b): \"...and was not acquired directly or indirectly from the disclosing party\"",
+      "explanation": "Atomic exception component."
+    },
+    {
+      "id": "P_36",
+      "translation": "The information is made public by the disclosing party.",
+      "evidence": "Clause 4(c): \"information which is made public ... by the disclosing party\"",
+      "explanation": "Atomic exception condition."
+    },
+    {
+      "id": "P_37",
+      "translation": "The information is made public by others with the permission of the disclosing party.",
+      "evidence": "Clause 4(c): \"...or by others with the permission of the disclosing party\"",
+      "explanation": "Atomic exception condition."
+    },
+    {
+      "id": "P_38",
+      "translation": "The receiving party receives the information from a third party without similar restriction.",
+      "evidence": "Clause 4(d): \"information which is received ... from a third party without similar restriction\"",
+      "explanation": "Atomic exception component."
+    },
+    {
+      "id": "P_39",
+      "translation": "Receiving the information from the third party is without breach of this Agreement.",
+      "evidence": "Clause 4(d): \"...and without breach of this Agreement.\"",
+      "explanation": "Atomic exception component."
+    },
+    {
+      "id": "P_40",
+      "translation": "The information is required to be disclosed by legal process.",
+      "evidence": "Clause 4(e): \"information which is required to be disclosed by legal process\"",
+      "explanation": "Atomic exception condition."
+    },
+    {
+      "id": "P_41",
+      "translation": "The information is required to be disclosed by law.",
+      "evidence": "Clause 4(e): \"...law...\"",
+      "explanation": "Atomic exception condition."
+    },
+    {
+      "id": "P_42",
+      "translation": "The information is required to be disclosed by a regulatory authority.",
+      "evidence": "Clause 4(e): \"...or regulatory authority.\"",
+      "explanation": "Atomic exception condition."
+    },
+    {
+      "id": "P_43",
+      "translation": "The confidentiality obligations under this Agreement apply to the information.",
+      "evidence": "Clause 4 lead-in: \"the obligations herein undertaken will not apply to:\" (implying an applicability concept)",
+      "explanation": "Atomic applicability flag used to encode the contract’s exception structure."
+    },
+    {
+      "id": "P_44",
+      "translation": "The ten-year confidentiality period (starting from the effective date) is in effect.",
+      "evidence": "Clause 5: \"...thereafter for a period of ten (10) years, starting from the effective date...\"",
+      "explanation": "Atomic temporal-status proposition (used as a condition in constraints)."
+    },
+    {
+      "id": "P_45",
+      "translation": "A party communicates or divulges to third parties confidential information received from the other party.",
+      "evidence": "Clause 5: \"...not to communicate or to divulge to third parties confidential information received from the other party.\"",
+      "explanation": "Atomic disclosure-to-third-parties action (two verbs treated as one act-type)."
+    },
+    {
+      "id": "P_46",
+      "translation": "This Agreement is construed and enforced in accordance with English Law.",
+      "evidence": "Clause 6: \"This Agreement is to be construed and enforced in accordance with English Law\"",
+      "explanation": "Atomic governing-law statement."
+    },
+    {
+      "id": "P_47",
+      "translation": "This Agreement is subject to the exclusive jurisdiction of the English courts.",
+      "evidence": "Clause 6: \"...subject to the exclusive jurisdiction of the English courts...\"",
+      "explanation": "Atomic jurisdiction statement."
+    },
+    {
+      "id": "P_48",
+      "translation": "A party seeks interim relief in a court of competent jurisdiction.",
+      "evidence": "Clause 6: \"This clause shall not prevent a party from seeking interim relief in any court of competent jurisdiction.\"",
+      "explanation": "Atomic act statement (permission/option; not itself required)."
+    },
+    {
+      "id": "P_49",
+      "translation": "The receiving party affords disclosed confidential information the same degree of protection as it affords its own information.",
+      "evidence": "Purpose paragraph: \"In general the receiving party must afford disclosed confidential information the same degree of protection as it would afford its own.\"",
+      "explanation": "Atomic protection-standard statement (flagged as soft later due to hedge phrase \"In general\")."
+    },
+    {
+      "id": "P_50",
+      "translation": "The receiving party receives all confidential information disclosed in connection with this Agreement.",
+      "evidence": "Clause 3: \"The receiving party will receive all confidential information ... which is disclosed in connection with this Agreement\"",
+      "explanation": "Atomic receipt-in-connection statement used to trigger applicability."
+    }
+  ],
+  "hard_constraints": [
+    {
+      "id": "H_1",
+      "formula": "¬P_29",
+      "translation": "There is no explicit or implied transfer of ownership to the receiving party.",
+      "evidence": "Clause 4: \"there is no explicit or implied transfer of ownership to the receiving party...\"",
+      "reasoning": "The text explicitly denies transfer of ownership; therefore ownership transfer must be false."
+    },
+    {
+      "id": "H_2",
+      "formula": "¬P_30",
+      "translation": "There is no transfer of the copyright subsisting in the drawings/documents/software to the receiving party.",
+      "evidence": "Clause 4: \"...or the copyright subsisting in them.\"",
+      "reasoning": "The clause denies implied/explicit transfer of copyright; thus transfer must be false."
+    },
+    {
+      "id": "H_3",
+      "formula": "P_10 ⟹ P_11",
+      "translation": "If documents/materials are provided on loan, they will be specified in a schedule to the Agreement.",
+      "evidence": "Clause 1: \"...provided on loan... will be specified in a schedule...\"",
+      "reasoning": "Direct conditional requirement stated for loaned items."
+    },
+    {
+      "id": "H_4",
+      "formula": "(P_10 ∧ P_12) ⟹ P_13",
+      "translation": "If loaned documents/materials exist and the disclosing party requests return, the receiving party returns them.",
+      "evidence": "Clause 1: \"...the receiving party will return these ... to the disclosing party on request.\"",
+      "reasoning": "Return is required when a request is made (modeled as a trigger condition)."
+    },
+    {
+      "id": "H_5",
+      "formula": "P_14",
+      "translation": "The parties will mark or otherwise designate confidential information as imparted in confidence.",
+      "evidence": "Clause 2: \"The parties will mark or otherwise designate confidential information...\"",
+      "reasoning": "\"Will\" in the agreement states a binding obligation; treated as a must-hold condition."
+    },
+    {
+      "id": "H_6",
+      "formula": "(P_50 ∧ ¬(P_31 ∨ P_32 ∨ P_33 ∨ (P_34 ∧ P_35) ∨ P_36 ∨ P_37 ∨ (P_38 ∧ P_39) ∨ P_40 ∨ P_41 ∨ P_42)) ⟹ P_43",
+      "translation": "If information is disclosed in connection with the Agreement and none of the exceptions apply, then the confidentiality obligations apply to it.",
+      "evidence": "Clause 3 lead-in (confidential information disclosed in connection) plus Clause 4: \"PROVIDED that the obligations herein undertaken will not apply to: ...\"",
+      "reasoning": "Common-sense contract semantics: Clause 4 enumerates carve-outs; absent carve-outs, the obligations apply to information disclosed under the Agreement."
+    },
+    {
+      "id": "H_7",
+      "formula": "(P_31 ∨ P_32 ∨ P_33 ∨ (P_34 ∧ P_35) ∨ P_36 ∨ P_37 ∨ (P_38 ∧ P_39) ∨ P_40 ∨ P_41 ∨ P_42) ⟹ ¬P_43",
+      "translation": "If any listed exception condition holds, the confidentiality obligations do not apply to that information.",
+      "evidence": "Clause 4: \"the obligations herein undertaken will not apply to: (a)...(e)...\"",
+      "reasoning": "Direct statement: the obligations do not apply when exceptions hold."
+    },
+    {
+      "id": "H_8",
+      "formula": "P_43 ⟹ P_15",
+      "translation": "If confidentiality obligations apply, the receiving party takes proper and reasonable measures to maintain confidentiality.",
+      "evidence": "Clause 3(a) together with Clause 4 (obligations apply except exceptions).",
+      "reasoning": "Clause 3(a) is an obligation applicable to covered confidential information; Clause 4 controls when obligations apply."
+    },
+    {
+      "id": "H_9",
+      "formula": "(P_43 ∧ P_16) ⟹ P_18",
+      "translation": "If obligations apply and the receiving party uses the information commercially, it must have a written licence or other agreement.",
+      "evidence": "Clause 3(b): \"...will not use ... for any commercial purpose... without obtaining a written licence...\"",
+      "reasoning": "Encodes \"not X without Y\" as \"if X then Y\" under applicability."
+    },
+    {
+      "id": "H_10",
+      "formula": "(P_43 ∧ P_17) ⟹ P_18",
+      "translation": "If obligations apply and the receiving party manufactures using the information, it must have a written licence or other agreement.",
+      "evidence": "Clause 3(b): \"...or manufacture without obtaining a written licence...\"",
+      "reasoning": "Same \"if action then licence\" structure for manufacturing."
+    },
+    {
+      "id": "H_11",
+      "formula": "(P_43 ∧ P_19) ⟹ P_20",
+      "translation": "If obligations apply and the receiving party discloses to a third party, it must have written permission.",
+      "evidence": "Clause 3(c): \"...will not disclose ... to any third party without written permission;\"",
+      "reasoning": "Encodes the prohibition-except-permission as a material implication."
+    },
+    {
+      "id": "H_12",
+      "formula": "(P_43 ∧ P_21) ⟹ (P_22 ∧ P_23)",
+      "translation": "If obligations apply and the receiving party discloses to other employees, then the disclosure is necessary for the purposes and those employees are made aware of confidentiality and conditions.",
+      "evidence": "Clause 3(d): \"...except to the extent necessary...\" and \"...will be made aware...\"",
+      "reasoning": "Clause 3(d) conditions employee disclosure on necessity and on giving notice/awareness."
+    },
+    {
+      "id": "H_13",
+      "formula": "(P_43 ∧ P_24) ⟹ P_26",
+      "translation": "If obligations apply and the receiving party makes a copy, it must have specific written permission.",
+      "evidence": "Clause 3(e): \"...will not make any copy ... without specific written permission...\"",
+      "reasoning": "Encodes the contractual restriction on copying."
+    },
+    {
+      "id": "H_14",
+      "formula": "(P_43 ∧ P_25) ⟹ P_26",
+      "translation": "If obligations apply and the receiving party makes an abstract, it must have specific written permission.",
+      "evidence": "Clause 3(e): \"...or abstract ... without specific written permission...\"",
+      "reasoning": "Encodes the contractual restriction on abstracting."
+    },
+    {
+      "id": "H_15",
+      "formula": "P_43 ⟹ (P_27 ∧ P_28)",
+      "translation": "If obligations apply, the receiving party acknowledges the source and marks \"Confidential\" on drawings/documents/software that incorporate the information.",
+      "evidence": "Clause 3(f): \"...will acknowledge the source... and will mark \\\"Confidential\\\"...\"",
+      "reasoning": "Clause 3(f) is a positive obligation for covered confidential information."
+    },
+    {
+      "id": "H_16",
+      "formula": "(P_44 ∧ P_43 ∧ ¬P_20) ⟹ ¬P_45",
+      "translation": "During the ten-year period, if obligations apply and there is no written permission, then the party does not communicate/divulge the other party’s confidential information to third parties.",
+      "evidence": "Clause 5: \"...for a period of ten (10) years... not to communicate or to divulge to third parties confidential information received from the other party.\"",
+      "reasoning": "Harmonizes Clause 5 with Clause 3(c): Clause 5 states a time-bounded non-disclosure duty; Clause 3(c) indicates disclosure requires written permission, so the non-disclosure is enforced when permission is absent."
+    },
+    {
+      "id": "H_17",
+      "formula": "P_46",
+      "translation": "The Agreement is construed and enforced in accordance with English Law.",
+      "evidence": "Clause 6: \"...construed and enforced in accordance with English Law\"",
+      "reasoning": "Express governing-law clause; treated as binding."
+    },
+    {
+      "id": "H_18",
+      "formula": "P_47",
+      "translation": "The Agreement is subject to the exclusive jurisdiction of the English courts.",
+      "evidence": "Clause 6: \"...subject to the exclusive jurisdiction of the English courts...\"",
+      "reasoning": "Express jurisdiction clause; treated as binding."
+    }
+  ],
+  "soft_constraints": [
+    {
+      "id": "S_1",
+      "formula": "P_49",
+      "translation": "The receiving party affords disclosed confidential information the same degree of protection as its own information.",
+      "evidence": "Purpose paragraph: \"In general the receiving party must afford... the same degree of protection...\"",
+      "reasoning": "The hedge phrase \"In general\" introduces non-absolute scope/uncertainty; per instructions this becomes a soft constraint even though \"must\" appears."
+    }
+  ]
+}

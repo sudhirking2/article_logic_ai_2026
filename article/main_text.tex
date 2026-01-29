@@ -10,7 +10,7 @@ Large language models (LLMs) provide natural-language interfaces for such tasks,
 This conflation is the source of their unreliability.
 LLMs hallucinate facts, preferring external knowledge to the input document~\citep{ji2023hallucination}; miss information in long contexts, prioritizing the start and end while neglecting the middle~\citep{liu2024lost}; and produce plausible but logically unsound conclusions~\citep{huang2023reasoning}.
 
-A recent survey identifies neuro-symbolic methods, which separate language semantics from logical reasoning, as the most effective paradigm for improving reasoning in LLMs~\citep{yang2025neurosymbolic}. One class of neuro-symbolic methods translates natural language into formal representations, delegates inference to symbolic solvers, and translates results back---the LLM serves as a bridge between natural language and formal logic. However, these approaches have been evaluated on short reasoning problems—the standard benchmarks (FOLIO, ProofWriter, PrOntoQA, AR-LSAT, LogicalDeduction, ReClor) contain examples of a few hundred tokens. Even if retrieval-augmented generation (RAG) is employed to handle longer documents, it may fail to capture logical constraints scattered across the text. For example, a non-disclosure clause on page 3 may interact with an exception on page 12, and retrieval cannot guarantee that all relevant pieces are brought into context.
+A recent survey identifies neuro-symbolic methods, which separate language semantics from logical reasoning, as the most effective paradigm for improving reasoning in LLMs~\citep{yang2025neurosymbolic}. One class of neuro-symbolic methods translates natural language into formal representations, delegates inference to symbolic solvers, and translates results back---the LLM serves as a bridge between natural language and formal logic. However, these approaches have been evaluated on short reasoning problems—the standard benchmarks (FOLIO, ProofWriter, PrOntoQA, AR-LSAT, LogicalDeduction, ReClor) contain examples of less than $500$ tokens. Even if retrieval-augmented generation (RAG) is employed to handle longer documents, it may fail to capture logical constraints scattered across the text. For example, a non-disclosure clause on page 3 may interact with an exception on page 12, and retrieval cannot guarantee that all relevant pieces are brought into context.
 
 To handle large documents, we propose a different approach: \emph{logify} the document once, then reason symbolically over the resulting structure. Our pipeline extracts atomic propositions, hard constraints (definite statements that must hold), and soft constraints (defeasible statements with weights measuring uncertainty). This structure supports faithful reasoning---entailment, satisfiability, uncertainty quantification---via a weighted Max-SAT solver.
 
@@ -20,10 +20,9 @@ To handle large documents, we propose a different approach: \emph{logify} the do
     querying via weighted Max-SAT (Section~\ref{sec:system}).
     \item Experiments on logical reasoning and document-level NLI benchmarks,
     demonstrating consistent gains over RAG and neuro-symbolic baselines, with
-    the largest improvements on long documents (Section~\ref{sec:experiments}).
-    \item An algebraic framework for representing the finite logical theory
-    with hard and soft constraints as an algebraic structure (Section~\ref{sec:framework}).
+    the largest improvements on long documents (Section~\ref{sec:experiments}). 
 \end{enumerate}
+All our code, files, and data are available on GitHub (insert anonymized link). 
 
 \subsection{Related Work}
 \label{sec:related_work}
@@ -31,32 +30,22 @@ To handle large documents, we propose a different approach: \emph{logify} the do
 \paragraph{Neuro-symbolic logical reasoning.}
 Recent work combines LLMs with symbolic solvers to improve logical reasoning.
 Logic-LM++ \citep{parmar2024logiclmpp} extends Logic-LM \citep{pan2023logiclm} with
-multi-step refinement, achieving 78.9\% on FOLIO (204 examples, $\sim$75 tokens each)
-and 79.7\% on ProofWriter (600 examples, $\sim$100 tokens each).
+multi-step refinement, achieving 78.9\% on FOLIO 
+and 79.7\% on ProofWriter.
 LINC \citep{olausson2023linc} uses first-order logic with Prover9, reaching
 87\% on ProofWriter with GPT-4. Both systems formalize problems \emph{per query}
 on short benchmarks; in contrast, our approach logifies the document once and supports
 repeated querying over long texts. Moreover, these systems treat all constraints as hard;
-we introduce soft constraints with confidence weights, enabling reasoning under uncertainty.
+we introduce soft constraints with confidence weights and enable reasoning under uncertainty.
 
 \paragraph{Tool-augmented LLMs.}
-A broader line of work augments LLMs using external tools for faithful computation.
+A broader line of work augments LLMs using external tools to aid reasoning.
 PAL \citep{gao2023pal} and Program-of-Thought \citep{chen2023pot} use code execution
 for arithmetic reasoning. SatLM \citep{ye2023satlm} targets satisfiability problems.
-Logic-of-Thought \citep{liu2024lot} injects propositional logic to generate augmented prompts, and let an LLM reason.
-These have been shown to perform better than Chain-of-Thought baselines.
+Logic-of-Thought \citep{liu2024lot} injects propositional logic to generate augmented prompts that an LLM reasons over.
+All these have been shown to perform better than Chain-of-Thought baselines.
 
-\paragraph{Algebraic and proof-theoretic foundations.}
-Our framework builds on algebraic proof systems, where polynomial encodings yield 
-certificates of propositional unsatisfiability \cite{CleggEdmondsImpagliazzo1996}. 
-We use Boolean polynomial rings, computable via tools like PolyBoRi 
-\cite{brickenstein2009polybori}. From the model-theoretic perspective, de Kleer's 
-assumption-based truth maintenance system (ATMS) \cite{deKleer1986} compactly 
-represents multiple consistent assignments under evolving constraints—conceptually 
-parallel to our notion of ring homomorphisms $\phi: R(T) \to \mathbb{F}_2$ 
-as a consistent assignment.
-
-\paragraph{Weighted reasoning and model counting.}
+\paragraph{Weighted reasoning}
 When soft constraints carry confidences, we connect to weighted Max-SAT 
 \cite{heras2007minimaxsat} and Algebraic Model Counting (AMC) 
 \cite{KimmigVanDenBroeckDeRaedt2017}, which 
@@ -64,33 +53,30 @@ generalizes weighted model counting to commutative semirings. This provides a
 principled route to ranking readings by plausibility and quantifying underdetermination.
 
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.95\linewidth]{article/structure.jpeg}
-    \caption{The document is processed once through a three-stage pipeline: (1) we extract relational triples from Stanford OpenIE, (2) we pass the text and triples to an LLM (GPT-5.2) once to extract atomic propositions,  hard constraints, and soft constraints, and (3) we assign weights via SBERT retrieval and LLM verification. At query time, the user's question is translated to a propositional formula (using SBERT retrieval over the translations of the atomic propositions), and the MaxSAT solver determines entailment, contradiction, or uncertainty.}
-    \label{fig:arch}
-\end{figure}
-
 \section{System Architecture}
 \label{sec:system}
 
-Our architecture follows a modular design with three components: (1) \texttt{from\_text\_to\_logic}, which logifies text into propositions and constraints;  (2) \texttt{interface\_with\_user}, which handles natural language interaction for queries, and (3) \texttt{logic\_solver}, which performs reasoning via weighted Max-SAT. Figure~\ref{fig:arch} illustrates the overall pipeline.
-
-
+Our architecture follows a modular design with three components: (1) \texttt{from\_text\_to\_logic}, which logifies text into propositions, constraints, and weights;  (2) \texttt{interface\_with\_user}, which handles natural language interaction for queries, and (3) \texttt{logic\_solver}, which performs reasoning via weighted Max-SAT. Figure~\ref{fig:arch} illustrates the overall pipeline.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.95\linewidth]{article/structure.jpeg}
+    \caption{The document is processed once through \emph{logify} to obtain a propositional calculus consisting of propositional variables, hard constraints, and weighted of soft constraints. At query time, the user's question is translated to a propositional formula, and we employ a MaxSAT solver to determine entailment, contradiction, or uncertainty.}
+    \label{fig:arch}
+\end{figure}
 
 \subsection{From Text to Logic}
 \label{sec:from_text_to_logic}
 
-This module implements the extraction of natural language text into the weighted logified structure in three stages.
+We implement the extraction of natural language text into a weighted logified structure in three stages.
 
 \subsubsection{Relation Triple Extraction}
-We use Stanford CoreNLP's OpenIE system \cite{angeli2015openie} via the Stanza Python interface \cite{qi2020stanza} to extract subject-predicate-object triples from the text. This provides structured relational information that can help guide proposition identification. We first apply native Stanza coreference resolution to handle pronominal references (e.g. replacing "They" with "Alice"), to ensure that triples consistently refer to canonical entities rather than pronouns. As a fallback, we use Stanza's dependency parse for sentences where OpenIE fails to extract triples (e.g., intransitive verbs with adverbs). Triples are formatted as \texttt{[subject, predicate, object]}.
+We use Stanford CoreNLP's OpenIE system \cite{angeli2015openie} via the Stanza Python interface \cite{qi2020stanza} to extract subject-predicate-object triples from the text.  We first apply native Stanza coreference resolution to ensure that triples consistently refer to canonical entities rather than pronouns (e.g. replacing "they" with "Alice"). As a fallback, we use Stanza's dependency parse for sentences where OpenIE fails (e.g., intransitive verbs with adverbs).
 
 \subsubsection{LLM-Based Logic Conversion}
-The original text $T$ and the extracted triples are jointly provided to a large language model (GPT-5.2 by default). The LLM performs semantic analysis to identify atomic propositions $\mathcal{P}(T)$, hard constraints $\mathcal{C}(T)$, and soft constraints $\mathcal{S}(T)$---crucially, soft constraints are extracted \emph{without} weights at this stage.
+We input the original text $T$ and its extracted triples to GPT-5.2 (with medium reasoning effort by default) using a few-shot CoT prompt. The LLM uses the relation triples as hints to identify atomic propositions $\mathcal{P}(T):=\{P_1, P_2, \dots, P_n\}$, and two classes of propositional formulas over $\mathcal{P}(T)$ called hard constraints $\mathcal{C}(T):=\{H_1, H_2, \dots, H_m\}$ and soft constraints $\mathcal{S}(T):=\{S_1, S_2, \dots, S_k\}$, along with their translation to natural language.  Hard constraints represent obligatory requirements enforced by the text, and soft constraints represent defeasible tendencies that may hold. Note, our prompt also extract hard constraints based on common-sense relationships between the atomic propositions (see Appendix~\ref{sec:prompt} for the full prompt and Appendix~\ref{sec:exemplar} for a worked example).
 
 \subsubsection{Weight Assignment}
-The final stage assigns confidence weights to all constraints using an evidence-based retrieval and LLM verification pipeline. For each constraint $Q$, we: (1) chunk the original document and pre-compute SBERT embeddings \cite{reimers2019sbert} (model: \texttt{all-MiniLM-L6-v2}); (2) retrieve the top-$k$ chunks most similar to the constraint's natural language translation ($k=10$ by default); (3) prompt an LLM with the retrieved chunks, asking a YES/NO verification question: ``Does this document excerpt provide clear evidence supporting this claim?''; (4) extract logprobs for YES and NO tokens from the response; (5) repeat for the \emph{negated} constraint: ``It is not the case that [Q]''; and (6) compute confidence via binary softmax: $w(Q) = P(\text{YES} \mid Q) / (P(\text{YES} \mid Q) + P(\text{YES} \mid \neg Q) + \epsilon)$, where $\epsilon$ is a small constant for numerical stability. This produces a weight $w(Q) \in (0,1)$ reflecting how strongly the document supports $Q$. The separation is deliberate: the LLM identifies \emph{which} constraints are defeasible based on linguistic cues, while the weight assignment module quantifies \emph{how strongly} the text supports each constraint. The output is stored as a triplet $[\text{prob\_yes\_orig}, \text{prob\_yes\_neg}, \text{confidence}]$ for transparency, where $\text{confidence}$ is the calibrated score used for downstream reasoning.
+We assign confidence weights to all soft constraints using an evidence-based retrieval and LLM verification pipeline. For each constraint $Q$, we: (1) chunk the original document and pre-compute SBERT embeddings \cite{reimers2019sbert} (model: \texttt{all-MiniLM-L6-v2}); (2) retrieve the top-$k$ chunks most similar to the constraint's natural language translation ($k=10$ by default); (3) prompt an LLM with the retrieved chunks, asking the YES/NO question: ``Does this document excerpt provide clear evidence supporting this claim?''; (4) extract logprobs for YES and NO tokens from the response; (5) repeat for the \emph{negated} constraint $\neg Q$; and (6) compute confidence via binary softmax: $w(Q) = P(\text{YES} \mid Q) / (P(\text{YES} \mid Q) + P(\text{YES} \mid \neg Q))$. This produces a weight $w(Q) \in [0,1]$ reflecting how strongly the document supports $Q$.
 
 \subsubsection{Output: The Logified Structure}
 The module outputs a JSON structure with rich provenance metadata. After Stage 3, the weighted structure includes:
@@ -104,7 +90,6 @@ The module outputs a JSON structure with rich provenance metadata. After Stage 3
     "translation": "...",
     "evidence": "...",
     "reasoning": "...",
-    "weight": [0.95, 0.12, 0.89]}],
  "soft_constraints": [
    {"id": "S_1", "formula": "P_3 -> P_4",
     "translation": "...",
@@ -112,7 +97,7 @@ The module outputs a JSON structure with rich provenance metadata. After Stage 3
     "reasoning": "...",
     "weight": [0.82, 0.45, 0.65]}]}
 \end{verbatim}
-The \texttt{weight} field contains $[\text{prob\_yes\_orig}, \text{prob\_yes\_neg}, \text{confidence}]$ as described above. See Appendix~\ref{sec:implementation} for specific details on implementation.
+The \textit{weight} field contains the probability of YES for the original soft constraint, the negated soft constraint, and the weight value as described above. See Appendix~\ref{sec:implementation} for specific details on implementation.
 
 
 \subsection{Logic Solver}
