@@ -238,7 +238,8 @@ def run_experiment(
     max_tokens: int = 128000,
     query_max_tokens: int = 64000,
     k_weights: int = 10,
-    k_query: int = 20
+    k_query: int = 20,
+    limit: Optional[int] = None
 ) -> Dict[str, Any]:
     """
     Run the DocNLI experiment.
@@ -270,6 +271,11 @@ def run_experiment(
 
     print(f"  Loaded {len(examples)} examples")
     print(f"  Filter criteria: {metadata.get('filter_criteria', {})}")
+
+    # Apply limit if specified
+    if limit is not None:
+        examples = examples[:limit]
+        print(f"  Limited to {len(examples)} examples")
 
     # Initialize results
     timestamp = datetime.now().isoformat()
