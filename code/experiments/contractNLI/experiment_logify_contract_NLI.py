@@ -42,6 +42,9 @@ RESULTS_DIR = _script_dir / "results_logify_contract_NLI"
 # Default document IDs to process
 DEFAULT_DOC_IDS = [3, 7, 9, 10, 12, 13, 14, 15, 16, 17, 19, 20, 27, 28, 29, 32, 33, 35, 37, 39]
 
+# Fixed model for logification
+LOGIFY_MODEL = "openai/gpt-5.2"
+
 
 def load_contractnli_dataset(dataset_path: str) -> Dict[str, Any]:
     """Load ContractNLI dataset from JSON file."""
@@ -68,7 +71,6 @@ def logify_document(
     text: str,
     doc_id: int,
     api_key: str,
-    model: str,
     temperature: float,
     reasoning_effort: str,
     max_tokens: int,
@@ -100,7 +102,7 @@ def logify_document(
 
     converter = LogifyConverter(
         api_key=api_key,
-        model=model,
+        model=LOGIFY_MODEL,
         temperature=temperature,
         reasoning_effort=reasoning_effort,
         max_tokens=max_tokens
@@ -218,7 +220,7 @@ def query_hypothesis(
 def run_experiment(
     dataset_path: str,
     api_key: str,
-    query_model: str = "openai/gpt-4o",
+    query_model: str = "openai/gpt-5-nano",
     weights_model: str = "gpt-4o",
     temperature: float = 0.1,
     reasoning_effort: str = "medium",
@@ -273,6 +275,7 @@ def run_experiment(
     results = {
         "metadata": {
             "timestamp": timestamp,
+            "logify_model": LOGIFY_MODEL,
             "query_model": query_model,
             "weights_model": weights_model,
             "temperature": temperature,
@@ -317,7 +320,6 @@ def run_experiment(
                 text=doc_text,
                 doc_id=doc_id,
                 api_key=api_key,
-                model=model,
                 temperature=temperature,
                 reasoning_effort=reasoning_effort,
                 max_tokens=max_tokens,
@@ -470,8 +472,8 @@ def main():
     # Note: Logification model is fixed to LOGIFY_MODEL (openai/gpt-5.2) and cannot be changed
     parser.add_argument(
         "--query-model",
-        default="openai/gpt-4o",
-        help="Model for query translation (default: openai/gpt-4o). Logification uses fixed model: openai/gpt-5.2"
+        default="openai/gpt-5-nano",
+        help="Model for query translation (default: openai/gpt-5-nano). Logification uses fixed model: openai/gpt-5.2"
     )
     parser.add_argument(
         "--weights-model",
