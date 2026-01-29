@@ -275,6 +275,53 @@ This investigation exemplifies a new research modality: an AI agent as lead inve
 \end{itemize}
 
 % ==============================================================================
+% CROSS-DATASET VALIDATION: DOCNLI
+% Purpose: Test error pattern generalizability and report experimental failures
+% ==============================================================================
+\section{Cross-dataset validation: DocNLI results}
+
+\subsection{Experimental setup}
+
+To assess whether the identified error patterns generalize beyond ContractNLI, we attempted evaluation on the DocNLI benchmark \cite{docnli}—a document-level NLI dataset from diverse domains. We filtered the test split for premises between 200-500 words, yielding 20 documents with 109 hypothesis pairs (21 entailment, 88 not-entailment).
+
+\subsection{Technical failure and methodological transparency}
+
+\textbf{The Logify evaluation encountered severe technical failures}: 19 of 20 premises failed to process due to cache path errors, leaving only 5/109 examples successfully evaluated (4.6\% completion rate). The reported accuracy of 80\% (4/5 correct) is statistically meaningless given this small sample size.
+
+In contrast, the RAG baseline successfully evaluated all 109 examples, achieving 78\% overall accuracy (85/109 correct). Per-class performance: 81\% on entailment (17/21), 77\% on not-entailment (68/88). This represents balanced performance across both label types, unlike the imbalanced pattern observed in ContractNLI.
+
+\subsection{Implications for the investigation}
+
+This technical failure exemplifies two critical aspects of AI-driven research methodology:
+
+\textbf{1. Experimental brittleness}: The cache error suggests the Logify evaluation pipeline has unresolved implementation issues beyond the three conceptual error patterns identified in ContractNLI analysis. This brittleness prevented cross-dataset validation of our hypotheses.
+
+\textbf{2. Methodological transparency}: Traditional research reporting might obscure such failures or relegate them to brief mentions. AI-driven qualitative research, emphasizing reflexivity and failure analysis, demands explicit documentation: \textit{the cross-dataset validation attempt failed due to implementation errors, limiting our ability to assess error pattern generalizability}.
+
+\subsection{What can be inferred from RAG performance?}
+
+The RAG baseline's consistent 77-78\% accuracy across both ContractNLI (68\% on 7 docs) and DocNLI (78\% on 109 examples) suggests reasonable stability. Key observations:
+
+\begin{itemize}
+\item \textbf{Balanced performance}: Unlike ContractNLI where RAG showed strong FALSE detection (79\%), DocNLI evaluation shows balanced accuracy across entailment (81\%) and not-entailment (77\%) classes
+\item \textbf{Domain stability}: Performance holds across legal documents (ContractNLI) and mixed-domain texts (DocNLI)
+\item \textbf{Baseline strength}: This reinforces that the 40\% Logify performance on ContractNLI represents significant underperformance relative to a standard neural baseline
+\end{itemize}
+
+\subsection{Revised scope of findings}
+
+Given the DocNLI failure, our conclusions must be explicitly scoped:
+
+\begin{enumerate}
+\item The three error patterns (negation failure, over-confidence, lossy translation) are \textit{observed in ContractNLI data only}
+\item Error pattern generalizability \textit{remains unknown} due to technical failures preventing cross-dataset validation
+\item The investigation reveals both conceptual error patterns (ContractNLI analysis) and implementation brittleness (DocNLI failure)—both valuable for system improvement
+\item Claims about ``systematic'' errors must be understood as ContractNLI-specific until additional validation succeeds
+\end{enumerate}
+
+This limitation is transparent and actionable: future work should prioritize resolving the implementation issues that prevented DocNLI evaluation, then re-attempt cross-dataset validation.
+
+% ==============================================================================
 % CONCLUSION
 % Purpose: Summarize key takeaways, acknowledge limitations, point to future work
 % ==============================================================================
