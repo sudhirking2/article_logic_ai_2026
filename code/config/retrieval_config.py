@@ -20,6 +20,10 @@ NLI_BATCH_SIZE = 32  # Batch size for efficient inference
 ENABLE_NLI_FILTERING = True  # Set False to disable NLI filtering
 ENABLE_HYBRID_EMBEDDING = True  # Embed translation + evidence together
 
+# Negation handling (Fix 1 from negation_fix_proposal.md)
+ENABLE_AUTO_NEGATION_CORRECTION = True  # Auto-correct polarity mismatches
+ENABLE_NEGATION_WARNINGS = True  # Log warnings for polarity issues
+
 # Confidence thresholds (for future use in experiments)
 CONFIDENCE_THRESHOLD_TRUE = 0.55  # TRUE → UNCERTAIN if confidence below this
 MIN_PROPOSITION_WEIGHT = 0.4  # Low weight → low confidence adjustment
