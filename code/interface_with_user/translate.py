@@ -64,6 +64,9 @@ from baseline_rag.retriever import (
 # OpenAI client for LLM calls
 from openai import OpenAI
 
+# Global cache for NLI model (expensive to load, reused across queries)
+_cached_nli_model = None
+
 
 def extract_proposition_chunks(logified_structure: Dict[str, Any], hybrid_embedding: bool = True) -> List[Dict]:
     """
@@ -775,11 +778,19 @@ def translate_query(
             print("  Stage 1: SBERT candidate retrieval")
             print("  Stage 2: NLI semantic filtering")
 
-    # Load NLI model if filtering is enabled
+    # Load NLI model if filtering is enabled (with caching to avoid reloading)
+    global _cached_nli_model
     nli_model = None
     if retrieval_config.ENABLE_NLI_FILTERING:
-        from baseline_rag import nli_reranker
-        nli_model = nli_reranker.load_nli_model()
+        if _cached_nli_model is None:
+            from baseline_rag import nli_reranker
+            if verbose:
+                print("  Loading NLI model (first time, will be cached)...")
+            _cached_nli_model = nli_reranker.load_nli_model()
+        else:
+            if verbose:
+                print("  Using cached NLI model...")
+        nli_model = _cached_nli_model
 
     retrieved = retrieve_top_k_propositions(
         query=query,
