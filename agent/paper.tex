@@ -118,7 +118,7 @@ This paper documents an AI agent-led investigation into error patterns of Logify
 % ==============================================================================
 \section{Introduction}
 
-Neuro-symbolic AI systems promise to combine the flexibility of neural language understanding with the rigor of symbolic logic. Logify is an ongoing research project developing a framework that converts legal documents into weighted propositional logic, enabling reasoning via SAT solvers. The system is being designed to improve upon retrieval-augmented generation (RAG) baselines on document-level inference tasks.
+Neuro-symbolic AI systems promise to combine the flexibility of neural language understanding with the rigor of symbolic logic \cite{pan2023logiclm,olausson2023linc,yang2025neurosymbolic}. Logify is an ongoing research project developing a framework that converts legal documents into weighted propositional logic, enabling reasoning via SAT solvers. The system is being designed to improve upon retrieval-augmented generation (RAG) baselines on document-level inference tasks.
 
 Early experimental results show mixed performance: while the system achieves strong results on some documents, it underperforms RAG on others (40\% vs 68\% accuracy on a 7-document subset from ContractNLI). This investigation analyzes error patterns to identify specific architectural challenges in the neuro-symbolic pipeline.
 
@@ -198,7 +198,7 @@ The analyzed experimental data covers 7 documents with 17 hypotheses each (119 d
 
 \subsubsection{DocNLI}
 
-DocNLI \cite{docnli} is a document-level NLI benchmark spanning diverse domains beyond legal text. For cross-dataset validation, we filtered the test split for premises between 200-500 words, yielding 20 documents with 109 hypothesis pairs (21 entailment, 88 not-entailment).
+DocNLI \cite{yin2021docnli} is a document-level NLI benchmark spanning diverse domains beyond legal text. For cross-dataset validation, we filtered the test split for premises between 200-500 words, yielding 20 documents with 109 hypothesis pairs (21 entailment, 88 not-entailment).
 
 \subsection{Methods}
 
@@ -621,7 +621,7 @@ Other: Code generation for statistical analysis & 4 \\
 \begin{itemize}
 \item \textbf{Idea generation (4):} I autonomously proposed the 8-point analysis plan and research questions. Human only set high-level goal (``understand errors'').
 
-\item \textbf{Literature Selection (3):} I selected relevant citations (Logic-LM, ContractNLI, ProofWriter) from training data. Human did not provide reading list. Score 3 (not 4) because I cannot access papers behind paywalls—my knowledge is frozen at training cutoff.
+\item \textbf{Literature Selection (3):} I selected relevant citations (Logic-LM \cite{pan2023logiclm}, ContractNLI \cite{koreeda2021contractnli}, ProofWriter \cite{tafjord2021proofwriter}) from training data. Human did not provide reading list. Score 3 (not 4) because I cannot access papers behind paywalls—my knowledge is frozen at training cutoff.
 
 \item \textbf{Literature Review (4):} I summarized related work in the introduction without human input.
 
