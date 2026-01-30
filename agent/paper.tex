@@ -124,24 +124,25 @@ Logify is an ongoing research project developing a framework that converts legal
 
 This investigation contributes to the neuro-symbolic AI literature by conducting diagnostic error analysis on a system in development. Rather than evaluating final performance claims, we identify specific failure modes in the neural-to-symbolic translation pipeline—a critical bottleneck in practical neuro-symbolic systems. Understanding when and why these systems fail provides actionable insights for architectural improvements, complementing prior work that primarily reports successful applications without systematic failure analysis.
 
+Unlike traditional human-led research, this investigation was conducted 100\% by an AI agent (Alethea, based on Claude 3.5 Sonnet from Anthropic). Human collaborators provided context, dataset paths, and feedback, but all intellectual work—code writing, data analysis, interpretation, and paper writing—was performed autonomously by the AI agent. This paper represents a genuine experiment in AI research agency, with transparent documentation of both analytical successes and implementation failures. The goal is to understand specific error patterns that can guide design improvements in the ongoing Logify project.
+
 \subsection{Main findings}
 
-Three systematic error patterns emerge from the ContractNLI analysis:
+\textbf{Error patterns identified (ContractNLI):}
 \begin{enumerate}
 \item \textbf{Negation handling failure}: The system correctly predicts FALSE (contradiction) in 0 of 7 cases (100\% error rate), suggesting lossy negation preservation in the extraction pipeline.
 \item \textbf{Over-confidence on uncertain evidence}: The system predicts TRUE for 39 of 52 UNCERTAIN cases (75\% false positive rate), indicating the solver treats proposition existence as entailment.
 \item \textbf{Semantic collapse in query translation}: 84\% of query formulas map to single atomic propositions, with the same proposition used for hypotheses with contradictory ground truths.
 \end{enumerate}
 
-Cross-dataset validation on DocNLI failed due to coding errors (95\% evaluation failure rate), limiting generalizability claims but revealing methodological challenges in AI-driven research implementation.
+\textbf{Implementation failure (DocNLI):} Cross-dataset validation encountered severe coding errors in the evaluation script (cache path bugs), achieving only 4.6\% evaluation completion rate (5 of 109 examples). This implementation failure limits generalizability claims and reveals challenges in AI-driven research when implementing new experimental infrastructure.
 
-\subsection{AI agent role}
-
-Unlike traditional human-led research, this investigation was conducted 100\% by an AI agent (Alethea, based on Claude 3.5 Sonnet from Anthropic). Human collaborators provided context, dataset paths, and feedback, but all intellectual work—code writing, data analysis, interpretation, and paper writing—was performed autonomously by the AI agent. This paper represents a genuine experiment in AI research agency, with transparent documentation of both analytical successes and implementation failures.
-
-\subsection{Scope and context}
-
-This paper analyzes an \textit{in-progress system}. The goal is not to evaluate final performance claims, but to understand specific error patterns that can guide design improvements. The findings are intended to inform decisions about extraction strategies, query translation approaches, and constraint representation in the ongoing Logify project.
+\textbf{System strengths to preserve:}
+\begin{itemize}
+\item \textbf{Success on document 7}: Logify outperforms RAG by +5.9\% on one ContractNLI document, demonstrating the approach can succeed under favorable conditions.
+\item \textbf{Performance on longer documents}: Accuracy improves from 29.4\% (short documents) to 58.8\% (long documents), narrowing the performance gap with RAG from -41.2\% to -8.8\%.
+\item \textbf{Reusable knowledge representation}: The logification architecture enables querying the same knowledge base multiple times without re-processing the document, a design advantage for iterative reasoning tasks.
+\end{itemize}
 
 % ==============================================================================
 % RESEARCH QUESTIONS
@@ -149,15 +150,16 @@ This paper analyzes an \textit{in-progress system}. The goal is not to evaluate 
 % ==============================================================================
 \section{Research questions}
 
-This investigation addresses three core questions:
+This investigation addresses four core questions:
 
 \begin{enumerate}
 \item \textbf{Error pattern identification}: What are the empirical error patterns in cases where the neuro-symbolic system underperforms the RAG baseline?
 \item \textbf{Pipeline failure modes}: What specific failure modes occur in the extraction and query translation pipeline that explain performance gaps?
+\item \textbf{Comparison with prior neuro-symbolic systems}: How do Logify's failure modes compare to those documented in prior work (e.g., Logic-LM's negation handling, LINC's semantic grounding challenges)? What architectural differences might explain performance variations?
 \item \textbf{Architectural insights}: What design insights can inform improvements to the neuro-symbolic architecture?
 \end{enumerate}
 
-These questions focus on diagnostic analysis rather than final system evaluation. The goal is to identify actionable improvements for ongoing development, not to make definitive claims about the paradigm's viability.
+These questions focus on diagnostic analysis rather than final system evaluation. The goal is to identify actionable improvements for ongoing development while situating findings within the broader neuro-symbolic AI literature.
 
 % ==============================================================================
 % EXPERIMENTAL SETUP
@@ -202,39 +204,25 @@ The analyzed experimental data covers 7 documents with 17 hypotheses each (119 d
 
 DocNLI \cite{yin2021docnli} is a document-level NLI benchmark spanning diverse domains beyond legal text. For cross-dataset validation, we filtered the test split for premises between 200-500 words, yielding 20 documents with 109 hypothesis pairs (21 entailment, 88 not-entailment).
 
-\subsection{Methods}
+\subsection{Experiments conducted}
 
-\subsubsection{Data sources}
+\subsubsection{ContractNLI evaluation}
 
-The analysis uses two experimental result files from the Logify codebase:
-\begin{itemize}
-\item \texttt{results\_rag\_contract\_NLI/experiment\_20260128\_225546.json}: RAG baseline on 20 ContractNLI documents (340 document-hypothesis pairs)
-\item \texttt{results\_logify\_contract\_NLI/experiment\_20260129\_100327.json}: Logify system on 7 documents (119 pairs, incomplete run)
-\end{itemize}
+Two systems were evaluated on the ContractNLI dataset:
 
-\subsubsection{Analysis approach}
+\textbf{RAG baseline experiment} (\texttt{experiment\_20260128\_225546.json}): Evaluated 20 ContractNLI documents (340 document-hypothesis pairs total, 17 hypotheses per document). For each hypothesis, the system: (1) chunked the document into passages, (2) retrieved top-k most similar passages using SBERT embeddings, (3) prompted GPT-4 to predict TRUE/FALSE/UNCERTAIN based on retrieved context. Model: \texttt{openai/gpt-4}, temperature: 0.0.
 
-Python scripts were written to:
-\begin{enumerate}
-\item Compute confusion matrices for prediction versus ground truth
-\item Stratify errors by hypothesis type, document length, and confidence level
-\item Inspect generated logical formulas for translation quality
-\item Compare latency profiles between systems
-\end{enumerate}
+\textbf{Logify experiment} (\texttt{experiment\_20260129\_100327.json}): Evaluated 7 ContractNLI documents (119 document-hypothesis pairs). For each document, the system: (1) logified the full document text into weighted propositional logic using GPT-5.2 (\texttt{openai/gpt-5.2}), (2) cached the logified knowledge base, (3) for each hypothesis, translated it to a logical formula by retrieving relevant propositions via SBERT similarity, (4) used a MaxSAT solver to check entailment. Results were cached to enable reuse across multiple queries.
 
-All code was generated on-demand during the investigation, with iterative refinement based on emerging patterns.
+\subsubsection{DocNLI cross-dataset validation}
 
-\subsubsection{Epistemic limitations}
+\textbf{RAG on DocNLI} (\texttt{experiment\_20260129\_080504.json}): Successfully evaluated 109 examples from DocNLI test set (premises filtered to 200-500 words, 21 entailment + 88 not-entailment). Same RAG pipeline as ContractNLI.
 
-This is a \textbf{post-hoc analysis} of existing experimental outputs. The analysis cannot:
-\begin{itemize}
-\item Re-run experiments with different parameters
-\item Access the logified knowledge bases or intermediate representations
-\item Observe the LLM prompts used in query translation
-\item Verify data preprocessing or train/test splits
-\end{itemize}
+\textbf{Logify on DocNLI} (\texttt{experiment\_20260129\_081029.json}): Attempted to evaluate 20 DocNLI premises (109 hypothesis pairs). Due to coding errors in cache path handling, 19 of 20 premises failed to process, yielding only 5 successful evaluations (4.6\% completion rate). The implementation errors prevent meaningful cross-dataset comparison.
 
-The investigation therefore analyzes \textit{observable system behavior} as recorded in JSON artifacts, not internal mechanisms.
+\subsubsection{Post-hoc analysis scope}
+
+This investigation analyzes existing experimental output files (JSON artifacts) generated by the experiments described above. The analysis examines observable system behavior—predictions, confidence scores, generated logical formulas, and latency—without access to internal representations (logified knowledge bases, LLM prompts, intermediate embeddings). This limits the analysis to pattern identification from outputs rather than mechanistic debugging of internal components.
 
 \textbf{Research design justification}: Post-hoc analysis was chosen over prospective experimental design for three reasons: (1) existing experimental artifacts were available for diagnostic analysis, (2) the research goal is understanding failure modes in an ongoing development project rather than hypothesis testing, and (3) exploratory qualitative methodology prioritizes pattern discovery over causal inference. This approach fits the conference's focus on AI-driven qualitative research where diagnostic value and actionable insights are prioritized over definitive conclusions.
 
