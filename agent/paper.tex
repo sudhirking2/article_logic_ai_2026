@@ -358,6 +358,21 @@ The analyzed 7 documents represent a subset of the full ContractNLI evaluation. 
 
 This variability is valuable: it indicates the system's performance is sensitive to specific document characteristics, providing clear directions for improvement efforts.
 
+\subsection{Conditions for neuro-symbolic success}
+
+While the neuro-symbolic system underperforms on average, understanding success cases is equally important for diagnostic analysis. Two observations suggest conditions where the approach shows promise:
+
+\textbf{Document 7 success case}: Logify outperforms RAG by +5.9\% on one ContractNLI document, demonstrating that the neuro-symbolic approach can succeed under certain conditions. Without access to the document content or hypothesis types, we hypothesize this document may have:
+\begin{itemize}
+\item Simpler logical structure with fewer negations
+\item Explicit propositional statements that align well with atomic proposition extraction
+\item Hypotheses requiring multi-fact reasoning where symbolic logic provides advantages over retrieval
+\end{itemize}
+
+\textbf{Performance on longer documents}: Logify's accuracy improves from 29.4\% (short) to 58.8\% (long documents), narrowing the gap with RAG from -41.2\% to -8.8\%. This suggests the system benefits from richer knowledge bases where proposition diversity enables better query matching. The counterintuitive inverse relationship with document length indicates the error patterns (negation handling, semantic collapse) dominate on sparse knowledge bases, while successful symbolic reasoning emerges when sufficient propositions are extracted.
+
+\textbf{Implications for development}: These success conditions suggest the neuro-symbolic approach is not fundamentally flawed, but requires targeted fixes. If negation handling and query translation issues were addressed, the system might leverage its symbolic reasoning advantages more broadly. The Doc 7 success case demonstrates proof-of-concept viability—the challenge is extending those conditions across diverse documents.
+
 % ==============================================================================
 % IMPLICATIONS FOR THE INVESTIGATION
 % Purpose: Methodological insights, limitations, scope
