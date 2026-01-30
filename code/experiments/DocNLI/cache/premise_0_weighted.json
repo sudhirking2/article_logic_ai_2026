@@ -1,4 +1,3 @@
-```json
 {
   "primitive_props": [
     {
@@ -158,56 +157,96 @@
       "formula": "P_1 ⟹ P_5",
       "translation": "If the TSA kept $675,000 last year, then it was allowed to keep $675,000 last year.",
       "evidence": "Sentences 1 and 5 both describe keeping/being allowed to keep $675,000 last year.",
-      "reasoning": "Semantic consistency: actually keeping the money in this report presupposes authorization (reinforced by explicit 'were allowed to keep')."
+      "reasoning": "Semantic consistency: actually keeping the money in this report presupposes authorization (reinforced by explicit 'were allowed to keep').",
+      "weight": [
+        0.9992847247554298,
+        0.015906120727439712,
+        0.9843318901243578
+      ]
     },
     {
       "id": "H_2",
       "formula": "P_10 ⟹ P_11",
       "translation": "If no one comes back to claim the money, the TSA is allowed to keep it.",
       "evidence": "Sentence 7: \"if no one comes back to claim the money the TSA are allowed to keep it.\"",
-      "reasoning": "Direct statement of federal-law rule; treated as mandatory condition."
+      "reasoning": "Direct statement of federal-law rule; treated as mandatory condition.",
+      "weight": [
+        0.9999962302845802,
+        0.10668835386159746,
+        0.903596420973456
+      ]
     },
     {
       "id": "H_3",
       "formula": "P_10 ⟹ P_12",
       "translation": "If no one comes back to claim the money, it stays with the TSA.",
       "evidence": "Final sentence: \"if no one comes back to claim the money it stays with the TSA.\"",
-      "reasoning": "Directly stated rule; mandatory."
+      "reasoning": "Directly stated rule; mandatory.",
+      "weight": [
+        0.9996128967337348,
+        0.09534759559619048,
+        0.9129214275976064
+      ]
     },
     {
       "id": "H_4",
       "formula": "P_11 ⟹ P_12",
       "translation": "If the TSA is allowed to keep the money, then the money stays with the TSA.",
       "evidence": "Sentences 7 and final sentence express the same legal outcome in different words.",
-      "reasoning": "Semantic alignment: 'allowed to keep' entails retention ('stays with the TSA') in this context."
+      "reasoning": "Semantic alignment: 'allowed to keep' entails retention ('stays with the TSA') in this context.",
+      "weight": [
+        0.9995663255398752,
+        0.07585327033952563,
+        0.92946634824246
+      ]
     },
     {
       "id": "H_5",
       "formula": "P_12 ⟹ P_13",
       "translation": "If the money stays with the TSA, then the agency is free to spend it to improve civil aviation security.",
       "evidence": "Sentences 7-8: after the TSA is allowed to keep it, \"The agency is then free to spend...\"",
-      "reasoning": "The text links retention/keeping to the ensuing permission to spend; modeled as implication."
+      "reasoning": "The text links retention/keeping to the ensuing permission to spend; modeled as implication.",
+      "weight": [
+        0.9997909980899469,
+        0.04742458556459711,
+        0.9547136356070925
+      ]
     },
     {
       "id": "H_6",
       "formula": "P_19 ⟹ P_20",
       "translation": "If Congress gave the agency the ability to use forgotten money to fund security operations, then the agency can use forgotten money to fund security operations.",
       "evidence": "Sentence 12.",
-      "reasoning": "Semantic unpacking: granting an ability implies possessing that ability."
+      "reasoning": "Semantic unpacking: granting an ability implies possessing that ability.",
+      "weight": [
+        0.99973047545732,
+        0.020332183566062284,
+        0.9800677101879247
+      ]
     },
     {
       "id": "H_7",
       "formula": "P_20 ⟹ P_13",
       "translation": "If the agency can use forgotten money to fund security operations, then it is free to spend such money to improve civil aviation security.",
       "evidence": "Sentence 8 (spend to improve security) and Sentence 12 (use money to fund security operations).",
-      "reasoning": "Common-sense semantic inclusion: funding security operations is a way of improving civil aviation security, so the more specific ability supports the broader spending-permission claim in this domain."
+      "reasoning": "Common-sense semantic inclusion: funding security operations is a way of improving civil aviation security, so the more specific ability supports the broader spending-permission claim in this domain.",
+      "weight": [
+        0.9997942159132012,
+        0.037326354071664035,
+        0.9640096280838222
+      ]
     },
     {
       "id": "H_8",
       "formula": "P_17 ∧ P_18 ⟹ P_15",
       "translation": "If unclaimed money is documented and turned into the TSA financial office, then there are unclaimed items/money left behind at checkpoints.",
       "evidence": "Sentence 11 (documentation/turn-in of unclaimed money) and Sentence 9 (instances of unclaimed items).",
-      "reasoning": "Semantic existence constraint: a process for handling unclaimed money presupposes that some unclaimed money/items exist."
+      "reasoning": "Semantic existence constraint: a process for handling unclaimed money presupposes that some unclaimed money/items exist.",
+      "weight": [
+        0.9997354806777898,
+        0.07585733953517927,
+        0.9294739244822836
+      ]
     }
   ],
   "soft_constraints": [
@@ -216,36 +255,60 @@
       "formula": "P_3",
       "translation": "The funds collected by the TSA are increasing every year.",
       "evidence": "Sentence 3 (and repeated in Sentence 4): \"appear to be increasing every year\"",
-      "reasoning": "Marked soft because the text uses the hedge \"appear\" (uncertainty), even though it cites figures."
+      "reasoning": "Marked soft because the text uses the hedge \"appear\" (uncertainty), even though it cites figures.",
+      "weight": [
+        0.7981729093259042,
+        0.3207904469846186,
+        0.7133146086609552
+      ]
     },
     {
       "id": "S_2",
       "formula": "P_16",
       "translation": "Unclaimed money consists of loose coins passengers remove from their pockets.",
       "evidence": "Sentence 11: \"typically consisting of loose coins\"",
-      "reasoning": "Soft because the hedge \"typically\" indicates a generalization rather than a strict rule."
+      "reasoning": "Soft because the hedge \"typically\" indicates a generalization rather than a strict rule.",
+      "weight": [
+        0.9997946926377986,
+        0.000911044453785481,
+        0.9990895970522533
+      ]
     },
     {
       "id": "S_3",
       "formula": "P_14 ⟹ P_25",
       "translation": "If TSA officials stated the agency makes every effort to reunite passengers with items, then the agency makes every effort to reunite passengers with items.",
       "evidence": "Sentence 9 is an officials' statement about agency practice.",
-      "reasoning": "Soft because a reported claim by officials is not guaranteed true; it is plausible but defeasible."
+      "reasoning": "Soft because a reported claim by officials is not guaranteed true; it is plausible but defeasible.",
+      "weight": [
+        0.9986737387255448,
+        0.10668898977563598,
+        0.903480560789505
+      ]
     },
     {
       "id": "S_4",
       "formula": "P_21 ∨ P_22 ∨ P_23",
       "translation": "At least one of Phoenix, Columbus (Ohio), or Denver International Airport offers travellers the opportunity to donate money to local charities at checkpoint collection boxes.",
       "evidence": "Sentence 13 lists these airports as examples of airports that offer the opportunity.",
-      "reasoning": "Soft because the phrasing \"Some airports, such as ...\" is compatible with the possibility of reporting looseness/illustrative examples; treating the disjunction as defeasible conservatism."
+      "reasoning": "Soft because the phrasing \"Some airports, such as ...\" is compatible with the possibility of reporting looseness/illustrative examples; treating the disjunction as defeasible conservatism.",
+      "weight": [
+        0.9997359573598329,
+        0.04742517352716166,
+        0.9547107192169164
+      ]
     },
     {
       "id": "S_5",
       "formula": "(P_21 ∨ P_22 ∨ P_23) ⟹ P_24",
       "translation": "If airports offer travellers the opportunity to donate at collection boxes, then travellers donate money at those collection boxes.",
       "evidence": "Sentence 13 (opportunity to donate) plus common-sense about opportunities sometimes being taken.",
-      "reasoning": "Soft because offering an opportunity does not guarantee the action occurs, but it is a reasonable defeasible inference."
+      "reasoning": "Soft because offering an opportunity does not guarantee the action occurs, but it is a reasonable defeasible inference.",
+      "weight": [
+        0.0007096683061315453,
+        0.060086147433516125,
+        0.011672979230966378
+      ]
     }
   ]
 }
-```
