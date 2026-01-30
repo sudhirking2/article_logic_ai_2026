@@ -158,6 +158,13 @@ RELATION TRIPLES:
                 raise ValueError("LLM returned empty response")
 
             response_text = response_text.strip()
+
+            # Check for empty response after stripping
+            if not response_text:
+                print(f"  ERROR: LLM returned empty response after stripping whitespace.")
+                print(f"  This may indicate API timeout, rate limiting, or model error.")
+                raise ValueError("LLM returned empty response. This may indicate API timeout, rate limiting, or model error.")
+
             print(f"  Response length: {len(response_text)} characters")
 
             # Parse the JSON response
