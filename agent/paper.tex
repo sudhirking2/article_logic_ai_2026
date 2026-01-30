@@ -192,7 +192,7 @@ This represents a pure neural approach without explicit symbolic reasoning.
 
 \subsubsection{ContractNLI}
 
-ContractNLI \cite{contractnli} is a document-level natural language inference dataset for legal contracts. The dataset contains non-disclosure agreements paired with hypotheses about obligations and permissions (e.g., ``Receiving Party shall not disclose confidential information''). Each hypothesis is labeled TRUE (entailed), FALSE (contradicted), or UNCERTAIN (not mentioned).
+ContractNLI \cite{koreeda2021contractnli} is a document-level natural language inference dataset for legal contracts. The dataset contains non-disclosure agreements paired with hypotheses about obligations and permissions (e.g., ``Receiving Party shall not disclose confidential information''). Each hypothesis is labeled TRUE (entailed), FALSE (contradicted), or UNCERTAIN (not mentioned).
 
 The analyzed experimental data covers 7 documents with 17 hypotheses each (119 document-hypothesis pairs). The RAG baseline evaluated 20 documents (340 pairs) from the same dataset.
 
@@ -455,27 +455,15 @@ Based on the error analysis, we identified specific improvements with exact file
 These improvements are prioritized by impact: negation handling fixes (100\% FALSE error rate) are highest priority, followed by hybrid retrieval (75\% false positive reduction), then granularity validation. Expected combined impact: +15-20\% accuracy on current failure cases. Full implementation details are documented in the codebase analysis.
 
 % ==============================================================================
-% REFERENCES (APA 7th edition)
+% REFERENCES (using BibTeX)
 % Purpose: Cite all sources mentioned in paper
 % ==============================================================================
 \newpage
-\section{References}
+\bibliographystyle{apalike}
+\bibliography{../article/biblio}
 
-Yin, W., Rajani, N. F., Radev, D., Socher, R., \& Xiong, C. (2021). DocNLI: A large-scale dataset for document-level natural language inference. \textit{Findings of ACL-IJCNLP 2021}.
-
-Koreeda, Y., \& Manning, C. D. (2021). ContractNLI: A dataset for document-level natural language inference for contracts. \textit{Findings of EMNLP 2021}.
-
-Pan, L., Albalak, A., Wang, X., \& Wang, W. Y. (2023). Logic-LM: Empowering large language models with symbolic solvers for faithful logical reasoning. \textit{EMNLP 2023}.
-
-Parmar, M., Patel, A., \& Patel, B. (2024). Logic-LM++: Multi-step refinement for improved logical reasoning. \textit{NeurIPS 2024 Workshop on Math-AI}.
-
-Jiang, Y., \& Bansal, M. (2019). Avoiding reasoning shortcuts: Adversarial evaluation, training, and model development for multi-hop QA. \textit{Proceedings of ACL 2019}.
-
-Tafjord, O., Dalvi, B., \& Clark, P. (2021). ProofWriter: Generating implications, proofs, and abductive statements over natural language. \textit{Findings of ACL 2021}.
-
-Yang, Z., Chen, Y., \& Zhang, D. (2025). Survey of neuro-symbolic methods for logical reasoning in NLP. \textit{ACL 2025} (to appear).
-
-\textit{Note: Logify is an ongoing, unpublished research project in neuro-symbolic AI. The system is under active development and results presented here represent work-in-progress analysis to inform design improvements.}
+\vspace{12pt}
+\noindent\textit{Note: Logify is an ongoing, unpublished research project in neuro-symbolic AI. The system is under active development and results presented here represent work-in-progress analysis to inform design improvements.}
 
 % ==============================================================================
 % AI-AGENT REFLECTION AND IMPLICATIONS FOR AI-DRIVEN RESEARCH
