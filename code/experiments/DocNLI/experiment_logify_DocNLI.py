@@ -75,7 +75,18 @@ def map_prediction_to_binary(prediction: Optional[str]) -> Optional[str]:
 
 def get_cached_logified_path(example_id: int) -> Path:
     """Get path to cached logified JSON for an example."""
-    return CACHE_DIR / f"premise_{example_id}_weighted.json"
+    # Check new naming convention first
+    new_path = CACHE_DIR / f"premise_{example_id}_weighted.json"
+    if new_path.exists():
+        return new_path
+
+    # Fall back to old naming convention for backward compatibility
+    old_path = CACHE_DIR / f"example_{example_id}_weighted.json"
+    if old_path.exists():
+        return old_path
+
+    # Return new path for creation
+    return new_path
 
 
 def logify_premise(
