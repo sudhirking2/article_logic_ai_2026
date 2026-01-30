@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+"""
+retrieval_config.py - Configuration for retrieval and NLI filtering
+
+Centralizes all tunable parameters for the query translation pipeline.
+"""
+
+# SBERT bi-encoder settings (Stage 1: Candidate retrieval)
+SBERT_MODEL = "all-MiniLM-L6-v2"
+SBERT_TOP_K = 50  # Increased from 20 for broader recall
+SBERT_MIN_SIMILARITY = 0.3  # Minimum cosine similarity threshold
+
+# NLI cross-encoder settings (Stage 2: Semantic filtering)
+NLI_MODEL = "cross-encoder/nli-deberta-v3-large"
+NLI_ENTAILMENT_THRESHOLD = 0.5  # Min P(entailment) to keep proposition
+NLI_CONTRADICTION_THRESHOLD = 0.5  # Min P(contradiction) to keep proposition
+NLI_BATCH_SIZE = 32  # Batch size for efficient inference
+
+# Feature flags
+ENABLE_NLI_FILTERING = True  # Set False to disable NLI filtering
+ENABLE_HYBRID_EMBEDDING = True  # Embed translation + evidence together
+
+# Confidence thresholds (for future use in experiments)
+CONFIDENCE_THRESHOLD_TRUE = 0.55  # TRUE → UNCERTAIN if confidence below this
+MIN_PROPOSITION_WEIGHT = 0.4  # Low weight → low confidence adjustment

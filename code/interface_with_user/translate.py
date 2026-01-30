@@ -65,7 +65,7 @@ from baseline_rag.retriever import (
 from openai import OpenAI
 
 
-def extract_proposition_chunks(logified_structure: Dict[str, Any]) -> List[Dict]:
+def extract_proposition_chunks(logified_structure: Dict[str, Any], hybrid_embedding: bool = True) -> List[Dict]:
     """
     Extract primitive propositions from logified JSON as chunks.
 
@@ -73,6 +73,7 @@ def extract_proposition_chunks(logified_structure: Dict[str, Any]) -> List[Dict]
 
     Args:
         logified_structure: Loaded JSON with 'primitive_props' field
+        hybrid_embedding: If True, embed translation + evidence together for better grounding
 
     Returns:
         List of chunk dicts, each with 'text' field (for SBERT encoding)
@@ -89,12 +90,22 @@ def extract_proposition_chunks(logified_structure: Dict[str, Any]) -> List[Dict]
         if 'id' not in prop or 'translation' not in prop:
             raise ValueError(f"Proposition missing required fields (id, translation): {prop}")
 
-        # Create chunk with 'text' field for SBERT (use translation as the text to embed)
+        # Hybrid embedding: combine translation + evidence for grounding
+        translation = prop['translation']
+        evidence = prop.get('evidence', '')
+
+        if hybrid_embedding and evidence:
+            # Truncate evidence to avoid exceeding model limits
+            text_to_embed = f"{translation} | Evidence: {evidence[:200]}"
+        else:
+            text_to_embed = translation
+
+        # Create chunk with 'text' field for SBERT
         chunk = {
-            'text': prop['translation'],  # This is what SBERT encodes
+            'text': text_to_embed,
             'id': prop['id'],
             'translation': prop['translation'],
-            'evidence': prop.get('evidence', ''),
+            'evidence': evidence,
             'explanation': prop.get('explanation', '')
         }
         chunks.append(chunk)
@@ -106,40 +117,66 @@ def retrieve_top_k_propositions(
     query: str,
     chunks: List[Dict],
     sbert_model,
-    k: int = 20
+    k: int = 20,
+    min_similarity: float = 0.3,
+    nli_model = None,
+    enable_nli_filtering: bool = True
 ) -> List[Dict]:
     """
-    Retrieve top-K most relevant propositions for the query using SBERT.
+    Retrieve and filter propositions using two-stage retrieval.
+
+    Stage 1: SBERT retrieves top-k candidates by cosine similarity
+    Stage 2: NLI cross-encoder filters by semantic entailment/contradiction
 
     Args:
         query: User query string
         chunks: List of proposition chunks (each with 'text' field)
         sbert_model: Loaded SBERT model
-        k: Number of propositions to retrieve
+        k: Number of candidates to retrieve in Stage 1
+        min_similarity: Minimum cosine similarity threshold
+        nli_model: Pre-loaded NLI model (optional, will load if needed)
+        enable_nli_filtering: If True, apply NLI filtering (Stage 2)
 
     Returns:
-        List of top-K chunks sorted by relevance (most relevant first)
+        List of filtered chunks sorted by relevance
     """
-    # Encode all chunks
+    # Stage 1: SBERT candidate retrieval
     chunk_embeddings = encode_chunks(chunks, sbert_model)
-
-    # Encode query
     query_embedding = encode_query(query, sbert_model)
-
-    # Compute similarities
     similarities = compute_cosine_similarity(query_embedding, chunk_embeddings)
 
-    # Get top-K indices
+    # Get top-K indices sorted by similarity
     top_k_indices = np.argsort(similarities)[::-1][:k]
 
-    # Return top-K chunks with their similarity scores
-    retrieved = []
+    # Filter by minimum similarity and build candidates
+    candidates = []
     for idx in top_k_indices:
-        chunk = chunks[idx].copy()
-        chunk['similarity'] = float(similarities[idx])
-        retrieved.append(chunk)
+        similarity = float(similarities[idx])
+        if similarity < min_similarity:
+            break  # Sorted, so stop when below threshold
 
-    return retrieved
+        chunk = chunks[idx].copy()
+        chunk['similarity'] = similarity
+        candidates.append(chunk)
+
+    # Stage 2: NLI filtering (if enabled and candidates exist)
+    if enable_nli_filtering and candidates:
+        from baseline_rag import nli_reranker
+
+        # Load NLI model if not provided
+        if nli_model is None:
+            nli_model = nli_reranker.load_nli_model()
+
+        # Filter by NLI scores
+        filtered = nli_reranker.filter_propositions_by_nli(
+            propositions=candidates,
+            query=query,
+            model=nli_model
+        )
+
+        return filtered
+
+    return candidates
 
 
 def is_yes_no_question(query: str) -> bool:
@@ -683,7 +720,11 @@ def translate_query(
     if verbose:
         print("Extracting primitive propositions...")
 
-    chunks = extract_proposition_chunks(logified_structure)
+    from config import retrieval_config
+    chunks = extract_proposition_chunks(
+        logified_structure,
+        hybrid_embedding=retrieval_config.ENABLE_HYBRID_EMBEDDING
+    )
 
     if verbose:
         print(f"  Found {len(chunks)} propositions")
@@ -699,20 +740,51 @@ def translate_query(
 
     sbert_model = load_sbert_model(sbert_model_name)
 
-    # Retrieve top-K propositions
+    # Retrieve top-K propositions with two-stage filtering
     if verbose:
         print(f"Retrieving top-{actual_k} relevant propositions...")
+        if retrieval_config.ENABLE_NLI_FILTERING:
+            print("  Stage 1: SBERT candidate retrieval")
+            print("  Stage 2: NLI semantic filtering")
 
-    retrieved = retrieve_top_k_propositions(query, chunks, sbert_model, k=actual_k)
+    # Load NLI model if filtering is enabled
+    nli_model = None
+    if retrieval_config.ENABLE_NLI_FILTERING:
+        from baseline_rag import nli_reranker
+        nli_model = nli_reranker.load_nli_model()
+
+    retrieved = retrieve_top_k_propositions(
+        query=query,
+        chunks=chunks,
+        sbert_model=sbert_model,
+        k=retrieval_config.SBERT_TOP_K,  # Use config value for Stage 1
+        min_similarity=retrieval_config.SBERT_MIN_SIMILARITY,
+        nli_model=nli_model,
+        enable_nli_filtering=retrieval_config.ENABLE_NLI_FILTERING
+    )
 
     if verbose:
-        print(f"  Top 5 retrieved propositions:")
-        for i, chunk in enumerate(retrieved[:5]):
-            print(f"    {i+1}. {chunk['id']} (sim={chunk['similarity']:.3f}): {chunk['translation'][:60]}...")
+        print(f"  Retrieved {len(retrieved)} propositions after filtering")
+        if retrieved:
+            print(f"  Top 5 propositions:")
+            for i, chunk in enumerate(retrieved[:5]):
+                nli_info = ""
+                if 'nli_scores' in chunk:
+                    scores = chunk['nli_scores']
+                    nli_info = f" [E:{scores['entailment']:.2f} C:{scores['contradiction']:.2f}]"
+                print(f"    {i+1}. {chunk['id']} (sim={chunk['similarity']:.3f}){nli_info}: {chunk['translation'][:60]}...")
 
-    # Validate we have propositions to work with
+    # Handle empty retrieval: Document is silent on hypothesis
     if not retrieved:
-        raise ValueError("No propositions retrieved - cannot translate query without available propositions")
+        if verbose:
+            print("  No relevant propositions found - document appears silent on this hypothesis")
+        return {
+            "formula": "NONE",
+            "translation": "No relevant propositions found",
+            "query": query,
+            "explanation": "Document appears silent on this hypothesis",
+            "should_return_uncertain": True
+        }
 
     # Get valid proposition IDs for validation
     valid_prop_ids = {chunk['id'] for chunk in chunks}
