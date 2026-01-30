@@ -182,6 +182,7 @@ RELATION TRIPLES:
                     f.write(response_text)
                 print(f"  Raw response saved to: {debug_file}")
 
+                # Try to extract JSON from markdown code fences or other wrapping text
                 if "{" in response_text and "}" in response_text:
                     json_start = response_text.find("{")
                     json_end = response_text.rfind("}") + 1
