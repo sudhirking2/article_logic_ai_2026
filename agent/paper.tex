@@ -118,9 +118,11 @@ This paper documents an AI agent-led investigation into error patterns of Logify
 % ==============================================================================
 \section{Introduction}
 
-Neuro-symbolic AI systems promise to combine the flexibility of neural language understanding with the rigor of symbolic logic \cite{pan2023logiclm,olausson2023linc,yang2025neurosymbolic}. Logify is an ongoing research project developing a framework that converts legal documents into weighted propositional logic, enabling reasoning via SAT solvers. The system is being designed to improve upon retrieval-augmented generation (RAG) baselines on document-level inference tasks.
+Neuro-symbolic AI systems promise to combine the flexibility of neural language understanding with the rigor of symbolic logic \cite{pan2023logiclm,olausson2023linc,yang2025neurosymbolic}. Recent systems like Logic-LM \cite{pan2023logiclm} integrate LLMs with theorem provers for multi-step reasoning, while LINC \cite{olausson2023linc} uses natural language as an intermediate representation for program synthesis. These approaches aim to leverage symbolic solvers' deductive rigor while preserving neural models' semantic flexibility—a promising but challenging integration.
 
-Early experimental results show mixed performance: while the system achieves strong results on some documents, it underperforms RAG on others (40\% vs 68\% accuracy on a 7-document subset from ContractNLI). This investigation analyzes error patterns to identify specific architectural challenges in the neuro-symbolic pipeline.
+Logify is an ongoing research project developing a framework that converts legal documents into weighted propositional logic, enabling reasoning via SAT solvers. The system is being designed to improve upon retrieval-augmented generation (RAG) baselines on document-level inference tasks. Early experimental results show mixed performance: while the system achieves strong results on some documents, it underperforms RAG on others (40\% vs 68\% accuracy on a 7-document subset from ContractNLI).
+
+This investigation contributes to the neuro-symbolic AI literature by conducting diagnostic error analysis on a system in development. Rather than evaluating final performance claims, we identify specific failure modes in the neural-to-symbolic translation pipeline—a critical bottleneck in practical neuro-symbolic systems. Understanding when and why these systems fail provides actionable insights for architectural improvements, complementing prior work that primarily reports successful applications without systematic failure analysis.
 
 \subsection{Main findings}
 
@@ -233,6 +235,12 @@ This is a \textbf{post-hoc analysis} of existing experimental outputs. The analy
 \end{itemize}
 
 The investigation therefore analyzes \textit{observable system behavior} as recorded in JSON artifacts, not internal mechanisms.
+
+\textbf{Research design justification}: Post-hoc analysis was chosen over prospective experimental design for three reasons: (1) existing experimental artifacts were available for diagnostic analysis, (2) the research goal is understanding failure modes in an ongoing development project rather than hypothesis testing, and (3) exploratory qualitative methodology prioritizes pattern discovery over causal inference. This approach fits the conference's focus on AI-driven qualitative research where diagnostic value and actionable insights are prioritized over definitive conclusions.
+
+\subsubsection{Ethical considerations}
+
+This research involves no human subjects. The investigation analyzes existing computational system outputs (JSON artifacts) from the Logify and RAG systems evaluating their performance on publicly available NLI datasets (ContractNLI and DocNLI). No institutional review board (IRB) approval was required. The study examines system behavior, not human participants, and therefore traditional informed consent procedures do not apply. All datasets used (ContractNLI, DocNLI) are publicly released research benchmarks with appropriate licensing for academic use.
 
 % ==============================================================================
 % EXPERIMENTAL RESULTS
