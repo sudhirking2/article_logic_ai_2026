@@ -340,20 +340,28 @@ def build_prompt(query: str, retrieved_chunks: List[Dict], logified_structure: D
 
     Args:
         query: User query string
-        retrieved_chunks: List of relevant proposition chunks
+        retrieved_chunks: List of relevant proposition chunks (with polarity metadata)
         logified_structure: Optional logified structure containing constraints
 
     Returns:
         Formatted prompt string
     """
-    # Format the propositions for the prompt
+    # Detect query polarity
+    from interface_with_user import negation_detection
+    query_is_negative = negation_detection.detect_negation_in_hypothesis(query)
+
+    # Format the propositions for the prompt with polarity info
     props_text = ""
     prop_ids = []
     for chunk in retrieved_chunks:
         prop_id = chunk['id']
         prop_ids.append(prop_id)
+
+        # Add polarity annotation
+        polarity = "NEGATIVE" if chunk.get('is_negative', False) else "AFFIRMATIVE"
+
         props_text += f"""
-{prop_id}: {chunk['translation']}
+{prop_id}: {chunk['translation']} [Polarity: {polarity}]
   Evidence: {chunk['evidence']}
 """
 
@@ -451,16 +459,36 @@ First, determine the QUERY MODE based on the hypothesis wording:
 2. **consistency**: The hypothesis asks if something is ALLOWED or POSSIBLE.
    - Keywords: "may", "can", "could", "is allowed", "is permitted", "is possible"
 
+=== NEGATION HANDLING ===
+
+Query polarity: {"NEGATIVE (prohibition/restriction)" if query_is_negative else "AFFIRMATIVE"}
+
+When translating negative queries ("shall not X", "only include Y"):
+- If query is NEGATIVE and proposition is AFFIRMATIVE → use negation: ¬P_i
+- If query is NEGATIVE and proposition is NEGATIVE → use directly: P_i
+- If query is AFFIRMATIVE and proposition is AFFIRMATIVE → use directly: P_i
+
+Examples:
+- Query: "Party shall not disclose" + P_1="Party discloses" [AFFIRMATIVE] → Formula: ¬P_1
+- Query: "Party shall not disclose" + P_1="Party does not disclose" [NEGATIVE] → Formula: P_1
+- Query: "Info includes only X" + P_2="Info includes X and Y" [AFFIRMATIVE] → Formula: ¬P_2
+
 === TRANSLATION GUIDELINES ===
 
 1. "Shall"/"Must" obligations → Use proposition directly: P_i (mode: entailment)
-2. "Shall not" prohibitions → The proposition already captures the negation, use: P_i (mode: entailment)
+2. "Shall not"/"Must not" prohibitions → Check proposition polarity:
+   - If proposition is AFFIRMATIVE, apply negation: ¬P_i
+   - If proposition is NEGATIVE, use directly: P_i
+   - Mode: entailment
 3. "May"/"Can" permissions → Use proposition for the permitted action: P_i (mode: consistency)
 4. Conditionals "If A then B" / "in case" / "when" → Use implication: P_a ⟹ P_b (mode: entailment)
 5. "Some"/"Any" (existential) → Use disjunction: P_1 ∨ P_2
 6. "All"/"Every" (universal) → Use conjunction: P_1 ∧ P_2
 
-IMPORTANT: Choose the SIMPLEST formula. If one proposition captures the hypothesis, use just that proposition.
+IMPORTANT:
+- Choose the SIMPLEST formula that preserves semantic intent
+- ALWAYS match hypothesis polarity with formula polarity
+- Check [Polarity: ...] annotations above
 
 === OUTPUT FORMAT ===
 Return ONLY a JSON object (no other text):
@@ -786,6 +814,27 @@ def translate_query(
             "should_return_uncertain": True
         }
 
+    # Stage 3: Negation detection and polarity annotation
+    if verbose:
+        print("  Stage 3: Detecting polarity...")
+
+    from interface_with_user import negation_detection
+
+    query_is_negative = negation_detection.detect_negation_in_hypothesis(query)
+
+    # Annotate retrieved propositions with polarity
+    for chunk in retrieved:
+        chunk['is_negative'] = negation_detection.detect_negation_in_proposition(
+            chunk['translation']
+        )
+
+    if verbose and retrieval_config.ENABLE_NEGATION_WARNINGS:
+        if query_is_negative:
+            print(f"    Query is NEGATIVE (prohibition/restriction)")
+        neg_count = sum(1 for c in retrieved if c.get('is_negative', False))
+        pos_count = len(retrieved) - neg_count
+        print(f"    Retrieved: {neg_count} negative, {pos_count} positive propositions")
+
     # Get valid proposition IDs for validation
     valid_prop_ids = {chunk['id'] for chunk in chunks}
 
@@ -814,6 +863,33 @@ def translate_query(
         if invalid_props and verbose:
             print(f"  Warning: Formula contains proposition IDs not in document: {invalid_props}")
             # Don't fail, just warn - the LLM might have hallucinated but formula may still be useful
+
+    # Stage 4: Polarity validation and correction
+    if verbose:
+        print("  Stage 4: Validating polarity...")
+
+    retrieved_prop_data = [
+        {'id': chunk['id'], 'translation': chunk['translation']}
+        for chunk in retrieved
+    ]
+
+    final_formula, was_corrected, explanation = negation_detection.apply_polarity_correction(
+        formula=result.get('formula', ''),
+        hypothesis=query,
+        retrieved_props=retrieved_prop_data,
+        auto_correct=retrieval_config.ENABLE_AUTO_NEGATION_CORRECTION
+    )
+
+    if was_corrected:
+        if verbose:
+            print(f"    POLARITY CORRECTED: {result.get('formula', '')} → {final_formula}")
+        result['formula'] = final_formula
+        result['polarity_corrected'] = True
+        result['polarity_explanation'] = explanation
+    elif not explanation.startswith("Polarity consistent"):
+        if verbose and retrieval_config.ENABLE_NEGATION_WARNINGS:
+            print(f"    WARNING: {explanation}")
+        result['polarity_warning'] = explanation
 
     # Add original query if it was converted
     if original_query != query:
