@@ -802,6 +802,54 @@ def translate_query(
         enable_nli_filtering=retrieval_config.ENABLE_NLI_FILTERING
     )
 
+    # Adjust proposition weights based on NLI entailment scores
+    if retrieval_config.ENABLE_NLI_FILTERING and retrieved:
+        if verbose:
+            print(f"  Adjusting proposition weights using NLI entailment scores...")
+
+        # Build mapping from proposition ID to NLI entailment score
+        prop_id_to_nli = {}
+        for prop in retrieved:
+            if 'nli_scores' in prop:
+                prop_id_to_nli[prop['id']] = prop['nli_scores']['entailment']
+
+        # Adjust weights in soft_constraints
+        for constraint in logified_structure.get('soft_constraints', []):
+            formula = constraint.get('formula', '')
+
+            # Extract proposition IDs from formula (simple case: single prop or conjunctions)
+            # Match P_\d+ pattern
+            import re
+            prop_ids_in_formula = set(re.findall(r'P_\d+', formula))
+
+            if not prop_ids_in_formula:
+                continue
+
+            # For formulas with multiple propositions, use minimum NLI score (conservative)
+            nli_scores_for_formula = [prop_id_to_nli.get(pid, 1.0) for pid in prop_ids_in_formula if pid in prop_id_to_nli]
+
+            if nli_scores_for_formula:
+                min_nli_score = min(nli_scores_for_formula)
+
+                # Extract original weight (handle array format [prob_yes, prob_no, confidence])
+                weight_raw = constraint.get('weight', 0.5)
+                if isinstance(weight_raw, list) and len(weight_raw) >= 3:
+                    original_confidence = weight_raw[2]
+                else:
+                    original_confidence = weight_raw if not isinstance(weight_raw, list) else 0.5
+
+                # Adjust confidence by multiplying with NLI entailment score
+                adjusted_confidence = original_confidence * min_nli_score
+
+                # Update weight (keep array format if it was array)
+                if isinstance(weight_raw, list) and len(weight_raw) >= 3:
+                    constraint['weight'] = [weight_raw[0], weight_raw[1], adjusted_confidence]
+                else:
+                    constraint['weight'] = adjusted_confidence
+
+                if verbose:
+                    print(f"    {constraint.get('id', formula)}: weight {original_confidence:.3f} → {adjusted_confidence:.3f} (NLI: {min_nli_score:.3f})")
+
     if verbose:
         print(f"  Retrieved {len(retrieved)} propositions after filtering")
         if retrieved:
