@@ -1,0 +1,24 @@
+# Python compiled files
+*.pyc
+__pycache__/
+# Log files
+nohup.out
+*.log
+# VS Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.tmp
+*.bak
+*~
