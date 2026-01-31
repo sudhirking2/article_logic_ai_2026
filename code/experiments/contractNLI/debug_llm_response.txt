@@ -3,440 +3,828 @@
   "primitive_props": [
     {
       "id": "P_1",
-      "translation": "This Agreement is made between The University of Bristol and the other signatory party (the Parties).",
-      "evidence": "Header paragraph: \"This Agreement is made ... between The University of Bristol ... and __________ ... (the \\\"Parties\\\")\"",
-      "explanation": "Atomic party-identification statement; no logical connectives to split."
+      "translation": "This document is a Mutual Non-Disclosure Agreement (the “Agreement”).",
+      "evidence": "Title and opening: “MUTUAL NON-DISCLOSURE AGREEMENT”",
+      "explanation": "Atomic classification of the document; no logical connective."
     },
     {
       "id": "P_2",
-      "translation": "The purpose of this Agreement is to regulate the exchange and subsequent treatment of confidential information received or disclosed to the signatories.",
-      "evidence": "\"THE PURPOSE of this Agreement is to regulate the exchange and subsequent treatment of confidential information...\"",
-      "explanation": "Single stated purpose; treated as one proposition describing the Agreement’s aim."
+      "translation": "The Agreement is made between the Producer and the Agency.",
+      "evidence": "Preamble: “by and between ... (“Producer”) and ... (“Agency”)”",
+      "explanation": "Identifies the two named counterparties; no connective."
     },
     {
       "id": "P_3",
-      "translation": "Confidential information includes proprietary materials.",
-      "evidence": "\"the term confidential information includes proprietary materials...\"",
-      "explanation": "Single inclusion claim; no connectives."
+      "translation": "The Agency is signing the Agreement for itself.",
+      "evidence": "Preamble: “Agency is signing this Agreement for itself...”",
+      "explanation": "Single fact about signing capacity."
     },
     {
       "id": "P_4",
-      "translation": "Confidential information includes specifications.",
-      "evidence": "\"including without limitation specifications...\"",
-      "explanation": "Single category inclusion."
+      "translation": "The Agency is signing the Agreement for its Client.",
+      "evidence": "Preamble: “...and for its Client...”",
+      "explanation": "Single fact about signing capacity."
     },
     {
       "id": "P_5",
-      "translation": "Confidential information includes drawings.",
-      "evidence": "\"including without limitation ... drawings...\"",
-      "explanation": "Single category inclusion."
+      "translation": "The Client is a “Party” under the Agreement.",
+      "evidence": "Preamble: “...its Client who is also a 'Party'...”",
+      "explanation": "Single status assignment."
     },
     {
       "id": "P_6",
-      "translation": "Confidential information includes designs.",
-      "evidence": "\"including without limitation ... designs...\"",
-      "explanation": "Single category inclusion."
+      "translation": "The Client is a “Recipient” under the Agreement.",
+      "evidence": "Preamble: “...also a '...Recipient'...”",
+      "explanation": "Single status assignment."
     },
     {
       "id": "P_7",
-      "translation": "Confidential information includes computer software.",
-      "evidence": "\"including without limitation ... computer software...\"",
-      "explanation": "Single category inclusion."
+      "translation": "The Client is a “Discloser” under the Agreement.",
+      "evidence": "Preamble: “...also a '...Discloser' under this Agreement.”",
+      "explanation": "Single status assignment."
     },
     {
       "id": "P_8",
-      "translation": "Confidential information includes knowhow.",
-      "evidence": "\"including without limitation ... knowhow.\"",
-      "explanation": "Single category inclusion."
+      "translation": "If the Agreement’s terms conflict with Client/Agency documents addressing the same subject matter, the Agreement’s terms control.",
+      "evidence": "Preamble: “If the terms... are inconsistent with those in Client’s or Agency’s... the terms... of this Agreement shall control.”",
+      "explanation": "This is a single conditional rule stated in the text; treated as atomic content to be constrained later."
     },
     {
       "id": "P_9",
-      "translation": "Confidential information is disclosed for the purpose of evaluating technology in the described field.",
-      "evidence": "Clause 1: \"The disclosure of confidential information is for the specific purpose of evaluating technology...\"",
-      "explanation": "Single disclosed-purpose statement."
+      "translation": "A Party is required by the Agreement to disclose its Confidential Information.",
+      "evidence": "Section 1: “Nothing in this Agreement shall require a Party to disclose its Confidential Information.”",
+      "explanation": "Atomic proposition capturing the (denied) requirement-to-disclose status."
     },
     {
       "id": "P_10",
-      "translation": "Documents or materials are provided on loan for the purposes described in Clause 1.",
-      "evidence": "Clause 1: \"Any specific documents or materials which are necessarily provided on loan...\"",
-      "explanation": "Atomic event-description (loan provision occurs)."
+      "translation": "A Recipient discloses Confidential Information without the other Party’s prior written consent.",
+      "evidence": "Section 2: “Recipients will not disclose... without the prior written consent...”",
+      "explanation": "Single action condition (disclosure without prior written consent)."
     },
     {
       "id": "P_11",
-      "translation": "Loaned documents or materials are specified in a schedule to this Agreement.",
-      "evidence": "Clause 1: \"...will be specified in a schedule to this Agreement\"",
-      "explanation": "Single specification requirement."
+      "translation": "A Recipient distributes Confidential Information without the other Party’s prior written consent.",
+      "evidence": "Section 2: “will not disclose, distribute...”",
+      "explanation": "Single action condition (distribution without prior written consent)."
     },
     {
       "id": "P_12",
-      "translation": "The disclosing party requests return of documents or materials provided to the receiving party.",
-      "evidence": "Clause 1: \"...will return these ... to the disclosing party on request.\"",
-      "explanation": "Atomic trigger condition (a request occurs)."
+      "translation": "A Recipient copies Confidential Information without the other Party’s prior written consent.",
+      "evidence": "Section 2: “will not... copy...”",
+      "explanation": "Single action condition (copying without prior written consent)."
     },
     {
       "id": "P_13",
-      "translation": "The receiving party returns the loaned documents or materials to the disclosing party.",
-      "evidence": "Clause 1: \"...the receiving party will return these...\"",
-      "explanation": "Atomic action/outcome (return occurs)."
+      "translation": "A Recipient uses Confidential Information without the other Party’s prior written consent.",
+      "evidence": "Section 2: “will not... use any Confidential Information... without the prior written consent...”",
+      "explanation": "Single action condition (use without prior written consent)."
     },
     {
       "id": "P_14",
-      "translation": "The Parties mark or otherwise designate confidential information to show it is imparted in confidence.",
-      "evidence": "Clause 2: \"The parties will mark or otherwise designate confidential information...\"",
-      "explanation": "Single required conduct statement; does not decompose without introducing disjunction ('mark' vs 'otherwise designate')."
+      "translation": "A Recipient discloses the fact that a Transaction is being considered or is under a production contract without the other Party’s prior written consent.",
+      "evidence": "Section 2: “...or the fact that a Transaction is being considered or is under a production contract without the prior written consent...”",
+      "explanation": "Single action condition about disclosing the fact of the Transaction."
     },
     {
       "id": "P_15",
-      "translation": "The receiving party takes proper and reasonable measures to maintain confidentiality of the information.",
-      "evidence": "Clause 3(a): \"it will take all proper and reasonable measures to ensure that the confidentiality... is maintained;\"",
-      "explanation": "Atomic obligation content."
+      "translation": "A Recipient uses Confidential Information only for evaluating the Transaction.",
+      "evidence": "Section 2: “Confidential Information may be used only... for... evaluating...”",
+      "explanation": "Atomic ‘only-for’ usage restriction, treated as a standalone policy statement."
     },
     {
       "id": "P_16",
-      "translation": "The receiving party uses the information for a commercial purpose.",
-      "evidence": "Clause 3(b): \"it will not use the information for any commercial purpose...\"",
-      "explanation": "Atomic usage fact; permission handled separately."
+      "translation": "A Recipient uses Confidential Information only for producing the Transaction.",
+      "evidence": "Section 2: “...may be used only... for... producing...”",
+      "explanation": "Separate permitted purpose; no connective."
     },
     {
       "id": "P_17",
-      "translation": "The receiving party manufactures using the information.",
-      "evidence": "Clause 3(b): \"...or manufacture...\"",
-      "explanation": "Atomic manufacturing fact; permission handled separately."
+      "translation": "A Recipient uses Confidential Information only for carrying out the Transaction.",
+      "evidence": "Section 2: “...may be used only... for... carrying out the Transaction.”",
+      "explanation": "Separate permitted purpose; no connective."
     },
     {
       "id": "P_18",
-      "translation": "The receiving party has a written licence or other agreement from the disclosing party.",
-      "evidence": "Clause 3(b): \"...without obtaining a written licence or other agreement from the disclosing party;\"",
-      "explanation": "Atomic permission/existence-of-document fact."
+      "translation": "A Recipient discloses Confidential Information to a Representative who needs to know it for the Transaction.",
+      "evidence": "Section 2: “may only disclose... to those... ('Representatives') who need to know...”",
+      "explanation": "Single disclosure-to-category condition."
     },
     {
       "id": "P_19",
-      "translation": "The receiving party discloses the information to a third party.",
-      "evidence": "Clause 3(c): \"it will not disclose the information to any third party...\"",
-      "explanation": "Atomic disclosure action."
+      "translation": "A Representative who receives Confidential Information is bound by a written agreement or other legally enforceable written obligations to preserve confidentiality consistent with the Agreement.",
+      "evidence": "Section 2: “...who shall be bound by a written agreement or other legally enforceable written obligations...”",
+      "explanation": "Single status condition on Representatives."
     },
     {
       "id": "P_20",
-      "translation": "The receiving party has written permission from the disclosing party to disclose the information to a third party.",
-      "evidence": "Clause 3(c): \"...without written permission;\"",
-      "explanation": "Atomic permission fact."
+      "translation": "The Recipient is responsible for a breach of the Agreement by the Recipient or its Representatives.",
+      "evidence": "Section 2: “The Recipient will be responsible for any breach... by it or its Representatives...”",
+      "explanation": "Single responsibility allocation."
     },
     {
       "id": "P_21",
-      "translation": "The receiving party discloses the information to employees other than those covered as permitted recipients.",
-      "evidence": "Clause 3(d): \"it will not disclose the information to employees other than those above...\"",
-      "explanation": "Atomic employee-disclosure action (scope handled via constraints)."
+      "translation": "The Discloser is the Producer.",
+      "evidence": "Section 2: “where the Discloser is the Producer...”",
+      "explanation": "Single role assignment in the special clause."
     },
     {
       "id": "P_22",
-      "translation": "Disclosure to those other employees is necessary to fulfil the purposes set out above.",
-      "evidence": "Clause 3(d): \"...except to the extent necessary to fulfil the purposes set out above...\"",
-      "explanation": "Atomic necessity condition."
+      "translation": "A Recipient Representative is a cost consultant of the Client or Agency.",
+      "evidence": "Section 2: “...a Recipient Representative is a cost consultant of the Client or Agency...”",
+      "explanation": "Single condition identifying the special representative type."
     },
     {
       "id": "P_23",
-      "translation": "Those other employees are made aware of the confidential nature of the information and the conditions of disclosure in the Agreement.",
-      "evidence": "Clause 3(d): \"...will be made aware of the confidential nature... and the conditions of disclosure herein;\"",
-      "explanation": "Atomic awareness/notice condition (kept as one statement describing the awareness requirement)."
+      "translation": "The Recipient secures the cost-consultant Representative’s express written agreement to hold all acquired/learned Confidential Information in confidence in perpetuity.",
+      "evidence": "Section 2: “Recipient shall secure... express written agreement... will in perpetuity hold in confidence...”",
+      "explanation": "Single obligation about securing a written agreement."
     },
     {
       "id": "P_24",
-      "translation": "The receiving party makes a copy of the information.",
-      "evidence": "Clause 3(e): \"it will not make any copy...\"",
-      "explanation": "Atomic copying action."
+      "translation": "The cost-consultant Representative uses or discloses Confidential Information except as permitted in the Agreement.",
+      "evidence": "Section 2: “...shall not use or disclose such information except as permitted...”",
+      "explanation": "Single prohibited-behavior condition."
     },
     {
       "id": "P_25",
-      "translation": "The receiving party makes an abstract of the information.",
-      "evidence": "Clause 3(e): \"...or abstract of the information...\"",
-      "explanation": "Atomic abstracting action."
+      "translation": "The cost-consultant Representative uses or discloses Confidential Information to a competitor of the Producer.",
+      "evidence": "Section 2: “...include... disclosures to a competitor of the Producer...”",
+      "explanation": "Specific prohibited scenario; atomic."
     },
     {
       "id": "P_26",
-      "translation": "The receiving party has specific written permission from the disclosing party to copy or abstract the information.",
-      "evidence": "Clause 3(e): \"...without specific written permission from the disclosing party;\"",
-      "explanation": "Atomic permission fact (for copy/abstract)."
+      "translation": "The cost-consultant Representative uses or discloses Confidential Information to another client or prospective client of the Representative.",
+      "evidence": "Section 2: “...include... disclosures to any other client or prospective client of such Representative...”",
+      "explanation": "Specific prohibited scenario; atomic."
     },
     {
       "id": "P_27",
-      "translation": "The receiving party acknowledges the source of the information in any drawing, document, or software incorporating the information.",
-      "evidence": "Clause 3(f): \"it will acknowledge the source... of ... any drawing, document or software incorporating the information.\"",
-      "explanation": "Atomic marking/acknowledgment requirement."
+      "translation": "Producer Confidential Information is disclosed to the Owner.",
+      "evidence": "Section 2: “Producer Confidential Information may be disclosed to the Owner...”",
+      "explanation": "Single disclosure fact (to Owner)."
     },
     {
       "id": "P_28",
-      "translation": "The receiving party marks \"Confidential\" on any drawing, document, or software incorporating the information.",
-      "evidence": "Clause 3(f): \"...and will mark \\\"Confidential\\\", any drawing, document or software incorporating the information.\"",
-      "explanation": "Atomic marking requirement."
+      "translation": "An independent third party is required by the FTC/DOJ.",
+      "evidence": "Section 2: “(unless an independent third party is required by the FTC/DOJ)”",
+      "explanation": "Single condition about regulatory requirement."
     },
     {
       "id": "P_29",
-      "translation": "Ownership of drawings, documents, or software is transferred to the receiving party under this Agreement.",
-      "evidence": "Clause 4: \"there is no explicit or implied transfer of ownership to the receiving party...\"",
-      "explanation": "Atomic transfer-of-ownership claim (will be negated by constraints)."
+      "translation": "Producer Confidential Information is disclosed (on an aggregate basis) to other Agency Affiliates.",
+      "evidence": "Section 2: “...disclosed, on an aggregate basis, to other Agency Affiliates...”",
+      "explanation": "Single disclosure fact (to Agency Affiliates) as aggregated."
     },
     {
       "id": "P_30",
-      "translation": "Copyright in the drawings, documents, or software is transferred to the receiving party under this Agreement.",
-      "evidence": "Clause 4: \"...or the copyright subsisting in them.\"",
-      "explanation": "Atomic transfer-of-copyright claim (will be negated by constraints)."
+      "translation": "The Owner and each Agency Affiliate Recipient agree to be bound by the Agreement.",
+      "evidence": "Section 2: “provided: (i) the Owner and each Agency Affiliate Recipient agrees to be bound by this Agreement;”",
+      "explanation": "Single binding condition."
     },
     {
       "id": "P_31",
-      "translation": "The information is in the public domain at the time of disclosure.",
-      "evidence": "Clause 4(a): \"information which at the time of disclosure is in the public domain\"",
-      "explanation": "Atomic exception condition."
+      "translation": "Producer Confidential Information disclosed under the aggregate procedure is at least three months old.",
+      "evidence": "Section 2: “(ii) ... is at least three months old;”",
+      "explanation": "Single age condition."
     },
     {
       "id": "P_32",
-      "translation": "After disclosure, the information becomes part of the public domain through no fault of the recipient.",
-      "evidence": "Clause 4(a): \"...or which after disclosure becomes part of the public domain through no fault of the recipient\"",
-      "explanation": "Atomic exception condition."
+      "translation": "The disclosed Producer Confidential Information is aggregated with similar confidential information of at least four other commercial producers who consented in writing.",
+      "evidence": "Section 2: “(iii) ... aggregated with ... at least 4 other commercial producers ... consented in writing ...”",
+      "explanation": "Single aggregation-and-consent condition (kept as one atomic policy fact to avoid quantifiers)."
     },
     {
       "id": "P_33",
-      "translation": "The recipient party had the information in its possession at the time of disclosure.",
-      "evidence": "Clause 4(b): \"...can show was in its possession at the time of disclosure\"",
-      "explanation": "Atomic exception condition."
+      "translation": "No aggregated producer confidential information represents more than 25% (weighted) of any statistic.",
+      "evidence": "Section 2: “...no ... represents more than 25% on a weighted basis of any statistic...”",
+      "explanation": "Single numeric restriction."
     },
     {
       "id": "P_34",
-      "translation": "The information is independently developed by the recipient.",
-      "evidence": "Clause 4(b): \"...or which is independently developed by the recipient...\"",
-      "explanation": "Atomic exception component; additional condition handled separately."
+      "translation": "The aggregation is sufficient such that a Recipient cannot identify the Producer’s Confidential Information (or any other producer’s aggregated confidential information).",
+      "evidence": "Section 2: “...sufficiently aggregated such that it would not allow a Recipient to identify...”",
+      "explanation": "Single non-identifiability requirement."
     },
     {
       "id": "P_35",
-      "translation": "The information was not acquired directly or indirectly from the disclosing party.",
-      "evidence": "Clause 4(b): \"...and was not acquired directly or indirectly from the disclosing party\"",
-      "explanation": "Atomic exception component."
+      "translation": "The confidentiality obligations extend to the item of Confidential Information.",
+      "evidence": "Section 2: “The obligations of confidentiality... do not extend to any item... which (i)...(v)...”",
+      "explanation": "Atomic applicability status for an item."
     },
     {
       "id": "P_36",
-      "translation": "The information is made public by the disclosing party.",
-      "evidence": "Clause 4(c): \"information which is made public ... by the disclosing party\"",
-      "explanation": "Atomic exception condition."
+      "translation": "The item of Confidential Information is publicly known at the time of disclosure.",
+      "evidence": "Section 2 exception (i): “publicly known at the time of its disclosure”",
+      "explanation": "Single exception condition."
     },
     {
       "id": "P_37",
-      "translation": "The information is made public by others with the permission of the disclosing party.",
-      "evidence": "Clause 4(c): \"...or by others with the permission of the disclosing party\"",
-      "explanation": "Atomic exception condition."
+      "translation": "The item of Confidential Information is lawfully received from a third party not known to be under a similar confidentiality obligation to the Discloser.",
+      "evidence": "Section 2 exception (ii)",
+      "explanation": "Single exception condition."
     },
     {
       "id": "P_38",
-      "translation": "The receiving party receives the information from a third party without similar restriction.",
-      "evidence": "Clause 4(d): \"information which is received ... from a third party without similar restriction\"",
-      "explanation": "Atomic exception component."
+      "translation": "The item of Confidential Information is published or otherwise made known to the public by the Discloser.",
+      "evidence": "Section 2 exception (iii)",
+      "explanation": "Single exception condition."
     },
     {
       "id": "P_39",
-      "translation": "Receiving the information from the third party is without breach of this Agreement.",
-      "evidence": "Clause 4(d): \"...and without breach of this Agreement.\"",
-      "explanation": "Atomic exception component."
+      "translation": "The item of Confidential Information was generated independently by the Recipient without reliance on Confidential Information (as proven by supporting documentation).",
+      "evidence": "Section 2 exception (iv)",
+      "explanation": "Single exception condition."
     },
     {
       "id": "P_40",
-      "translation": "The information is required to be disclosed by legal process.",
-      "evidence": "Clause 4(e): \"information which is required to be disclosed by legal process\"",
-      "explanation": "Atomic exception condition."
+      "translation": "The item of Confidential Information was received prior to the Effective Date.",
+      "evidence": "Section 2 exception (v): “received either prior to the Effective Date...”",
+      "explanation": "Single exception condition."
     },
     {
       "id": "P_41",
-      "translation": "The information is required to be disclosed by law.",
-      "evidence": "Clause 4(e): \"...law...\"",
-      "explanation": "Atomic exception condition."
+      "translation": "The item of Confidential Information was received for the first time only after termination or expiration of the Agreement.",
+      "evidence": "Section 2 exception (v): “...or ... only after the termination or expiration...”",
+      "explanation": "Single exception condition."
     },
     {
       "id": "P_42",
-      "translation": "The information is required to be disclosed by a regulatory authority.",
-      "evidence": "Clause 4(e): \"...or regulatory authority.\"",
-      "explanation": "Atomic exception condition."
+      "translation": "The Recipient takes reasonable measures to protect the secrecy of Confidential Information and avoid disclosure and unauthorized use.",
+      "evidence": "Section 3: “Recipient agrees that it shall take reasonable measures...”",
+      "explanation": "Single obligation statement."
     },
     {
       "id": "P_43",
-      "translation": "The confidentiality obligations under this Agreement apply to the information.",
-      "evidence": "Clause 4 lead-in: \"the obligations herein undertaken will not apply to:\" (implying an applicability concept)",
-      "explanation": "Atomic applicability flag used to encode the contract’s exception structure."
+      "translation": "The Recipient takes at least the measures it takes to protect its own confidential information of a similar nature.",
+      "evidence": "Section 3: “Recipient shall take at least those measures that it takes to protect its own confidential information...”",
+      "explanation": "Single comparative requirement."
     },
     {
       "id": "P_44",
-      "translation": "The ten-year confidentiality period (starting from the effective date) is in effect.",
-      "evidence": "Clause 5: \"...thereafter for a period of ten (10) years, starting from the effective date...\"",
-      "explanation": "Atomic temporal-status proposition (used as a condition in constraints)."
+      "translation": "The Recipient reproduces the Discloser’s proprietary rights notices on copies in the same manner as on the original.",
+      "evidence": "Section 3: “Recipient shall reproduce Discloser's proprietary rights notices...”",
+      "explanation": "Single copying/notices obligation."
     },
     {
       "id": "P_45",
-      "translation": "A party communicates or divulges to third parties confidential information received from the other party.",
-      "evidence": "Clause 5: \"...not to communicate or to divulge to third parties confidential information received from the other party.\"",
-      "explanation": "Atomic disclosure-to-third-parties action (two verbs treated as one act-type)."
+      "translation": "The Recipient notifies the Discloser immediately upon discovery of any loss of Confidential Information.",
+      "evidence": "Section 3: “Recipient shall immediately notify Discloser upon discovery of any loss...”",
+      "explanation": "Single notification obligation for loss."
     },
     {
       "id": "P_46",
-      "translation": "This Agreement is construed and enforced in accordance with English Law.",
-      "evidence": "Clause 6: \"This Agreement is to be construed and enforced in accordance with English Law\"",
-      "explanation": "Atomic governing-law statement."
+      "translation": "The Recipient notifies the Discloser immediately upon discovery of any unauthorized disclosure of Confidential Information.",
+      "evidence": "Section 3: “...or unauthorized disclosure...”",
+      "explanation": "Single notification obligation for unauthorized disclosure."
     },
     {
       "id": "P_47",
-      "translation": "This Agreement is subject to the exclusive jurisdiction of the English courts.",
-      "evidence": "Clause 6: \"...subject to the exclusive jurisdiction of the English courts...\"",
-      "explanation": "Atomic jurisdiction statement."
+      "translation": "The Recipient receives a request to disclose Confidential Information under a valid subpoena or court/governmental order.",
+      "evidence": "Section 3: “If the Recipient receives a request to disclose... under... subpoena or order...”",
+      "explanation": "Single triggering condition."
     },
     {
       "id": "P_48",
-      "translation": "A party seeks interim relief in a court of competent jurisdiction.",
-      "evidence": "Clause 6: \"This clause shall not prevent a party from seeking interim relief in any court of competent jurisdiction.\"",
-      "explanation": "Atomic act statement (permission/option; not itself required)."
+      "translation": "Upon such legal request, the Recipient immediately notifies the Discloser of the existence, terms, and circumstances of the request.",
+      "evidence": "Section 3: “Recipient agrees to (i) immediately notify the Discloser...”",
+      "explanation": "Single obligation step (notification)."
     },
     {
       "id": "P_49",
-      "translation": "The receiving party affords disclosed confidential information the same degree of protection as it affords its own information.",
-      "evidence": "Purpose paragraph: \"In general the receiving party must afford disclosed confidential information the same degree of protection as it would afford its own.\"",
-      "explanation": "Atomic protection-standard statement (flagged as soft later due to hedge phrase \"In general\")."
+      "translation": "Upon such legal request, the Recipient discloses only the portion counsel advises is legally required to be disclosed.",
+      "evidence": "Section 3: “(ii) only disclose that portion... counsel advises is legally required...”",
+      "explanation": "Single limitation on compelled disclosure."
     },
     {
       "id": "P_50",
-      "translation": "The receiving party receives all confidential information disclosed in connection with this Agreement.",
-      "evidence": "Clause 3: \"The receiving party will receive all confidential information ... which is disclosed in connection with this Agreement\"",
-      "explanation": "Atomic receipt-in-connection statement used to trigger applicability."
+      "translation": "The Discloser retains sole ownership of its Confidential Information.",
+      "evidence": "Section 3: “At all times, the Discloser shall retain sole ownership...”",
+      "explanation": "Single ownership statement."
+    },
+    {
+      "id": "P_51",
+      "translation": "At the Discloser’s request, the Recipient promptly returns written/electronic Confidential Information and physical media (including copies) to the Discloser.",
+      "evidence": "Section 4: “At the request of the Discloser, Recipient will promptly return...”",
+      "explanation": "Single return obligation."
+    },
+    {
+      "id": "P_52",
+      "translation": "At the Discloser’s instruction, the Recipient destroys written/electronic Confidential Information and physical media (including copies).",
+      "evidence": "Section 4: “...or at Discloser’s instructions destroy...”",
+      "explanation": "Single destruction obligation."
+    },
+    {
+      "id": "P_53",
+      "translation": "The Recipient provides a letter confirming that Confidential Information has not been reproduced or copied or that all copies have been returned.",
+      "evidence": "Section 4: “...with a letter confirming that the Confidential Information has not been reproduced or copied or that all copies have been returned...”",
+      "explanation": "Single certification obligation (as stated)."
+    },
+    {
+      "id": "P_54",
+      "translation": "The Recipient provides a letter confirming that none of the Confidential Information was disclosed except in accordance with the Agreement.",
+      "evidence": "Section 4: “...and that none... was disclosed... except in accordance with this Agreement.”",
+      "explanation": "Single certification obligation."
+    },
+    {
+      "id": "P_55",
+      "translation": "The Recipient and its Representatives retain copies/extracts/reproductions of returned/destroyed written/electronic Confidential Information.",
+      "evidence": "Section 4: “The Recipient and its Representatives shall not retain any copies...”",
+      "explanation": "Atomic retention condition (to be prohibited by constraints)."
+    },
+    {
+      "id": "P_56",
+      "translation": "The Recipient retains copies/extracts/reproductions as needed to comply with applicable law.",
+      "evidence": "Section 4: “except as may be needed to comply with applicable law...”",
+      "explanation": "Single exception-permission condition."
+    },
+    {
+      "id": "P_57",
+      "translation": "The Recipient retains one copy of Confidential Information in its confidential files for use only if a dispute arises and only in connection with that dispute.",
+      "evidence": "Section 4: “...Recipient may retain one copy... for use only in the event a dispute arises... and only in connection with that dispute.”",
+      "explanation": "Single special retention permission."
+    },
+    {
+      "id": "P_58",
+      "translation": "Confidential Information is provided “as is”.",
+      "evidence": "Section 5: “All confidential information is provided 'as is'...”",
+      "explanation": "Single disclaimer statement."
+    },
+    {
+      "id": "P_59",
+      "translation": "Disclosers make warranties regarding the accuracy, utility, completeness, or performance of Confidential Information.",
+      "evidence": "Section 5: “Disclosers make no warranties... regarding the accuracy...”",
+      "explanation": "Atomic proposition capturing the (denied) existence of warranties."
+    },
+    {
+      "id": "P_60",
+      "translation": "The Agreement grants the Recipient rights in the Discloser’s copyrights or other intellectual property.",
+      "evidence": "Section 6: “Nothing... intended to grant any rights... in any copyrights or other intellectual property...”",
+      "explanation": "Atomic proposition capturing the (denied) grant of IP rights."
+    },
+    {
+      "id": "P_61",
+      "translation": "The Agreement grants any Party proprietary rights in or to the other Party’s Confidential Information.",
+      "evidence": "Section 6: “nor shall this Agreement grant any Party any proprietary rights in or to the Confidential Information of the other Party.”",
+      "explanation": "Atomic proposition capturing the (denied) proprietary-rights grant."
+    },
+    {
+      "id": "P_62",
+      "translation": "The Recipient’s obligations under the Agreement expire five years from the date the Agreement is executed by the Parties.",
+      "evidence": "Section 7: “...shall expire five (5) years from the date this Agreement is executed...”",
+      "explanation": "Single term/expiration statement."
+    },
+    {
+      "id": "P_63",
+      "translation": "A violation of the Agreement would cause irreparable harm to the Discloser for which no adequate remedy at law exists.",
+      "evidence": "Section 8: “...would cause irreparable harm... for which no adequate remedy at law exists...”",
+      "explanation": "Single acknowledged consequence statement."
+    },
+    {
+      "id": "P_64",
+      "translation": "Both Parties are entitled to seek injunctive relief to enforce the Agreement’s terms without requiring the Discloser to prove irreparable harm or post a bond.",
+      "evidence": "Section 8: “...both Parties will be entitled to seek injunctive relief... without a requirement that Discloser prove irreparable harm or provide the posting of a bond.”",
+      "explanation": "Single remedies entitlement statement."
+    },
+    {
+      "id": "P_65",
+      "translation": "The Agreement may be modified or waived only by a separate writing signed by the Parties expressly modifying or waiving the terms.",
+      "evidence": "Section 9: “...may be modified or waived only by a separate writing signed by the Parties...”",
+      "explanation": "Single modification/waiver rule statement."
+    },
+    {
+      "id": "P_66",
+      "translation": "A failure or delay by the Discloser in exercising a right/power/privilege operates as a waiver.",
+      "evidence": "Section 9: “No failure or delay... shall operate as a waiver...”",
+      "explanation": "Atomic proposition capturing the (denied) waiver-by-delay effect."
+    },
+    {
+      "id": "P_67",
+      "translation": "Unenforceability of a provision affects the validity or enforceability of other provisions.",
+      "evidence": "Section 9: “The unenforceability of any provision... will not affect...”",
+      "explanation": "Atomic proposition capturing the (denied) spillover effect."
+    },
+    {
+      "id": "P_68",
+      "translation": "The Agreement binds and benefits the Parties and their successors and assigns.",
+      "evidence": "Section 9: “This Agreement shall bind and inure to the benefit of the Parties... and their successors and assigns.”",
+      "explanation": "Single binding/benefit statement."
+    },
+    {
+      "id": "P_69",
+      "translation": "The Agreement is governed by and construed in accordance with the laws of the specified State (without giving effect to conflicts/choice of laws that would apply another jurisdiction’s domestic substantive laws).",
+      "evidence": "Section 9: “This Agreement shall be governed by... laws of the State of ... without giving effect to conflicts...”",
+      "explanation": "Single governing-law statement."
+    },
+    {
+      "id": "P_70",
+      "translation": "The Agreement contains the entire agreement between the Parties with respect to the subject matter.",
+      "evidence": "Section 9: “This Agreement contains the entire agreement between the Parties...”",
+      "explanation": "Single integration clause statement."
+    },
+    {
+      "id": "P_71",
+      "translation": "Neither Party has any obligation (express or implied by law) regarding the other Party’s trade secret or proprietary information except as set forth in the Agreement.",
+      "evidence": "Section 9: “...neither Party shall have any obligation... except as set forth herein.”",
+      "explanation": "Single exclusivity-of-obligations statement."
+    },
+    {
+      "id": "P_72",
+      "translation": "The Agreement may be executed in counterparts.",
+      "evidence": "Section 9: “This Agreement may be executed in counterparts...”",
+      "explanation": "Single execution method statement."
+    },
+    {
+      "id": "P_73",
+      "translation": "The Parties agree they will be bound by electronic signatures.",
+      "evidence": "Section 9: “...the Parties agree that they will be bound by electronic signatures.”",
+      "explanation": "Single assent statement."
+    },
+    {
+      "id": "P_74",
+      "translation": "Disputes relating to the Agreement will be exclusively adjudicated by federal and state courts located in the specified place.",
+      "evidence": "Section 9: “...any disputes... will be exclusively adjudicated by federal and state courts located in...”",
+      "explanation": "Single forum-selection statement."
+    },
+    {
+      "id": "P_75",
+      "translation": "Each person who signs the Agreement has authority and is empowered to sign and deliver the Agreement on behalf of the Recipient they represent.",
+      "evidence": "Signature block paragraph: “Each person who signs... represents that he/she has the authority...”",
+      "explanation": "Single representation about signatory authority."
     }
   ],
   "hard_constraints": [
     {
       "id": "H_1",
-      "formula": "¬P_29",
-      "translation": "There is no explicit or implied transfer of ownership to the receiving party.",
-      "evidence": "Clause 4: \"there is no explicit or implied transfer of ownership to the receiving party...\"",
-      "reasoning": "The text explicitly denies transfer of ownership; therefore ownership transfer must be false."
+      "formula": "¬P_9",
+      "translation": "No Party is required to disclose its Confidential Information.",
+      "evidence": "Section 1: “Nothing in this Agreement shall require a Party to disclose its Confidential Information.”",
+      "reasoning": "The text explicitly denies any duty to disclose; thus the proposition “required to disclose” must be false."
     },
     {
       "id": "H_2",
-      "formula": "¬P_30",
-      "translation": "There is no transfer of the copyright subsisting in the drawings/documents/software to the receiving party.",
-      "evidence": "Clause 4: \"...or the copyright subsisting in them.\"",
-      "reasoning": "The clause denies implied/explicit transfer of copyright; thus transfer must be false."
+      "formula": "P_8",
+      "translation": "If there is an inconsistency with certain Client/Agency documents on the same subject matter, this Agreement controls.",
+      "evidence": "Preamble inconsistency clause",
+      "reasoning": "This is stated as the controlling priority rule of the contract."
     },
     {
       "id": "H_3",
-      "formula": "P_10 ⟹ P_11",
-      "translation": "If documents/materials are provided on loan, they will be specified in a schedule to the Agreement.",
-      "evidence": "Clause 1: \"...provided on loan... will be specified in a schedule...\"",
-      "reasoning": "Direct conditional requirement stated for loaned items."
+      "formula": "¬P_10",
+      "translation": "Recipients will not disclose Confidential Information without prior written consent.",
+      "evidence": "Section 2",
+      "reasoning": "Explicit prohibition (“will not disclose... without... consent”)."
     },
     {
       "id": "H_4",
-      "formula": "(P_10 ∧ P_12) ⟹ P_13",
-      "translation": "If loaned documents/materials exist and the disclosing party requests return, the receiving party returns them.",
-      "evidence": "Clause 1: \"...the receiving party will return these ... to the disclosing party on request.\"",
-      "reasoning": "Return is required when a request is made (modeled as a trigger condition)."
+      "formula": "¬P_11",
+      "translation": "Recipients will not distribute Confidential Information without prior written consent.",
+      "evidence": "Section 2",
+      "reasoning": "Explicit prohibition."
     },
     {
       "id": "H_5",
-      "formula": "P_14",
-      "translation": "The parties will mark or otherwise designate confidential information as imparted in confidence.",
-      "evidence": "Clause 2: \"The parties will mark or otherwise designate confidential information...\"",
-      "reasoning": "\"Will\" in the agreement states a binding obligation; treated as a must-hold condition."
+      "formula": "¬P_12",
+      "translation": "Recipients will not copy Confidential Information without prior written consent.",
+      "evidence": "Section 2",
+      "reasoning": "Explicit prohibition."
     },
     {
       "id": "H_6",
-      "formula": "(P_50 ∧ ¬(P_31 ∨ P_32 ∨ P_33 ∨ (P_34 ∧ P_35) ∨ P_36 ∨ P_37 ∨ (P_38 ∧ P_39) ∨ P_40 ∨ P_41 ∨ P_42)) ⟹ P_43",
-      "translation": "If information is disclosed in connection with the Agreement and none of the exceptions apply, then the confidentiality obligations apply to it.",
-      "evidence": "Clause 3 lead-in (confidential information disclosed in connection) plus Clause 4: \"PROVIDED that the obligations herein undertaken will not apply to: ...\"",
-      "reasoning": "Common-sense contract semantics: Clause 4 enumerates carve-outs; absent carve-outs, the obligations apply to information disclosed under the Agreement."
+      "formula": "¬P_13",
+      "translation": "Recipients will not use Confidential Information without prior written consent.",
+      "evidence": "Section 2",
+      "reasoning": "Explicit prohibition."
     },
     {
       "id": "H_7",
-      "formula": "(P_31 ∨ P_32 ∨ P_33 ∨ (P_34 ∧ P_35) ∨ P_36 ∨ P_37 ∨ (P_38 ∧ P_39) ∨ P_40 ∨ P_41 ∨ P_42) ⟹ ¬P_43",
-      "translation": "If any listed exception condition holds, the confidentiality obligations do not apply to that information.",
-      "evidence": "Clause 4: \"the obligations herein undertaken will not apply to: (a)...(e)...\"",
-      "reasoning": "Direct statement: the obligations do not apply when exceptions hold."
+      "formula": "¬P_14",
+      "translation": "Recipients will not disclose the fact of a Transaction being considered/under contract without prior written consent.",
+      "evidence": "Section 2",
+      "reasoning": "Explicit prohibition."
     },
     {
       "id": "H_8",
-      "formula": "P_43 ⟹ P_15",
-      "translation": "If confidentiality obligations apply, the receiving party takes proper and reasonable measures to maintain confidentiality.",
-      "evidence": "Clause 3(a) together with Clause 4 (obligations apply except exceptions).",
-      "reasoning": "Clause 3(a) is an obligation applicable to covered confidential information; Clause 4 controls when obligations apply."
+      "formula": "(P_15 ∨ P_16 ∨ P_17)",
+      "translation": "Confidential Information may be used only as reasonably required for evaluating, producing, or carrying out the Transaction.",
+      "evidence": "Section 2 permitted-use clause",
+      "reasoning": "The Agreement limits permitted uses to the stated Transaction purposes; representing that allowed use falls within the enumerated purposes."
     },
     {
       "id": "H_9",
-      "formula": "(P_43 ∧ P_16) ⟹ P_18",
-      "translation": "If obligations apply and the receiving party uses the information commercially, it must have a written licence or other agreement.",
-      "evidence": "Clause 3(b): \"...will not use ... for any commercial purpose... without obtaining a written licence...\"",
-      "reasoning": "Encodes \"not X without Y\" as \"if X then Y\" under applicability."
+      "formula": "P_18 ⟹ P_19",
+      "translation": "If a Recipient discloses to a Representative who needs to know, that Representative must be bound by written enforceable confidentiality obligations consistent with the Agreement.",
+      "evidence": "Section 2: “may only disclose... to those... who need to know... and who shall be bound...”",
+      "reasoning": "The text makes binding obligations a condition of permissible disclosure to Representatives."
     },
     {
       "id": "H_10",
-      "formula": "(P_43 ∧ P_17) ⟹ P_18",
-      "translation": "If obligations apply and the receiving party manufactures using the information, it must have a written licence or other agreement.",
-      "evidence": "Clause 3(b): \"...or manufacture without obtaining a written licence...\"",
-      "reasoning": "Same \"if action then licence\" structure for manufacturing."
+      "formula": "P_20",
+      "translation": "The Recipient is responsible for breaches by itself or its Representatives.",
+      "evidence": "Section 2 responsibility clause",
+      "reasoning": "Explicit allocation of responsibility."
     },
     {
       "id": "H_11",
-      "formula": "(P_43 ∧ P_19) ⟹ P_20",
-      "translation": "If obligations apply and the receiving party discloses to a third party, it must have written permission.",
-      "evidence": "Clause 3(c): \"...will not disclose ... to any third party without written permission;\"",
-      "reasoning": "Encodes the prohibition-except-permission as a material implication."
+      "formula": "(P_21 ∧ P_22) ⟹ P_23",
+      "translation": "If the Discloser is the Producer and the Recipient Representative is a cost consultant, the Recipient must secure the Representative’s express written perpetual confidentiality agreement.",
+      "evidence": "Section 2: “where the Discloser is the Producer and... cost consultant... Recipient shall secure...”",
+      "reasoning": "“Shall” indicates a mandatory obligation triggered by the stated condition."
     },
     {
       "id": "H_12",
-      "formula": "(P_43 ∧ P_21) ⟹ (P_22 ∧ P_23)",
-      "translation": "If obligations apply and the receiving party discloses to other employees, then the disclosure is necessary for the purposes and those employees are made aware of confidentiality and conditions.",
-      "evidence": "Clause 3(d): \"...except to the extent necessary...\" and \"...will be made aware...\"",
-      "reasoning": "Clause 3(d) conditions employee disclosure on necessity and on giving notice/awareness."
+      "formula": "(P_21 ∧ P_22) ⟹ ¬P_24",
+      "translation": "If the Discloser is the Producer and the Representative is a cost consultant, the Representative must not use or disclose Confidential Information except as permitted.",
+      "evidence": "Section 2: “...shall not use or disclose... except as permitted...”",
+      "reasoning": "Mandatory prohibition in the special cost-consultant clause."
     },
     {
       "id": "H_13",
-      "formula": "(P_43 ∧ P_24) ⟹ P_26",
-      "translation": "If obligations apply and the receiving party makes a copy, it must have specific written permission.",
-      "evidence": "Clause 3(e): \"...will not make any copy ... without specific written permission...\"",
-      "reasoning": "Encodes the contractual restriction on copying."
+      "formula": "P_25 ⟹ P_24",
+      "translation": "Use/disclosure to a competitor of the Producer counts as a prohibited use/disclosure (except as permitted).",
+      "evidence": "Section 2: “Prohibited uses and disclosures... include... to a competitor...”",
+      "reasoning": "Semantic entailment from the enumerated examples of prohibited uses."
     },
     {
       "id": "H_14",
-      "formula": "(P_43 ∧ P_25) ⟹ P_26",
-      "translation": "If obligations apply and the receiving party makes an abstract, it must have specific written permission.",
-      "evidence": "Clause 3(e): \"...or abstract ... without specific written permission...\"",
-      "reasoning": "Encodes the contractual restriction on abstracting."
+      "formula": "P_26 ⟹ P_24",
+      "translation": "Use/disclosure to another client or prospective client of the Representative counts as a prohibited use/disclosure (except as permitted).",
+      "evidence": "Section 2: “...include... to any other client or prospective client...”",
+      "reasoning": "Semantic entailment from the enumerated examples of prohibited uses."
     },
     {
       "id": "H_15",
-      "formula": "P_43 ⟹ (P_27 ∧ P_28)",
-      "translation": "If obligations apply, the receiving party acknowledges the source and marks \"Confidential\" on drawings/documents/software that incorporate the information.",
-      "evidence": "Clause 3(f): \"...will acknowledge the source... and will mark \\\"Confidential\\\"...\"",
-      "reasoning": "Clause 3(f) is a positive obligation for covered confidential information."
+      "formula": "P_29 ⟹ (P_30 ∧ P_31 ∧ P_32 ∧ P_33 ∧ P_34)",
+      "translation": "If Producer Confidential Information is disclosed (aggregated) to Agency Affiliates, the specified conditions (i)-(iii), the 25% limit, and non-identifiability must hold.",
+      "evidence": "Section 2: “...to other Agency Affiliates provided: (i)...(ii)...(iii)... and further provided...”",
+      "reasoning": "The Agreement allows such disclosure only if all listed conditions are satisfied."
     },
     {
       "id": "H_16",
-      "formula": "(P_44 ∧ P_43 ∧ ¬P_20) ⟹ ¬P_45",
-      "translation": "During the ten-year period, if obligations apply and there is no written permission, then the party does not communicate/divulge the other party’s confidential information to third parties.",
-      "evidence": "Clause 5: \"...for a period of ten (10) years... not to communicate or to divulge to third parties confidential information received from the other party.\"",
-      "reasoning": "Harmonizes Clause 5 with Clause 3(c): Clause 5 states a time-bounded non-disclosure duty; Clause 3(c) indicates disclosure requires written permission, so the non-disclosure is enforced when permission is absent."
+      "formula": "P_27 ⟹ ¬P_28",
+      "translation": "Disclosure of Producer Confidential Information to the Owner is allowed unless an independent third party is required by the FTC/DOJ; thus Owner-disclosure implies no such independent-third-party requirement applies.",
+      "evidence": "Section 2: “may be disclosed to the Owner (unless an independent third party is required...)”",
+      "reasoning": "The parenthetical “unless” makes the FTC/DOJ independent-third-party requirement an excluding condition for disclosure to Owner."
     },
     {
       "id": "H_17",
-      "formula": "P_46",
-      "translation": "The Agreement is construed and enforced in accordance with English Law.",
-      "evidence": "Clause 6: \"...construed and enforced in accordance with English Law\"",
-      "reasoning": "Express governing-law clause; treated as binding."
+      "formula": "(P_36 ∨ P_37 ∨ P_38 ∨ P_39 ∨ P_40 ∨ P_41) ⟹ ¬P_35",
+      "translation": "If an item meets any exception (publicly known, third-party lawful receipt, published by Discloser, independently generated, received before Effective Date, or first received after termination/expiration), confidentiality obligations do not extend to it.",
+      "evidence": "Section 2 exceptions (i)-(v)",
+      "reasoning": "The text explicitly states obligations do not extend to items meeting any listed exception."
     },
     {
       "id": "H_18",
-      "formula": "P_47",
-      "translation": "The Agreement is subject to the exclusive jurisdiction of the English courts.",
-      "evidence": "Clause 6: \"...subject to the exclusive jurisdiction of the English courts...\"",
-      "reasoning": "Express jurisdiction clause; treated as binding."
+      "formula": "P_42",
+      "translation": "Recipient shall take reasonable measures to protect secrecy and avoid disclosure/unauthorized use.",
+      "evidence": "Section 3 first sentence",
+      "reasoning": "“Recipient agrees that it shall...” is a hard contractual duty."
+    },
+    {
+      "id": "H_19",
+      "formula": "P_43",
+      "translation": "Recipient shall take at least the measures it uses for its own similar confidential information.",
+      "evidence": "Section 3: “Recipient shall take at least those measures...”",
+      "reasoning": "Explicit minimum-standard obligation."
+    },
+    {
+      "id": "H_20",
+      "formula": "P_43 ⟹ P_42",
+      "translation": "Taking at least the measures used for one’s own similar confidential information implies taking reasonable measures to protect secrecy/avoid unauthorized use.",
+      "evidence": "Section 3 (comparative standard plus “in no event less than reasonable measures”)",
+      "reasoning": "Common-sense/semantic: if the Agreement mandates at least that standard (and never less than reasonable), it entails the reasonable-measures requirement."
+    },
+    {
+      "id": "H_21",
+      "formula": "P_44",
+      "translation": "Recipient shall reproduce Discloser’s proprietary rights notices on copies in the same manner as the original.",
+      "evidence": "Section 3 notices clause",
+      "reasoning": "Explicit “shall” obligation."
+    },
+    {
+      "id": "H_22",
+      "formula": "P_45",
+      "translation": "Recipient shall immediately notify Discloser upon discovering any loss of Confidential Information.",
+      "evidence": "Section 3 notification clause",
+      "reasoning": "Explicit “shall immediately notify” duty."
+    },
+    {
+      "id": "H_23",
+      "formula": "P_46",
+      "translation": "Recipient shall immediately notify Discloser upon discovering any unauthorized disclosure of Confidential Information.",
+      "evidence": "Section 3 notification clause",
+      "reasoning": "Explicit “shall immediately notify” duty."
+    },
+    {
+      "id": "H_24",
+      "formula": "P_47 ⟹ P_48",
+      "translation": "If Recipient receives a subpoena/order request, Recipient must immediately notify the Discloser about it.",
+      "evidence": "Section 3 compelled-disclosure clause (i)",
+      "reasoning": "Obligation is explicitly conditional on receipt of a valid legal request."
+    },
+    {
+      "id": "H_25",
+      "formula": "P_47 ⟹ P_49",
+      "translation": "If Recipient receives a subpoena/order request, Recipient may disclose only the portion legally required (per counsel).",
+      "evidence": "Section 3 compelled-disclosure clause (ii)",
+      "reasoning": "Explicit conditional limitation on disclosure scope."
+    },
+    {
+      "id": "H_26",
+      "formula": "P_50",
+      "translation": "The Discloser retains sole ownership of its Confidential Information at all times.",
+      "evidence": "Section 3 ownership sentence",
+      "reasoning": "Explicit “shall retain sole ownership” statement."
+    },
+    {
+      "id": "H_27",
+      "formula": "P_51 ∨ P_52",
+      "translation": "Upon the Discloser’s request, the Recipient must either return the Confidential Information or (if instructed) destroy it.",
+      "evidence": "Section 4: “return... or... destroy...”",
+      "reasoning": "Section 4 imposes a mandatory return/destruction regime depending on the Discloser’s request/instructions."
+    },
+    {
+      "id": "H_28",
+      "formula": "(P_51 ∨ P_52) ⟹ (P_53 ∧ P_54)",
+      "translation": "If the Recipient returns or destroys materials as required, it must provide the confirming letter described in Section 4.",
+      "evidence": "Section 4: “...with a letter confirming...”",
+      "reasoning": "The letter is specified as part of the return/destroy process; treated as mandatory in context."
+    },
+    {
+      "id": "H_29",
+      "formula": "P_55 ⟹ (P_56 ∨ P_57)",
+      "translation": "If the Recipient retains copies/extracts/reproductions, that retention must be justified by the legal-compliance need or the single-copy dispute exception.",
+      "evidence": "Section 4: “shall not retain... except... applicable law... provided that... may retain one copy... in the event a dispute arises...”",
+      "reasoning": "Retention is prohibited except for the stated exceptions, so any retention implies an exception applies."
+    },
+    {
+      "id": "H_30",
+      "formula": "¬(P_56 ∧ P_57)",
+      "translation": "The ‘retain as needed to comply with law’ exception and the ‘retain one copy for dispute’ exception are treated as distinct bases (not the same retention instance).",
+      "evidence": "Section 4 lists them as separate carve-outs.",
+      "reasoning": "Common-sense semantic separation: they are different retention rationales; modeling them as mutually exclusive avoids conflating exceptions."
+    },
+    {
+      "id": "H_31",
+      "formula": "P_58",
+      "translation": "Confidential Information is provided “as is.”",
+      "evidence": "Section 5",
+      "reasoning": "Explicit disclaimer term."
+    },
+    {
+      "id": "H_32",
+      "formula": "¬P_59",
+      "translation": "Disclosers make no warranties regarding Confidential Information.",
+      "evidence": "Section 5: “make no warranties...”",
+      "reasoning": "The Agreement explicitly disclaims warranties; thus the existence-of-warranties proposition must be false."
+    },
+    {
+      "id": "H_33",
+      "formula": "¬P_60",
+      "translation": "The Agreement grants no IP rights (copyrights/other intellectual property) in the Discloser to the Recipient.",
+      "evidence": "Section 6",
+      "reasoning": "Explicitly stated as not intended to grant such rights."
+    },
+    {
+      "id": "H_34",
+      "formula": "¬P_61",
+      "translation": "The Agreement grants no proprietary rights in the other Party’s Confidential Information.",
+      "evidence": "Section 6",
+      "reasoning": "Explicit denial of proprietary-rights grant."
+    },
+    {
+      "id": "H_35",
+      "formula": "P_62",
+      "translation": "Recipient obligations expire five years after execution.",
+      "evidence": "Section 7",
+      "reasoning": "Explicit term clause."
+    },
+    {
+      "id": "H_36",
+      "formula": "P_63",
+      "translation": "A violation would cause irreparable harm with no adequate remedy at law.",
+      "evidence": "Section 8",
+      "reasoning": "The Agreement states this as an acknowledgment; treated as a stipulated fact within the contract."
+    },
+    {
+      "id": "H_37",
+      "formula": "P_64",
+      "translation": "Both Parties may seek injunctive relief without proving irreparable harm or posting bond.",
+      "evidence": "Section 8",
+      "reasoning": "Express remedies provision; mandatory legal entitlement per contract."
+    },
+    {
+      "id": "H_38",
+      "formula": "P_65",
+      "translation": "Modifications/waivers require a signed separate writing.",
+      "evidence": "Section 9 first sentence",
+      "reasoning": "Explicit contractual limitation."
+    },
+    {
+      "id": "H_39",
+      "formula": "¬P_66",
+      "translation": "Failure or delay in exercising rights does not operate as a waiver.",
+      "evidence": "Section 9: “No failure or delay... shall operate as a waiver”",
+      "reasoning": "Explicit non-waiver term; hence waiver-by-delay proposition is false."
+    },
+    {
+      "id": "H_40",
+      "formula": "¬P_67",
+      "translation": "Unenforceability of a provision does not affect validity/enforceability of other provisions.",
+      "evidence": "Section 9 severability sentence",
+      "reasoning": "Explicit severability term; hence spillover invalidity proposition is false."
+    },
+    {
+      "id": "H_41",
+      "formula": "P_68",
+      "translation": "The Agreement binds and benefits Parties and their successors/assigns.",
+      "evidence": "Section 9 binding sentence",
+      "reasoning": "Explicit clause."
+    },
+    {
+      "id": "H_42",
+      "formula": "P_69",
+      "translation": "Governing law is the specified State (with conflicts limitations).",
+      "evidence": "Section 9 governing law sentence",
+      "reasoning": "Explicit clause."
+    },
+    {
+      "id": "H_43",
+      "formula": "P_70",
+      "translation": "The Agreement is the entire agreement for the subject matter.",
+      "evidence": "Section 9 integration clause",
+      "reasoning": "Explicit clause."
+    },
+    {
+      "id": "H_44",
+      "formula": "P_71",
+      "translation": "No other obligations regarding trade secret/proprietary information exist except as set forth in the Agreement.",
+      "evidence": "Section 9: “neither Party shall have any obligation... except as set forth herein.”",
+      "reasoning": "Explicit exclusivity clause."
+    },
+    {
+      "id": "H_45",
+      "formula": "P_72",
+      "translation": "The Agreement may be executed in counterparts.",
+      "evidence": "Section 9 counterparts sentence",
+      "reasoning": "Explicit execution clause."
+    },
+    {
+      "id": "H_46",
+      "formula": "P_73",
+      "translation": "The Parties are bound by electronic signatures.",
+      "evidence": "Section 9 electronic signatures sentence",
+      "reasoning": "Explicit agreement to be bound by e-signatures."
+    },
+    {
+      "id": "H_47",
+      "formula": "P_74",
+      "translation": "Disputes will be exclusively adjudicated in the specified federal/state courts.",
+      "evidence": "Section 9 forum-selection sentence",
+      "reasoning": "Express exclusive forum-selection clause."
+    },
+    {
+      "id": "H_48",
+      "formula": "P_75",
+      "translation": "Each signatory represents having authority to sign/deliver on behalf of the Recipient represented.",
+      "evidence": "Signature block paragraph",
+      "reasoning": "Explicit representation term."
+    },
+    {
+      "id": "H_49",
+      "formula": "P_11 ⟹ P_10",
+      "translation": "Distributing Confidential Information entails disclosing it.",
+      "evidence": "Section 2 lists “disclose, distribute” as distinct acts; common-sense semantics",
+      "reasoning": "Semantic hard constraint: distribution is a form of disclosure in ordinary meaning."
+    },
+    {
+      "id": "H_50",
+      "formula": "P_12 ⟹ P_13",
+      "translation": "Copying Confidential Information entails using it.",
+      "evidence": "Section 2 lists “copy” and “use” separately; common-sense semantics",
+      "reasoning": "Semantic hard constraint: copying requires handling/using the information."
     }
   ],
   "soft_constraints": [
     {
       "id": "S_1",
-      "formula": "P_49",
-      "translation": "The receiving party affords disclosed confidential information the same degree of protection as its own information.",
-      "evidence": "Purpose paragraph: \"In general the receiving party must afford... the same degree of protection...\"",
-      "reasoning": "The hedge phrase \"In general\" introduces non-absolute scope/uncertainty; per instructions this becomes a soft constraint even though \"must\" appears."
+      "formula": "P_35",
+      "translation": "The confidentiality obligations extend to the item of Confidential Information (i.e., no exception applies).",
+      "evidence": "Common-sense default given exceptions are special cases in Section 2",
+      "reasoning": "The Agreement enumerates exceptions; typically an item is treated as covered unless an exception is shown."
+    },
+    {
+      "id": "S_2",
+      "formula": "P_27 ⟹ P_30",
+      "translation": "If Producer Confidential Information is disclosed to the Owner, the Owner agrees to be bound by the Agreement.",
+      "evidence": "Section 2: Owner disclosure is “for purposes permitted under this Agreement”; binding condition is stated explicitly for Agency Affiliates but not as explicitly for Owner",
+      "reasoning": "Plausible compliance expectation (permission implies similar confidentiality protections), but not stated with the same explicit “provided (i)” structure for Owner as for Agency Affiliates."
+    },
+    {
+      "id": "S_3",
+      "formula": "P_42 ⟹ (¬P_10 ∧ ¬P_11 ∧ ¬P_13)",
+      "translation": "If the Recipient takes reasonable measures, then unauthorized disclosure/distribution/use without consent does not occur.",
+      "evidence": "Common-sense connection between security measures and preventing unauthorized actions; Section 3 requires reasonable measures to avoid unauthorized use/disclosure",
+      "reasoning": "Reasonable measures reduce risk but do not logically guarantee zero breach; thus modeled as soft."
     }
   ]
 }
