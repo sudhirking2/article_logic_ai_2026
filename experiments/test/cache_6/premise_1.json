@@ -1,0 +1,208 @@
+{
+  "primitive_props": [
+    {
+      "id": "P_1",
+      "translation": "Alice is a university student.",
+      "evidence": "Sentence 0: \"Alice is a university student.\"",
+      "explanation": "This is a single categorical statement about Alice and has no internal logical connectives or conditions."
+    },
+    {
+      "id": "P_2",
+      "translation": "Alice studies computer science.",
+      "evidence": "Sentence 1: \"She studies computer science.\"",
+      "explanation": "This is an atomic subject–predicate–object fact with no connectives."
+    },
+    {
+      "id": "P_3",
+      "translation": "Alice studies hard.",
+      "evidence": "Sentence 2: \"If Alice studies hard, then she passes her exams.\"",
+      "explanation": "This is the antecedent clause extracted from a conditional; it is a standalone declarative proposition."
+    },
+    {
+      "id": "P_4",
+      "translation": "Alice passes her exams.",
+      "evidence": "Sentence 2: \"If Alice studies hard, then she passes her exams.\"",
+      "explanation": "This is the consequent clause extracted from a conditional; it is a standalone declarative proposition."
+    },
+    {
+      "id": "P_5",
+      "translation": "Alice studies hard before exams.",
+      "evidence": "Sentence 3: \"Alice typically studies hard before exams.\"",
+      "explanation": "This is a single event/habit statement with a temporal modifier; it contains no logical connectives."
+    },
+    {
+      "id": "P_6",
+      "translation": "Alice is focused.",
+      "evidence": "Sentence 4: \"When Alice is focused, she completes her assignments on time.\"",
+      "explanation": "This is the condition clause extracted from a 'when' statement; it is atomic."
+    },
+    {
+      "id": "P_7",
+      "translation": "Alice completes her assignments on time.",
+      "evidence": "Sentence 4: \"When Alice is focused, she completes her assignments on time.\"",
+      "explanation": "This is the main clause extracted from a 'when' statement; it is atomic."
+    },
+    {
+      "id": "P_8",
+      "translation": "Alice gets distracted by social media.",
+      "evidence": "Sentence 5: \"Alice sometimes gets distracted by social media.\"",
+      "explanation": "This is a single declarative claim; the frequency word is handled via constraint weight rather than inside the proposition."
+    },
+    {
+      "id": "P_9",
+      "translation": "Alice works part-time at the campus library.",
+      "evidence": "Sentence 6: \"She works part-time at the campus library.\"",
+      "explanation": "This is a single employment fact (role and location) without logical connectives."
+    },
+    {
+      "id": "P_10",
+      "translation": "Alice's assignments are due every Friday.",
+      "evidence": "Sentence 7: \"Her assignments are due every Friday.\"",
+      "explanation": "This is an atomic scheduling statement; 'every' is treated as part of the content, not a logical connective."
+    },
+    {
+      "id": "P_11",
+      "translation": "Alice studies late at night.",
+      "evidence": "Sentence 8: \"Alice rarely studies late at night.\"",
+      "explanation": "This is the positive core event; rarity is represented via a weighted constraint rather than negation in the proposition."
+    },
+    {
+      "id": "P_12",
+      "translation": "Alice likes to play volleyball in her free time.",
+      "evidence": "Sentence 9: \"In her free time, Alice likes to play volleyball and board games with her friends.\"",
+      "explanation": "The original sentence contains a conjunction; this proposition isolates one conjunct as an atomic like-preference."
+    },
+    {
+      "id": "P_13",
+      "translation": "Alice likes to play board games with her friends in her free time.",
+      "evidence": "Sentence 9: \"In her free time, Alice likes to play volleyball and board games with her friends.\"",
+      "explanation": "The original sentence contains a conjunction; this proposition isolates the other conjunct as an atomic like-preference."
+    },
+    {
+      "id": "P_14",
+      "translation": "Alice is competitive.",
+      "evidence": "Sentence 10: \"She is usually not competitive, unless she is playing on her Sunday volleyball league.\"",
+      "explanation": "The text uses negation and an exception; the primitive proposition is kept positive (competitive) and negation is handled in constraints."
+    },
+    {
+      "id": "P_15",
+      "translation": "Alice is playing on her Sunday volleyball league.",
+      "evidence": "Sentence 10: \"...unless she is playing on her Sunday volleyball league.\"",
+      "explanation": "This is the exception-trigger condition extracted from an 'unless' construction; it is atomic."
+    }
+  ],
+  "constraints": [
+    {
+      "id": "C_1",
+      "formula": "P_1",
+      "translation": "Alice is a university student.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 0",
+      "reasoning": "Direct unqualified assertion."
+    },
+    {
+      "id": "C_2",
+      "formula": "P_2",
+      "translation": "Alice studies computer science.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 1",
+      "reasoning": "Direct unqualified assertion."
+    },
+    {
+      "id": "C_3",
+      "formula": "P_3 ⟹ P_4",
+      "translation": "If Alice studies hard, then she passes her exams.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 2",
+      "reasoning": "Explicit conditional stated as a rule."
+    },
+    {
+      "id": "C_4",
+      "formula": "P_5",
+      "translation": "Alice typically studies hard before exams.",
+      "llm_weight": 0.8,
+      "evidence": "Sentence 3",
+      "reasoning": "\"Typically\" indicates a strong tendency but allows exceptions, so the constraint is high but < 1."
+    },
+    {
+      "id": "C_5",
+      "formula": "P_5 ⟹ P_3",
+      "translation": "Studying hard before exams implies that Alice studies hard.",
+      "llm_weight": 0.8,
+      "evidence": "Sentence 3 (supports P_5) + common-sense entailment",
+      "reasoning": "Studying hard before exams is a specific instance of studying hard; the same typicality level motivates a similar weight."
+    },
+    {
+      "id": "C_6",
+      "formula": "P_6 ⟹ P_7",
+      "translation": "When Alice is focused, she completes her assignments on time.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 4",
+      "reasoning": "Explicit 'when' conditional describing a regular relation."
+    },
+    {
+      "id": "C_7",
+      "formula": "P_8",
+      "translation": "Alice sometimes gets distracted by social media.",
+      "llm_weight": 0.6,
+      "evidence": "Sentence 5",
+      "reasoning": "\"Sometimes\" suggests the event occurs with moderate frequency; the text supports occurrence but not consistently."
+    },
+    {
+      "id": "C_8",
+      "formula": "P_9",
+      "translation": "Alice works part-time at the campus library.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 6",
+      "reasoning": "Direct unqualified assertion."
+    },
+    {
+      "id": "C_9",
+      "formula": "P_10",
+      "translation": "Her assignments are due every Friday.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 7",
+      "reasoning": "Direct unqualified assertion about a recurring due date."
+    },
+    {
+      "id": "C_10",
+      "formula": "¬P_11",
+      "translation": "Alice rarely studies late at night.",
+      "llm_weight": 0.85,
+      "evidence": "Sentence 8",
+      "reasoning": "\"Rarely\" indicates that studying late at night is usually false, but not impossible."
+    },
+    {
+      "id": "C_11",
+      "formula": "P_12",
+      "translation": "In her free time, Alice likes to play volleyball.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 9",
+      "reasoning": "Direct assertion (the conjunction is handled by splitting into separate primitives)."
+    },
+    {
+      "id": "C_12",
+      "formula": "P_13",
+      "translation": "In her free time, Alice likes to play board games with her friends.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 9",
+      "reasoning": "Direct assertion (the conjunction is handled by splitting into separate primitives)."
+    },
+    {
+      "id": "C_13",
+      "formula": "¬P_14",
+      "translation": "Alice is usually not competitive.",
+      "llm_weight": 0.75,
+      "evidence": "Sentence 10",
+      "reasoning": "\"Usually\" indicates a general tendency toward non-competitiveness, but allows exceptions."
+    },
+    {
+      "id": "C_14",
+      "formula": "P_15 ⟹ P_14",
+      "translation": "If Alice is playing on her Sunday volleyball league, she is competitive.",
+      "llm_weight": 0.9,
+      "evidence": "Sentence 10",
+      "reasoning": "\"Unless\" signals a strong exception condition; when the exception holds, competitiveness is strongly suggested."
+    }
+  ]
+}

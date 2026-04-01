@@ -1,0 +1,2086 @@
+nohup: ignoring input
+Loading data from /home/logify/article_logic_ai_2026/experiments/test/dataset/alice-20samples.json...
+  Loaded 1 premises with 20 total hypotheses
+  Label distribution: {'contradiction': 4, 'entailment': 6, 'not_mentioned': 5, 'uncertain': 5}
+
+[1/1] Premise 1: 89 words, 20 hypotheses
+    [CACHE HIT] /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+#################### 
+FUNCTION: translate_query : Alice attends a university.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice attends a university., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 9 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Loading NLI Model (cross-encoder/nli-deberta-v3-large)...
+    Filtered out (neutral): P_1 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_9 - E:0.02 C:0.00 N:0.98
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_1 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_9 - E:0.08 C:0.00 N:0.91
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_1 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_9 - E:0.02 C:0.00 N:0.97
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+ Total of 24 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-8 SBERT propositions (from 8 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_2
+    -> Verbal: Alice studies computer science...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.6424 (NLI score: 0.9999)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-8 SBERT propositions (from 8 retrieved)
+  Cand 0: P_3
+    -> Verbal: Alice studies hard...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_3 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-8 SBERT propositions (from 8 retrieved)
+  Cand 0: P_3
+    -> Verbal: Alice studies hard...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_3 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'P_2': 1, 'P_3': 2}
+[Adaptive Voting] Winner: P_3 (2/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_3'
+  [x] hyp 1 (test-31): pred=UNCERTAIN (uncertain) gt=entailment
+      formula: P_3
+      nli_confidence: 1.00
+      sbert_confidence: 0.64
+      voting: TRIGGERED (conf=0.67, counts={'P_2': 1, 'P_3': 2})
+#################### 
+FUNCTION: translate_query : Alice's field of study is computer science.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice's field of study is computer science., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 53 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_2 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 9 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_2 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 8 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_2 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 26 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_1
+    -> Verbal: Alice is a university student...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.6372 (NLI score: 0.9978)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: P_1
+    -> Verbal: Alice is a university student...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_1 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: P_1
+    -> Verbal: Alice is a university student...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_1 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'P_1': 3}
+[Adaptive Voting] Winner: P_1 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_1'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [+] hyp 2 (test-32): pred=TRUE (entailment) gt=entailment
+      formula: P_1
+      nli_confidence: 1.00
+      sbert_confidence: 0.64
+      voting: TRIGGERED (conf=1.00, counts={'P_1': 3})
+#################### 
+FUNCTION: translate_query : Alice has a part-time job.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice has a part-time job., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 36 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_9 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_9 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_9 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 27 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  [x] hyp 3 (test-33): pred=NOT MENTIONED (not_mentioned) gt=entailment
+      formula: NONE
+      nli_confidence: 0.50
+#################### 
+FUNCTION: translate_query : Alice studies a subject other than computer science.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice studies a subject other than computer science., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 38 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 30 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_2
+    -> Verbal: it is not the case that Alice studies computer science...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.8986 (NLI score: 0.0012)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 0.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Warning: LLM generation failed or returned invalid JSON: 'NoneType' object is not subscriptable
+  [LLM ERROR] Generation failed: TypeError: 'NoneType' object is not subscriptable
+    → LLM abstained (NONE)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: ¬P_2
+    -> Verbal: it is not the case that Alice studies computer science...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: ¬P_2 (score: 0.00)
+
+[Adaptive Voting] Vote results: {'~P_2': 2, 'NONE': 1}
+[Adaptive Voting] Winner: ~P_2 (2/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: '¬P_2'
+  [+] hyp 4 (test-34): pred=FALSE (contradiction) gt=contradiction
+      formula: ¬P_2
+      nli_confidence: 0.00
+      sbert_confidence: 0.90
+      voting: TRIGGERED (conf=0.67, counts={'~P_2': 2, 'NONE': 1})
+#################### 
+FUNCTION: translate_query : Alice is never distracted while studying.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice is never distracted while studying., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 17 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 8 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 8 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 9 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 9 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 8 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 8 after filtering (0 neutral removed)
+
+ Total of 25 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_8
+    -> Verbal: it is not the case that Alice gets distracted by social medi...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.5320 (NLI score: 0.9997)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: ¬P_8
+    -> Verbal: it is not the case that Alice gets distracted by social medi...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: ¬P_8 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: ¬P_8
+    -> Verbal: it is not the case that Alice gets distracted by social medi...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: ¬P_8 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'~P_8': 3}
+[Adaptive Voting] Winner: ~P_8 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: '¬P_8'
+  [x] hyp 5 (test-35): pred=UNCERTAIN (uncertain) gt=not_mentioned
+      formula: ¬P_8
+      nli_confidence: 1.00
+      sbert_confidence: 0.53
+      voting: TRIGGERED (conf=1.00, counts={'~P_8': 3})
+#################### 
+FUNCTION: translate_query : Alice frequently studies late at night.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice frequently studies late at night., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 11 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 30 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9673 (NLI score: 0.0019)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 0.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: P_11 (score: 0.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: P_11 (score: 0.00)
+
+[Adaptive Voting] Vote results: {'P_11': 3}
+[Adaptive Voting] Winner: P_11 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_11'
+  [x] hyp 6 (test-36): pred=UNCERTAIN (uncertain) gt=contradiction
+      formula: P_11
+      nli_confidence: 0.00
+      sbert_confidence: 0.97
+      voting: TRIGGERED (conf=1.00, counts={'P_11': 3})
+#################### 
+FUNCTION: translate_query : Alice enjoys working at the library.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice enjoys working at the library., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 25 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 30 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_9
+    -> Verbal: Alice works part-time at the campus library...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7851 (NLI score: 0.9995)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_9
+    -> Verbal: Alice works part-time at the campus library...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_9 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_9
+    -> Verbal: Alice works part-time at the campus library...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_9 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'P_9': 3}
+[Adaptive Voting] Winner: P_9 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_9'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [x] hyp 7 (test-37): pred=TRUE (entailment) gt=not_mentioned
+      formula: P_9
+      nli_confidence: 1.00
+      sbert_confidence: 0.79
+      voting: TRIGGERED (conf=1.00, counts={'P_9': 3})
+#################### 
+FUNCTION: translate_query : Alice plans to graduate next year.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice plans to graduate next year., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 12 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 30 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_1
+    -> Verbal: Alice is a university student...
+    -> Score: 0.10 (Ent: 0.10, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7769 (NLI score: 0.1019)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 0.10
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_1
+    -> Verbal: Alice is a university student...
+    -> Score: 0.10 (Ent: 0.10, Con: 0.00)
+    → Got formula: P_1 (score: 0.10)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_1
+    -> Verbal: Alice is a university student...
+    -> Score: 0.10 (Ent: 0.10, Con: 0.00)
+    → Got formula: P_1 (score: 0.10)
+
+[Adaptive Voting] Vote results: {'P_1': 3}
+[Adaptive Voting] Winner: P_1 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_1'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [x] hyp 8 (test-38): pred=TRUE (entailment) gt=not_mentioned
+      formula: P_1
+      nli_confidence: 0.10
+      sbert_confidence: 0.78
+      voting: TRIGGERED (conf=1.00, counts={'P_1': 3})
+#################### 
+FUNCTION: translate_query : Alice passes all of her exams.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice passes all of her exams., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 66 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_4 - E:0.41 C:0.00 N:0.59
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_4 - E:0.07 C:0.00 N:0.93
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_4 - E:0.28 C:0.00 N:0.72
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 27 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_5
+    -> Verbal: Alice studies hard before exams...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7780 (NLI score: 0.9999)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_5
+    -> Verbal: Alice studies hard before exams...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_5 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_5
+    -> Verbal: Alice studies hard before exams...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_5 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'P_5': 3}
+[Adaptive Voting] Winner: P_5 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_5'
+  [+] hyp 9 (test-39): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: P_5
+      nli_confidence: 1.00
+      sbert_confidence: 0.78
+      voting: TRIGGERED (conf=1.00, counts={'P_5': 3})
+#################### 
+FUNCTION: translate_query : Alice completes her assignments on time.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice completes her assignments on time., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 16 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_7 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_4 - E:0.02 C:0.00 N:0.98
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_7 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_4 - E:0.04 C:0.00 N:0.96
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_7 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_4 - E:0.03 C:0.00 N:0.97
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+ Total of 24 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_10
+    -> Verbal: Alice's assignments are due every Friday...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.8087 (NLI score: 0.9999)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: P_10
+    -> Verbal: Alice's assignments are due every Friday...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_10 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: P_10
+    -> Verbal: Alice's assignments are due every Friday...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_10 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'P_10': 3}
+[Adaptive Voting] Winner: P_10 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_10'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [x] hyp 10 (test-40): pred=TRUE (entailment) gt=uncertain
+      formula: P_10
+      nli_confidence: 1.00
+      sbert_confidence: 0.81
+      voting: TRIGGERED (conf=1.00, counts={'P_10': 3})
+#################### 
+FUNCTION: translate_query : Alice likes to play volleybal in her free time.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice likes to play volleybal in her free time., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 43 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_12 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_12 - E:0.01 C:0.00 N:0.99
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 28 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9311 (NLI score: 0.0017)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 0.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: P_12 (score: 0.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: P_12 (score: 0.00)
+
+[Adaptive Voting] Vote results: {'P_12': 3}
+[Adaptive Voting] Winner: P_12 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_12'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [+] hyp 11 (test-41): pred=TRUE (entailment) gt=entailment
+      formula: P_12
+      nli_confidence: 0.00
+      sbert_confidence: 0.93
+      voting: TRIGGERED (conf=1.00, counts={'P_12': 3})
+#################### 
+FUNCTION: translate_query : Alice's volleyball league happens on Sundays.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice's volleyball league happens on Sundays., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 20 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 4 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_15 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 3 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 4 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_15 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 3 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 5 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_15 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 4 after filtering (1 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-4 SBERT propositions (from 4 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7242 (NLI score: 0.9997)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-4 SBERT propositions (from 4 retrieved)
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_12 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-4 SBERT propositions (from 4 retrieved)
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: P_12 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'P_12': 3}
+[Adaptive Voting] Winner: P_12 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_12'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [+] hyp 12 (test-42): pred=TRUE (entailment) gt=entailment
+      formula: P_12
+      nli_confidence: 1.00
+      sbert_confidence: 0.72
+      voting: TRIGGERED (conf=1.00, counts={'P_12': 3})
+#################### 
+FUNCTION: translate_query : There may be times where Alice plays board games.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = There may be times where Alice plays board games., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 41 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_13 - E:0.03 C:0.00 N:0.97
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_13 - E:0.10 C:0.00 N:0.90
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_13 - E:0.38 C:0.00 N:0.62
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 27 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: -1.00 (Ent: 0.00, Con: 1.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.6944 (NLI score: -0.9973)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence -1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: -1.00 (Ent: 0.00, Con: 1.00)
+    → Got formula: P_12 (score: -1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball in her free time...
+    -> Score: -1.00 (Ent: 0.00, Con: 1.00)
+    → Got formula: P_12 (score: -1.00)
+
+[Adaptive Voting] Vote results: {'P_12': 3}
+[Adaptive Voting] Winner: P_12 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_12'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [+] hyp 13 (test-43): pred=TRUE (entailment) gt=entailment
+      formula: P_12
+      nli_confidence: -1.00
+      sbert_confidence: 0.69
+      voting: TRIGGERED (conf=1.00, counts={'P_12': 3})
+#################### 
+FUNCTION: translate_query : Alice can be on her free time but not enjoying playing board games.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice can be on her free time but not enjoying playing board games., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 71 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_8 - E:0.04 C:0.00 N:0.96
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_8 - E:0.08 C:0.00 N:0.92
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_8 - E:0.07 C:0.00 N:0.92
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 27 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_13
+    -> Verbal: it is not the case that Alice likes to play board games with...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9096 (NLI score: 0.9973)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: ¬P_13
+    -> Verbal: it is not the case that Alice likes to play board games with...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: ¬P_13 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+  Cand 0: ¬P_13
+    -> Verbal: it is not the case that Alice likes to play board games with...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: ¬P_13 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'~P_13': 3}
+[Adaptive Voting] Winner: ~P_13 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: '¬P_13'
+  [+] hyp 14 (test-44): pred=FALSE (contradiction) gt=contradiction
+      formula: ¬P_13
+      nli_confidence: 1.00
+      sbert_confidence: 0.91
+      voting: TRIGGERED (conf=1.00, counts={'~P_13': 3})
+#################### 
+FUNCTION: translate_query : Alice hates playing volleyball on her free time.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice hates playing volleyball on her free time., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 47 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 6 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 6 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 7 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 7 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 6 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 6 after filtering (0 neutral removed)
+
+ Total of 19 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-7 SBERT propositions (from 7 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_12
+    -> Verbal: it is not the case that Alice likes to play volleyball in he...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.8620 (NLI score: 0.0012)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 0.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-7 SBERT propositions (from 7 retrieved)
+  Cand 0: ¬P_12
+    -> Verbal: it is not the case that Alice likes to play volleyball in he...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: ¬P_12 (score: 0.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-7 SBERT propositions (from 7 retrieved)
+  Cand 0: ¬P_12
+    -> Verbal: it is not the case that Alice likes to play volleyball in he...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: ¬P_12 (score: 0.00)
+
+[Adaptive Voting] Vote results: {'~P_12': 3}
+[Adaptive Voting] Winner: ~P_12 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: '¬P_12'
+  [+] hyp 15 (test-45): pred=FALSE (contradiction) gt=contradiction
+      formula: ¬P_12
+      nli_confidence: 0.00
+      sbert_confidence: 0.86
+      voting: TRIGGERED (conf=1.00, counts={'~P_12': 3})
+#################### 
+FUNCTION: translate_query : Alice is usually competitive.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice is usually competitive., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 2 variants above 0.85 within expand_query_with_synonyms. Returning top 2.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 20 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_14
+    -> Verbal: Alice is competitive...
+    -> Score: 0.01 (Ent: 0.01, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9414 (NLI score: 0.0079)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 0.01
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_14
+    -> Verbal: Alice is competitive...
+    -> Score: 0.01 (Ent: 0.01, Con: 0.00)
+    → Got formula: P_14 (score: 0.01)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_14
+    -> Verbal: Alice is competitive...
+    -> Score: 0.01 (Ent: 0.01, Con: 0.00)
+    → Got formula: P_14 (score: 0.01)
+
+[Adaptive Voting] Vote results: {'P_14': 3}
+[Adaptive Voting] Winner: P_14 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_14'
+  [+] hyp 16 (test-46): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: P_14
+      nli_confidence: 0.01
+      sbert_confidence: 0.94
+      voting: TRIGGERED (conf=1.00, counts={'P_14': 3})
+#################### 
+FUNCTION: translate_query : Alice does not have free time.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice does not have free time., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 33 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_7 - E:0.50 C:0.48 N:0.02
+    Filtered out (neutral): P_14 - E:0.05 C:0.00 N:0.95
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_14 - E:0.40 C:0.00 N:0.60
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_6 - E:0.19 C:0.02 N:0.79
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 26 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_12
+    -> Verbal: it is not the case that Alice likes to play volleyball in he...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7294 (NLI score: 0.9993)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 1.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: ¬P_12
+    -> Verbal: it is not the case that Alice likes to play volleyball in he...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: ¬P_12 (score: 1.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: ¬P_12
+    -> Verbal: it is not the case that Alice likes to play volleyball in he...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+    → Got formula: ¬P_12 (score: 1.00)
+
+[Adaptive Voting] Vote results: {'~P_12': 3}
+[Adaptive Voting] Winner: ~P_12 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: '¬P_12'
+  [x] hyp 17 (test-47): pred=FALSE (contradiction) gt=not_mentioned
+      formula: ¬P_12
+      nli_confidence: 1.00
+      sbert_confidence: 0.73
+      voting: TRIGGERED (conf=1.00, counts={'~P_12': 3})
+#################### 
+FUNCTION: translate_query : Alice has a dog.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice has a dog., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 28 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 7 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 7 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 7 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 7 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 5 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 5 after filtering (0 neutral removed)
+
+ Total of 19 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-7 SBERT propositions (from 7 retrieved)
+  [+] hyp 18 (test-48): pred=NOT MENTIONED (not_mentioned) gt=not_mentioned
+      formula: NONE
+      nli_confidence: 0.50
+#################### 
+FUNCTION: translate_query : Alice is not competitive.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice is not competitive., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 2 variants above 0.85 within expand_query_with_synonyms. Returning top 2.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 5 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 5 after filtering (0 neutral removed)
+
+ Total of 15 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_14
+    -> Verbal: it is not the case that Alice is competitive...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9345 (NLI score: 0.0011)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 0.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: ¬P_14
+    -> Verbal: it is not the case that Alice is competitive...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: ¬P_14 (score: 0.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: ¬P_14
+    -> Verbal: it is not the case that Alice is competitive...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: ¬P_14 (score: 0.00)
+
+[Adaptive Voting] Vote results: {'~P_14': 3}
+[Adaptive Voting] Winner: ~P_14 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: '¬P_14'
+  [+] hyp 19 (test-49): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: ¬P_14
+      nli_confidence: 0.00
+      sbert_confidence: 0.93
+      voting: TRIGGERED (conf=1.00, counts={'~P_14': 3})
+#################### 
+FUNCTION: translate_query : Alice usually studies late at night.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice usually studies late at night., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 15 chunks
+              
+
+#FUNCTION: expand_query_with_synonyms
+ Found 9 variants above 0.85 within expand_query_with_synonyms. Returning top 3.
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_11 - E:0.07 C:0.00 N:0.93
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=15
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 29 retrievals
+Within translate_query_single, we finished retrieved with 15 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9509 (NLI score: 0.0026)
+
+Adaptive Voting is on. Making 2 additional LLM calls. Confidence 0.00
+  [Voting] Additional call 1/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: P_11 (score: 0.00)
+  [Voting] Additional call 2/2...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+    → Got formula: P_11 (score: 0.00)
+
+[Adaptive Voting] Vote results: {'P_11': 3}
+[Adaptive Voting] Winner: P_11 (3/3 votes)
+[DEBUG] Hard constraints passed to encoder: ['P_1', 'P_2', 'P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13']
+[DEBUG] Parsing formula: 'P_11'
+  [+] hyp 20 (test-50): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: P_11
+      nli_confidence: 0.00
+      sbert_confidence: 0.95
+      voting: TRIGGERED (conf=1.00, counts={'P_11': 3})
+  Premise accuracy: 12/20 = 60.00%
+  Logify: 0.00s (cached: True)
+
+============================================================
+EXPERIMENT COMPLETE (4-way classification)
+============================================================
+Premises processed: 1
+Hypotheses evaluated: 20
+Correct predictions: 12
+Overall accuracy: 60.00%
+
+Per-label accuracy:
+  - contradiction: 3/4 = 75.00%
+  - entailment: 4/6 = 66.67%
+  - not_mentioned: 1/5 = 20.00%
+  - uncertain: 4/5 = 80.00%
+
+Total errors: 0
+Results saved to: /home/logify/article_logic_ai_2026/experiments/test/results/config_run7_openAI_20260401_0658_alice-20samples.json_.json
