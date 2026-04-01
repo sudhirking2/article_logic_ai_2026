@@ -89,9 +89,7 @@
           0.9998358488082886
         ]
       ]
-    }
-  ],
-  "soft_constraints": [
+    },
     {
       "llm-weight": 0.9,
       "nli_entailment": 0.9998438358306885,

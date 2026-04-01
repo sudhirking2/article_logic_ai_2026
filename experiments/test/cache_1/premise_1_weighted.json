@@ -1,0 +1,495 @@
+{
+  "primitive_props": [
+    {
+      "id": "P_1",
+      "translation": "Alice is a university student.",
+      "evidence": "Sentence 0: \"Alice is a university student.\"",
+      "explanation": "Atomic categorical statement about Alice's status with no embedded logical structure."
+    },
+    {
+      "id": "P_2",
+      "translation": "Alice studies computer science.",
+      "evidence": "Sentence 1: \"She studies computer science.\"",
+      "explanation": "Atomic statement describing Alice's field of study."
+    },
+    {
+      "id": "P_3",
+      "translation": "Alice studies hard.",
+      "evidence": "Sentence 2: \"If Alice studies hard, then she passes her exams.\"",
+      "explanation": "Extracted as the antecedent component of a conditional; it is a simple declarative clause."
+    },
+    {
+      "id": "P_4",
+      "translation": "Alice passes her exams.",
+      "evidence": "Sentence 2: \"If Alice studies hard, then she passes her exams.\"",
+      "explanation": "Extracted as the consequent component of a conditional; it is a simple declarative clause."
+    },
+    {
+      "id": "P_5",
+      "translation": "Alice studies hard before exams.",
+      "evidence": "Sentence 3: \"Alice typically studies hard before exams.\"",
+      "explanation": "Atomic habitual-action statement (modality removed for proposition; handled via constraint weight)."
+    },
+    {
+      "id": "P_6",
+      "translation": "Alice is focused.",
+      "evidence": "Sentence 4: \"When Alice is focused, she completes her assignments on time.\"",
+      "explanation": "Extracted as the condition component of a temporal/conditional statement; declarative and atomic."
+    },
+    {
+      "id": "P_7",
+      "translation": "Alice completes her assignments on time.",
+      "evidence": "Sentence 4: \"When Alice is focused, she completes her assignments on time.\"",
+      "explanation": "Extracted as the outcome component of a conditional-like statement; declarative and atomic."
+    },
+    {
+      "id": "P_8",
+      "translation": "Alice gets distracted by social media.",
+      "evidence": "Sentence 5: \"Alice sometimes gets distracted by social media.\"",
+      "explanation": "Atomic behavioral statement (frequency removed; handled via constraint weight)."
+    },
+    {
+      "id": "P_9",
+      "translation": "Alice works part-time at the campus library.",
+      "evidence": "Sentence 6: \"She works part-time at the campus library.\"",
+      "explanation": "Atomic employment statement."
+    },
+    {
+      "id": "P_10",
+      "translation": "Alice's assignments are due every Friday.",
+      "evidence": "Sentence 7: \"Her assignments are due every Friday.\"",
+      "explanation": "Treated as a single atomic scheduling fact; further decomposition would require quantification over weeks/dates."
+    },
+    {
+      "id": "P_11",
+      "translation": "Alice studies late at night.",
+      "evidence": "Sentence 8: \"Alice rarely studies late at night.\"",
+      "explanation": "Atomic activity statement (frequency removed; handled via constraint weight)."
+    },
+    {
+      "id": "P_12",
+      "translation": "Alice likes to play volleyball with her friends.",
+      "evidence": "Sentence 9: \"In her free time, Alice likes to play volleyball and board games with her friends.\"",
+      "explanation": "Split from a coordination; this clause is a single preference statement."
+    },
+    {
+      "id": "P_13",
+      "translation": "Alice likes to play board games with her friends.",
+      "evidence": "Sentence 9: \"In her free time, Alice likes to play volleyball and board games with her friends.\"",
+      "explanation": "Split from a coordination; this clause is a single preference statement."
+    },
+    {
+      "id": "P_14",
+      "translation": "Alice is competitive.",
+      "evidence": "Sentence 10: \"She is usually not competitive, unless she is playing on her Sunday volleyball league.\"",
+      "explanation": "Uses the positive form as the primitive; negation and exception structure are represented in constraints."
+    },
+    {
+      "id": "P_15",
+      "translation": "Alice is playing on her Sunday volleyball league.",
+      "evidence": "Sentence 10: \"She is usually not competitive, unless she is playing on her Sunday volleyball league.\"",
+      "explanation": "Atomic event/state used as the exception condition in the sentence."
+    }
+  ],
+  "hard_constraints": [
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.999906063079834,
+      "combined=(llm)*(nli)": 0.999906063079834,
+      "hardness_constant": 0.9,
+      "id": "C_1",
+      "formula": "P_1",
+      "translation": "Alice is a university student.",
+      "evidence": "Sentence 0",
+      "reasoning": "Stated as a plain fact with no hedging.",
+      "list nli": [
+        [
+          2.005629357881844e-05,
+          7.386588549707085e-05,
+          0.999906063079834
+        ],
+        [
+          1.0492351975699421e-05,
+          0.00018716925114858896,
+          0.9998024106025696
+        ],
+        [
+          1.2098686056560837e-05,
+          0.00020368090190459043,
+          0.9997842907905579
+        ]
+      ]
+    },
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.9999216794967651,
+      "combined=(llm)*(nli)": 0.9999216794967651,
+      "hardness_constant": 0.9,
+      "id": "C_2",
+      "formula": "P_2",
+      "translation": "Alice studies computer science.",
+      "evidence": "Sentence 1",
+      "reasoning": "Stated as a plain fact with no hedging.",
+      "list nli": [
+        [
+          3.253143950132653e-05,
+          4.579353844746947e-05,
+          0.9999216794967651
+        ],
+        [
+          4.583547342917882e-05,
+          3.553201167960651e-05,
+          0.9999185800552368
+        ],
+        [
+          3.892828317475505e-05,
+          5.828321445733309e-05,
+          0.9999027252197266
+        ]
+      ]
+    },
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.9996250867843628,
+      "combined=(llm)*(nli)": 0.9996250867843628,
+      "hardness_constant": 0.9,
+      "id": "C_3",
+      "formula": "(P_3 ⟹ P_4)",
+      "translation": "If Alice studies hard, then she passes her exams.",
+      "evidence": "Sentence 2",
+      "reasoning": "Explicit conditional stated directly.",
+      "list nli": [
+        [
+          0.0003244745603296906,
+          5.0425234803697094e-05,
+          0.9996250867843628
+        ],
+        [
+          5.053205768490443e-06,
+          0.00039793027099221945,
+          0.9995970129966736
+        ],
+        [
+          0.00013649363245349377,
+          0.0003914863627869636,
+          0.9994720816612244
+        ]
+      ]
+    },
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.9999217987060547,
+      "combined=(llm)*(nli)": 0.9999217987060547,
+      "hardness_constant": 0.9,
+      "id": "C_6",
+      "formula": "(P_6 ⟹ P_7)",
+      "translation": "When Alice is focused, she completes her assignments on time.",
+      "evidence": "Sentence 4",
+      "reasoning": "Explicit conditional-like statement introduced by \"When\".",
+      "list nli": [
+        [
+          2.1239897250779904e-05,
+          5.6959150242619216e-05,
+          0.9999217987060547
+        ],
+        [
+          1.3828887858835515e-05,
+          0.00015937845455482602,
+          0.9998268485069275
+        ],
+        [
+          1.6277872418868355e-05,
+          0.00016342666640412062,
+          0.9998202919960022
+        ]
+      ]
+    },
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.9998530149459839,
+      "combined=(llm)*(nli)": 0.9998530149459839,
+      "hardness_constant": 0.9,
+      "id": "C_8",
+      "formula": "P_9",
+      "translation": "Alice works part-time at the campus library.",
+      "evidence": "Sentence 6",
+      "reasoning": "Stated as a plain fact with no hedging.",
+      "list nli": [
+        [
+          9.54283750616014e-05,
+          5.1541399443522096e-05,
+          0.9998530149459839
+        ],
+        [
+          0.00010099352221004665,
+          5.203750333748758e-05,
+          0.9998469352722168
+        ],
+        [
+          0.0003312043263576925,
+          3.839471173705533e-05,
+          0.999630331993103
+        ]
+      ]
+    },
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.9999222755432129,
+      "combined=(llm)*(nli)": 0.9999222755432129,
+      "hardness_constant": 0.9,
+      "id": "C_9",
+      "formula": "P_10",
+      "translation": "Her assignments are due every Friday.",
+      "evidence": "Sentence 7",
+      "reasoning": "Stated as a plain fact with no hedging.",
+      "list nli": [
+        [
+          1.5050163710839115e-05,
+          6.264165131142363e-05,
+          0.9999222755432129
+        ],
+        [
+          2.2834507035440765e-05,
+          5.9991787566104904e-05,
+          0.9999171495437622
+        ],
+        [
+          4.137332507525571e-05,
+          4.693893788498826e-05,
+          0.9999116659164429
+        ]
+      ]
+    },
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.999232292175293,
+      "combined=(llm)*(nli)": 0.999232292175293,
+      "hardness_constant": 0.9,
+      "id": "C_11",
+      "formula": "P_12",
+      "translation": "Alice likes to play volleyball with her friends.",
+      "evidence": "Sentence 9",
+      "reasoning": "Stated as a preference/like without hedging.",
+      "list nli": [
+        [
+          0.0006739567033946514,
+          9.373999637318775e-05,
+          0.999232292175293
+        ],
+        [
+          0.0011104325531050563,
+          0.0003180752682965249,
+          0.998571515083313
+        ],
+        [
+          0.0062562706880271435,
+          0.0007855730946175754,
+          0.9929581880569458
+        ]
+      ]
+    },
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.9997989535331726,
+      "combined=(llm)*(nli)": 0.9997989535331726,
+      "hardness_constant": 0.9,
+      "id": "C_12",
+      "formula": "P_13",
+      "translation": "Alice likes to play board games with her friends.",
+      "evidence": "Sentence 9",
+      "reasoning": "Stated as a preference/like without hedging.",
+      "list nli": [
+        [
+          8.671809337101877e-05,
+          0.00011437471403041855,
+          0.9997989535331726
+        ],
+        [
+          0.00208530412055552,
+          0.00040543859358876944,
+          0.997509241104126
+        ],
+        [
+          0.0023137188982218504,
+          0.00020139334083069116,
+          0.9974849224090576
+        ]
+      ]
+    },
+    {
+      "llm-weight": 1.0,
+      "nli_entailment": 0.999885082244873,
+      "combined=(llm)*(nli)": 0.999885082244873,
+      "hardness_constant": 0.9,
+      "id": "C_14",
+      "formula": "(P_15 ⟹ P_14)",
+      "translation": "If Alice is playing on her Sunday volleyball league, then Alice is competitive.",
+      "evidence": "Sentence 10",
+      "reasoning": "The \"unless\" clause indicates an exception case where competitiveness holds; treated as a strong intended implication.",
+      "list nli": [
+        [
+          1.0905977433139924e-05,
+          0.0001040002316585742,
+          0.999885082244873
+        ],
+        [
+          7.557496246590745e-06,
+          0.00018215231830254197,
+          0.9998102784156799
+        ],
+        [
+          0.00013023384963162243,
+          0.00026487227296456695,
+          0.9996048808097839
+        ]
+      ]
+    }
+  ],
+  "soft_constraints": [
+    {
+      "llm-weight": 0.8,
+      "nli_entailment": 0.9998021721839905,
+      "combined=(llm)*(nli)": 0.7998417377471925,
+      "hardness_constant": 0.9,
+      "id": "C_4",
+      "formula": "P_5",
+      "translation": "Alice studies hard before exams.",
+      "evidence": "Sentence 3",
+      "reasoning": "\"Typically\" indicates a strong tendency but not an absolute; encoded as less than certain.",
+      "list nli": [
+        [
+          0.00012991714174859226,
+          6.792927160859108e-05,
+          0.9998021721839905
+        ],
+        [
+          9.959965609596111e-06,
+          0.0001890876010293141,
+          0.999800980091095
+        ],
+        [
+          9.231227522832341e-06,
+          0.0003437577688600868,
+          0.9996470212936401
+        ]
+      ],
+      "weight": 0.7998417377471925
+    },
+    {
+      "llm-weight": 0.9,
+      "nli_entailment": 0.996012806892395,
+      "combined=(llm)*(nli)": 0.8964115262031556,
+      "hardness_constant": 0.9,
+      "id": "C_5",
+      "formula": "(P_5 ⟹ P_3)",
+      "translation": "Alice studies hard before exams implies Alice studies hard.",
+      "evidence": "Sentence 3 (plus semantic entailment from wording \"studies hard before exams\")",
+      "reasoning": "Common-sense semantic relationship: studying hard before exams is a specific instance of studying hard; near-certain entailment.",
+      "list nli": [
+        [
+          2.5284192815888673e-05,
+          0.003961970563977957,
+          0.996012806892395
+        ],
+        [
+          6.721952104271622e-06,
+          0.004951078910380602,
+          0.9950422048568726
+        ],
+        [
+          4.53465327154845e-05,
+          0.006536068860441446,
+          0.9934185743331909
+        ]
+      ],
+      "weight": 0.8964115262031556
+    },
+    {
+      "llm-weight": 0.6,
+      "nli_entailment": 0.9987442493438721,
+      "combined=(llm)*(nli)": 0.5992465496063232,
+      "hardness_constant": 0.9,
+      "id": "C_7",
+      "formula": "P_8",
+      "translation": "Alice gets distracted by social media.",
+      "evidence": "Sentence 5",
+      "reasoning": "\"Sometimes\" indicates the behavior occurs but not consistently; represented as moderately supported.",
+      "list nli": [
+        [
+          0.001170175732113421,
+          8.54895479278639e-05,
+          0.9987442493438721
+        ],
+        [
+          0.0059055145829916,
+          7.630418258486316e-05,
+          0.9940181970596313
+        ],
+        [
+          0.9853646159172058,
+          9.210860298480839e-05,
+          0.01454328466206789
+        ]
+      ],
+      "weight": 0.5992465496063232
+    },
+    {
+      "llm-weight": 0.8,
+      "nli_entailment": 0.9968767166137695,
+      "combined=(llm)*(nli)": 0.7975013732910157,
+      "hardness_constant": 0.9,
+      "id": "C_10",
+      "formula": "¬P_11",
+      "translation": "Alice does not study late at night.",
+      "evidence": "Sentence 8",
+      "reasoning": "\"Rarely\" suggests that, in general, the negation holds most of the time; strong but not absolute.",
+      "list nli": [
+        [
+          0.002673615235835314,
+          0.00044965071720071137,
+          0.9968767166137695
+        ],
+        [
+          0.02047644555568695,
+          0.0004759548173751682,
+          0.9790475964546204
+        ],
+        [
+          0.8108028173446655,
+          0.00047931185690686107,
+          0.18871785700321198
+        ]
+      ],
+      "weight": 0.7975013732910157
+    },
+    {
+      "llm-weight": 0.75,
+      "nli_entailment": 0.9998377561569214,
+      "combined=(llm)*(nli)": 0.749878317117691,
+      "hardness_constant": 0.9,
+      "id": "C_13",
+      "formula": "(¬P_15 ⟹ ¬P_14)",
+      "translation": "If Alice is not playing on her Sunday volleyball league, then Alice is not competitive.",
+      "evidence": "Sentence 10",
+      "reasoning": "\"Usually not competitive, unless ...\" supports that outside the league-playing context she tends to be non-competitive; \"usually\" weakens to < 1.0.",
+      "list nli": [
+        [
+          6.998948811087757e-05,
+          9.221526852343231e-05,
+          0.9998377561569214
+        ],
+        [
+          0.00014702350017614663,
+          0.00022610275482293218,
+          0.999626874923706
+        ],
+        [
+          0.0004386188229545951,
+          0.00042372505413368344,
+          0.9991376399993896
+        ]
+      ],
+      "weight": 0.749878317117691
+    }
+  ]
+}
