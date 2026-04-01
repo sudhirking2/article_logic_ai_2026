@@ -1,0 +1,329 @@
+{
+  "primitive_props": [
+    {
+      "id": "P_1",
+      "translation": "Alice is a university student.",
+      "evidence": "Sentence 0: 'Alice is a university student.'",
+      "explanation": "Single subject-copula-predicate claim with no logical connectives or negation."
+    },
+    {
+      "id": "P_2",
+      "translation": "Alice studies computer science.",
+      "evidence": "Sentence 1: 'She studies computer science.'",
+      "explanation": "Single action/relation asserted of Alice; no connectives or negation."
+    },
+    {
+      "id": "P_3",
+      "translation": "Alice studies hard.",
+      "evidence": "Sentence 2: 'If Alice studies hard, then she passes her exams.'",
+      "explanation": "Atomic predicate needed as the antecedent of a conditional; stated without connectives in the proposition text."
+    },
+    {
+      "id": "P_4",
+      "translation": "Alice passes her exams.",
+      "evidence": "Sentence 2: 'If Alice studies hard, then she passes her exams.'",
+      "explanation": "Atomic predicate needed as the consequent of a conditional; stated without connectives in the proposition text."
+    },
+    {
+      "id": "P_5",
+      "translation": "Alice studies hard before exams.",
+      "evidence": "Sentence 3: 'Alice typically studies hard before exams.'",
+      "explanation": "Single temporally qualified study-behavior claim; treated as atomic at propositional level."
+    },
+    {
+      "id": "P_6",
+      "translation": "Alice is focused.",
+      "evidence": "Sentence 4: 'When Alice is focused, she completes her assignments on time.'",
+      "explanation": "Atomic state predicate used as the antecedent of a conditional."
+    },
+    {
+      "id": "P_7",
+      "translation": "Alice completes her assignments on time.",
+      "evidence": "Sentence 4: 'When Alice is focused, she completes her assignments on time.'",
+      "explanation": "Atomic performance predicate used as the consequent of a conditional."
+    },
+    {
+      "id": "P_8",
+      "translation": "Alice gets distracted by social media.",
+      "evidence": "Sentence 5: 'Alice sometimes gets distracted by social media.'",
+      "explanation": "Single distraction relation claim; frequency word handled via constraint weight."
+    },
+    {
+      "id": "P_9",
+      "translation": "Alice works part-time at the campus library.",
+      "evidence": "Sentence 6: 'She works part-time at the campus library.'",
+      "explanation": "Single employment/location relation claim; no connectives or negation."
+    },
+    {
+      "id": "P_10",
+      "translation": "Alice's assignments are due every Friday.",
+      "evidence": "Sentence 7: 'Her assignments are due every Friday.'",
+      "explanation": "Single due-date regularity claim; treated as atomic at propositional level."
+    },
+    {
+      "id": "P_11",
+      "translation": "Alice studies late at night.",
+      "evidence": "Sentence 8: 'Alice rarely studies late at night.'",
+      "explanation": "Atomic study-time predicate; rarity handled via constraint weight."
+    },
+    {
+      "id": "P_12",
+      "translation": "Alice likes to play volleyball with her friends.",
+      "evidence": "Sentence 9: '...Alice likes to play volleyball and board games with her friends.'",
+      "explanation": "One like/preference claim; split from the coordination in the sentence."
+    },
+    {
+      "id": "P_13",
+      "translation": "Alice likes to play board games with her friends.",
+      "evidence": "Sentence 9: '...Alice likes to play volleyball and board games with her friends.'",
+      "explanation": "Second like/preference claim; split from the coordination in the sentence."
+    },
+    {
+      "id": "P_14",
+      "translation": "Alice is competitive.",
+      "evidence": "Sentence 10: 'She is usually not competitive, unless she is playing on her Sunday volleyball league.'",
+      "explanation": "Underlying positive predicate used so that negation appears only in constraints (per instructions)."
+    },
+    {
+      "id": "P_15",
+      "translation": "Alice is playing on her Sunday volleyball league.",
+      "evidence": "Sentence 10: '...unless she is playing on her Sunday volleyball league.'",
+      "explanation": "Atomic activity/context predicate used to model the 'unless' exception."
+    },
+    {
+      "id": "P_16",
+      "translation": "Alice is a high school student.",
+      "evidence": "Sentence 0: 'Alice is a university student.' (auxiliary proposition for education_level domain)",
+      "explanation": "Auxiliary proposition for mutual exclusion with P_1. Part of finite set: education_level. Mutually exclusive alternative."
+    },
+    {
+      "id": "P_17",
+      "translation": "Alice studies biology.",
+      "evidence": "Sentence 1: 'She studies computer science.' (auxiliary proposition for academic_major domain)",
+      "explanation": "Auxiliary proposition for mutual exclusion with P_2. Part of finite set: academic_major. Mutually exclusive alternative."
+    },
+    {
+      "id": "P_18",
+      "translation": "Alice studies mathematics.",
+      "evidence": "Sentence 1: 'She studies computer science.' (auxiliary proposition for academic_major domain)",
+      "explanation": "Auxiliary proposition for mutual exclusion with P_2. Part of finite set: academic_major. Mutually exclusive alternative."
+    },
+    {
+      "id": "P_19",
+      "translation": "Alice studies physics.",
+      "evidence": "Sentence 1: 'She studies computer science.' (auxiliary proposition for academic_major domain)",
+      "explanation": "Auxiliary proposition for mutual exclusion with P_2. Part of finite set: academic_major. Mutually exclusive alternative."
+    },
+    {
+      "id": "P_20",
+      "translation": "Alice studies chemistry.",
+      "evidence": "Sentence 1: 'She studies computer science.' (auxiliary proposition for academic_major domain)",
+      "explanation": "Auxiliary proposition for mutual exclusion with P_2. Part of finite set: academic_major. Mutually exclusive alternative."
+    },
+    {
+      "id": "P_21",
+      "translation": "Alice completes assignments late.",
+      "evidence": "Sentence 4: 'When Alice is focused, she completes her assignments on time.' (auxiliary proposition for timing_modifier domain)",
+      "explanation": "Auxiliary proposition for mutual exclusion with P_7. Part of finite set: timing_modifier. Mutually exclusive alternative."
+    },
+    {
+      "id": "P_22",
+      "translation": "Alice works full-time.",
+      "evidence": "Sentence 6: 'She works part-time at the campus library.' (auxiliary proposition for employment_type domain)",
+      "explanation": "Auxiliary proposition for mutual exclusion with P_9. Part of finite set: employment_type. Mutually exclusive alternative."
+    }
+  ],
+  "constraints": [
+    {
+      "id": "C_1",
+      "formula": "P_3 ⟹ P_4",
+      "translation": "If Alice studies hard, then Alice passes her exams.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 2: 'If Alice studies hard, then she passes her exams.'",
+      "reasoning": "Explicit conditional stated as a rule."
+    },
+    {
+      "id": "C_2",
+      "formula": "P_6 ⟹ P_7",
+      "translation": "When Alice is focused, Alice completes her assignments on time.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 4: 'When Alice is focused, she completes her assignments on time.'",
+      "reasoning": "Explicit conditional ('when') presented as a general pattern."
+    },
+    {
+      "id": "C_3",
+      "formula": "P_5",
+      "translation": "Alice studies hard before exams (typically).",
+      "llm_weight": 0.8,
+      "evidence": "Sentence 3: 'Alice typically studies hard before exams.'",
+      "reasoning": "'Typically' indicates the statement is generally true but admits exceptions; modeled as a high-confidence soft fact."
+    },
+    {
+      "id": "C_4",
+      "formula": "P_8",
+      "translation": "Alice gets distracted by social media (sometimes).",
+      "llm_weight": 0.6,
+      "evidence": "Sentence 5: 'Alice sometimes gets distracted by social media.'",
+      "reasoning": "'Sometimes' supports the occurrence but not as a strong/general rule; medium confidence as a soft fact."
+    },
+    {
+      "id": "C_5",
+      "formula": "P_9",
+      "translation": "Alice works part-time at the campus library.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 6: 'She works part-time at the campus library.'",
+      "reasoning": "Plain factual assertion with no hedging."
+    },
+    {
+      "id": "C_6",
+      "formula": "P_10",
+      "translation": "Alice's assignments are due every Friday.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 7: 'Her assignments are due every Friday.'",
+      "reasoning": "Plain factual scheduling assertion with no hedging."
+    },
+    {
+      "id": "C_7",
+      "formula": "P_11",
+      "translation": "Alice studies late at night (rarely).",
+      "llm_weight": 0.2,
+      "evidence": "Sentence 8: 'Alice rarely studies late at night.'",
+      "reasoning": "'Rarely' suggests the proposition is usually false; represented as a low-probability soft fact."
+    },
+    {
+      "id": "C_8",
+      "formula": "P_12",
+      "translation": "Alice likes to play volleyball with her friends.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 9: '...Alice likes to play volleyball...'",
+      "reasoning": "Direct preference statement."
+    },
+    {
+      "id": "C_9",
+      "formula": "P_13",
+      "translation": "Alice likes to play board games with her friends.",
+      "llm_weight": 1.0,
+      "evidence": "Sentence 9: '...and board games with her friends.'",
+      "reasoning": "Direct preference statement."
+    },
+    {
+      "id": "C_10",
+      "formula": "¬P_14",
+      "translation": "Alice is not competitive (usually).",
+      "llm_weight": 0.8,
+      "evidence": "Sentence 10: 'She is usually not competitive...'",
+      "reasoning": "'Usually' indicates a strong default; represented as a high-weight soft negation."
+    },
+    {
+      "id": "C_11",
+      "formula": "P_15 ⟹ P_14",
+      "translation": "If Alice is playing on her Sunday volleyball league, then Alice is competitive.",
+      "llm_weight": 0.9,
+      "evidence": "Sentence 10: '...unless she is playing on her Sunday volleyball league.'",
+      "reasoning": "'Unless' signals an exception to the usual non-competitive default; strongly suggests competitiveness in that context, though stated as an exception framing rather than an explicit 'she becomes competitive', so slightly under 1.0."
+    },
+    {
+      "id": "C_12",
+      "formula": "P_2 ⟹ P_1",
+      "translation": "If Alice studies computer science, then Alice is a university student.",
+      "llm_weight": 0.55,
+      "evidence": "Sentence 0: 'Alice is a university student.' Sentence 1: 'She studies computer science.'",
+      "reasoning": "Common-sense implication (studying a field like computer science typically occurs as a university student) but not logically necessary; given both are asserted, this is only a weak background constraint."
+    },
+    {
+      "id": "C_13",
+      "formula": "P_1 ⟹ ¬P_16",
+      "translation": "If Alice is a university student, then Alice is not a high school student.",
+      "llm_weight": 1.0,
+      "evidence": "Auto-generated",
+      "reasoning": "Mutual exclusion over education_level domain with weight 1.0"
+    },
+    {
+      "id": "C_14",
+      "formula": "P_2 ⟹ ¬P_17",
+      "translation": "If Alice studies computer science, then Alice does not study biology.",
+      "llm_weight": 1.0,
+      "evidence": "Auto-generated",
+      "reasoning": "Mutual exclusion over academic_major domain with weight 1.0"
+    },
+    {
+      "id": "C_15",
+      "formula": "P_2 ⟹ ¬P_18",
+      "translation": "If Alice studies computer science, then Alice does not study mathematics.",
+      "llm_weight": 1.0,
+      "evidence": "Auto-generated",
+      "reasoning": "Mutual exclusion over academic_major domain with weight 1.0"
+    },
+    {
+      "id": "C_16",
+      "formula": "P_2 ⟹ ¬P_19",
+      "translation": "If Alice studies computer science, then Alice does not study physics.",
+      "llm_weight": 1.0,
+      "evidence": "Auto-generated",
+      "reasoning": "Mutual exclusion over academic_major domain with weight 1.0"
+    },
+    {
+      "id": "C_17",
+      "formula": "P_2 ⟹ ¬P_20",
+      "translation": "If Alice studies computer science, then Alice does not study chemistry.",
+      "llm_weight": 1.0,
+      "evidence": "Auto-generated",
+      "reasoning": "Mutual exclusion over academic_major domain with weight 1.0"
+    },
+    {
+      "id": "C_18",
+      "formula": "P_7 ⟹ ¬P_21",
+      "translation": "If Alice completes assignments on time, then Alice does not complete assignments late.",
+      "llm_weight": 1.0,
+      "evidence": "Auto-generated",
+      "reasoning": "Mutual exclusion over timing_modifier domain with weight 1.0"
+    },
+    {
+      "id": "C_19",
+      "formula": "P_9 ⟹ ¬P_22",
+      "translation": "If Alice works part-time, then Alice does not work full-time.",
+      "llm_weight": 1.0,
+      "evidence": "Auto-generated",
+      "reasoning": "Mutual exclusion over employment_type domain with weight 1.0"
+    }
+  ],
+  "_enrichment_log": [
+    "[Negation] Sentence 10: Found negation of 'is'",
+    "           Affirmative clause: 'She is usually competitive , unless she is playing on her Sunday volleyball league .'",
+    "           No matching proposition found",
+    "[FiniteDomain] P_1: Detected education_level pattern",
+    "              Subject: Alice, Value: university",
+    "              Auxiliary 'college' already exists, skipping",
+    "              Auxiliary 'high school' already exists, skipping",
+    "              Auxiliary 'middle school' already exists, skipping",
+    "              Auxiliary 'graduate' already exists, skipping",
+    "[FiniteDomain] P_2: Detected academic_major pattern",
+    "              Subject: Alice, Value: computer science",
+    "              Auxiliary 'biology' already exists, skipping",
+    "              Auxiliary 'mathematics' already exists, skipping",
+    "              Auxiliary 'physics' already exists, skipping",
+    "              Auxiliary 'chemistry' already exists, skipping",
+    "[FiniteDomain] Skipping P_3: Value 'hard' is not a noun",
+    "[FiniteDomain] P_7: Detected timing_modifier pattern",
+    "              Subject: Alice, Value: on time",
+    "              Auxiliary 'early' already exists, skipping",
+    "              Auxiliary 'late' already exists, skipping",
+    "[FiniteDomain] P_9: Detected employment_type pattern",
+    "              Subject: Alice, Value: part-time",
+    "              Auxiliary 'full-time' already exists, skipping",
+    "[FiniteDomain] P_10: Detected day_of_week pattern",
+    "              Subject: Alice's assignments, Value: friday",
+    "              Auxiliary 'Monday' already exists, skipping",
+    "              Auxiliary 'Tuesday' already exists, skipping",
+    "              Auxiliary 'Wednesday' already exists, skipping",
+    "              Auxiliary 'Thursday' already exists, skipping",
+    "[Auxiliary] Found 7 auxiliary propositions",
+    "[Auxiliary] P_16: 'Alice is a high school student.'",
+    "[Auxiliary] P_17: 'Alice studies biology.'",
+    "[Auxiliary] P_18: 'Alice studies mathematics.'",
+    "[Auxiliary] P_19: 'Alice studies physics.'",
+    "[Auxiliary] P_20: 'Alice studies chemistry.'",
+    "[Auxiliary] P_21: 'Alice completes assignments late.'",
+    "[Auxiliary] P_22: 'Alice works full-time.'"
+  ]
+}

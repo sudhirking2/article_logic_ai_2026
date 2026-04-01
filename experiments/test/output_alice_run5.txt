@@ -1,0 +1,1454 @@
+nohup: ignoring input
+Some weights of the model checkpoint at roberta-large-mnli were not used when initializing RobertaForSequenceClassification: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+- This IS expected if you are initializing RobertaForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing RobertaForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of the model checkpoint at roberta-large-mnli were not used when initializing RobertaForSequenceClassification: ['roberta.pooler.dense.bias', 'roberta.pooler.dense.weight']
+- This IS expected if you are initializing RobertaForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing RobertaForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Loading data from /home/logify/article_logic_ai_2026/experiments/test/dataset/alice-20samples.json...
+  Loaded 1 premises with 20 total hypotheses
+  Label distribution: {'entailment': 6, 'contradiction': 4, 'uncertain': 5, 'not_mentioned': 5}
+
+[1/1] Premise 1: 89 words, 20 hypotheses
+    [LOGIFY] Converting premise 1 to logic...
+Initializing OpenIE Extractor with native Stanza...
+Initializing native Stanza coreference pipeline...
+  ✓ Native Stanza coref initialized
+Initializing Stanza dependency parse pipeline...
+  ✓ Stanza depparse initialized
+Initializing CoreNLP client for OpenIE...
+  ✓ CoreNLP OpenIE client initialized
+
+Initialization complete:
+  - Native Stanza coref: True
+  - Stanza depparse fallback: True
+  - CoreNLP port: 9000
+Extracting relation triples with native Stanza...
+  ✓ Extracted 19 relation triples
+    - OpenIE: 18
+    - Stanza fallback: 1
+
+  Sample triples:
+    1. (Alice ; is ; university student) [openie]
+    2. (She ; studies ; computer science) [openie]
+    3. (she ; pass ; exams) [stanza_depparse]
+    4. (Alice ; typically studies hard before ; exams) [openie]
+    5. (Alice ; is ; focused) [openie]
+[logic_converter] Single-pass mode (document size: 552 chars)
+[logic_converter] Response length: 8524 characters
+CoreNLP client closed.
+Loading SpaCy model...
+Loading SBERT model...
+Loading NLI model for conflict resolution...
+Pre-computing proposition embeddings...
+
+============================================================
+STEP 1: Verifying modal pairs
+============================================================
+
+============================================================
+STEP 2: Detecting modal opposites
+============================================================
+
+============================================================
+STEP 3: Detecting explicit negations in source text
+============================================================
+[Negation] Sentence 10: Found negation of 'is'
+           Affirmative clause: 'She is usually competitive , unless she is playing on her Sunday volleyball league .'
+           No matching proposition found
+
+============================================================
+STEP 4: Generating finite domain auxiliaries
+============================================================
+[FiniteDomain] P_1: Detected education_level pattern
+              Subject: Alice, Value: university
+              Auxiliary 'college' already exists, skipping
+              Added auxiliary: P_16 = 'Alice is a high school student.'
+              Added constraint: P_1 ⟹ ¬P_16 @1.0
+              Auxiliary 'middle school' already exists, skipping
+              Auxiliary 'graduate' already exists, skipping
+[FiniteDomain] P_2: Detected academic_major pattern
+              Subject: Alice, Value: computer science
+              Added auxiliary: P_17 = 'Alice studies biology.'
+              Added constraint: P_2 ⟹ ¬P_17 @1.0
+              Added auxiliary: P_18 = 'Alice studies mathematics.'
+              Added constraint: P_2 ⟹ ¬P_18 @1.0
+              Added auxiliary: P_19 = 'Alice studies physics.'
+              Added constraint: P_2 ⟹ ¬P_19 @1.0
+              Added auxiliary: P_20 = 'Alice studies chemistry.'
+              Added constraint: P_2 ⟹ ¬P_20 @1.0
+[FiniteDomain] Skipping P_3: Value 'hard' is not a noun
+[FiniteDomain] P_7: Detected timing_modifier pattern
+              Subject: Alice, Value: on time
+              Auxiliary 'early' already exists, skipping
+              Added auxiliary: P_21 = 'Alice completes assignments late.'
+              Added constraint: P_7 ⟹ ¬P_21 @1.0
+[FiniteDomain] P_9: Detected employment_type pattern
+              Subject: Alice, Value: part-time
+              Added auxiliary: P_22 = 'Alice works full-time.'
+              Added constraint: P_9 ⟹ ¬P_22 @1.0
+[FiniteDomain] P_10: Detected day_of_week pattern
+              Subject: Alice's assignments, Value: friday
+              Auxiliary 'Monday' already exists, skipping
+              Auxiliary 'Tuesday' already exists, skipping
+              Auxiliary 'Wednesday' already exists, skipping
+              Auxiliary 'Thursday' already exists, skipping
+
+============================================================
+STEP 4: Verifying auxiliary negatives
+============================================================
+[Auxiliary] Found 7 auxiliary propositions
+[Auxiliary] P_16: 'Alice is a high school student.'
+[Auxiliary] P_17: 'Alice studies biology.'
+[Auxiliary] P_18: 'Alice studies mathematics.'
+[Auxiliary] P_19: 'Alice studies physics.'
+[Auxiliary] P_20: 'Alice studies chemistry.'
+[Auxiliary] P_21: 'Alice completes assignments late.'
+[Auxiliary] P_22: 'Alice works full-time.'
+
+============================================================
+STEP 5: Resolving P_i / ¬P_i conflicts via NLI
+============================================================
+
+============================================================
+DONE: Enriched JSON saved to /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1.json
+      Propositions: 22
+      Constraints: 19
+============================================================
+    [WEIGHTS] Assigning weights...
+Loading logified JSON from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1.json
+Enriching logic structure...
+Loading SpaCy model...
+Loading SBERT model...
+Loading NLI model for conflict resolution...
+Pre-computing proposition embeddings...
+
+============================================================
+STEP 1: Verifying modal pairs
+============================================================
+
+============================================================
+STEP 2: Detecting modal opposites
+============================================================
+
+============================================================
+STEP 3: Detecting explicit negations in source text
+============================================================
+[Negation] Sentence 10: Found negation of 'is'
+           Affirmative clause: 'She is usually competitive , unless she is playing on her Sunday volleyball league .'
+           No matching proposition found
+
+============================================================
+STEP 4: Generating finite domain auxiliaries
+============================================================
+[FiniteDomain] P_1: Detected education_level pattern
+              Subject: Alice, Value: university
+              Auxiliary 'college' already exists, skipping
+              Auxiliary 'high school' already exists, skipping
+              Auxiliary 'middle school' already exists, skipping
+              Auxiliary 'graduate' already exists, skipping
+[FiniteDomain] P_2: Detected academic_major pattern
+              Subject: Alice, Value: computer science
+              Auxiliary 'biology' already exists, skipping
+              Auxiliary 'mathematics' already exists, skipping
+              Auxiliary 'physics' already exists, skipping
+              Auxiliary 'chemistry' already exists, skipping
+[FiniteDomain] Skipping P_3: Value 'hard' is not a noun
+[FiniteDomain] P_7: Detected timing_modifier pattern
+              Subject: Alice, Value: on time
+              Auxiliary 'early' already exists, skipping
+              Auxiliary 'late' already exists, skipping
+[FiniteDomain] P_9: Detected employment_type pattern
+              Subject: Alice, Value: part-time
+              Auxiliary 'full-time' already exists, skipping
+[FiniteDomain] P_10: Detected day_of_week pattern
+              Subject: Alice's assignments, Value: friday
+              Auxiliary 'Monday' already exists, skipping
+              Auxiliary 'Tuesday' already exists, skipping
+              Auxiliary 'Wednesday' already exists, skipping
+              Auxiliary 'Thursday' already exists, skipping
+
+============================================================
+STEP 4: Verifying auxiliary negatives
+============================================================
+[Auxiliary] Found 7 auxiliary propositions
+[Auxiliary] P_16: 'Alice is a high school student.'
+[Auxiliary] P_17: 'Alice studies biology.'
+[Auxiliary] P_18: 'Alice studies mathematics.'
+[Auxiliary] P_19: 'Alice studies physics.'
+[Auxiliary] P_20: 'Alice studies chemistry.'
+[Auxiliary] P_21: 'Alice completes assignments late.'
+[Auxiliary] P_22: 'Alice works full-time.'
+
+============================================================
+STEP 5: Resolving P_i / ¬P_i conflicts via NLI
+============================================================
+
+============================================================
+DONE: Enriched JSON saved to /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_enriched.json
+      Propositions: 22
+      Constraints: 19
+============================================================
+  Found 22 propositions
+Loading SBERT model: all-MiniLM-L6-v2
+Loading NLI model: cross-encoder/nli-deberta-v3-large
+Loading NLI model: cross-encoder/nli-deberta-v3-large
+
+Classifying 19 constraints (hardness_criterion=0.9)...
+  [1/19] C_1: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [2/19] C_2: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [3/19] C_3: llm=0.80 × nli=1.00 = 0.80 → SOFT
+  [4/19] C_4: llm=0.60 × nli=1.00 = 0.60 → SOFT
+  [5/19] C_5: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [6/19] C_6: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [7/19] C_7: llm=0.20 × nli=1.00 = 0.20 → SOFT
+  [8/19] C_8: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [9/19] C_9: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [10/19] C_10: llm=0.80 × nli=1.00 = 0.80 → SOFT
+  [11/19] C_11: llm=0.90 × nli=1.00 = 0.90 → SOFT
+  [12/19] C_12: llm=0.55 × nli=1.00 = 0.55 → SOFT
+  [13/19] C_13: llm=1.00 × nli=0.96 = 0.96 → HARD
+  [14/19] C_14: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [15/19] C_15: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [16/19] C_16: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [17/19] C_17: llm=1.00 × nli=0.99 = 0.99 → HARD
+  [18/19] C_18: llm=1.00 × nli=1.00 = 1.00 → HARD
+  [19/19] C_19: llm=1.00 × nli=0.96 = 0.96 → HARD
+
+✓ Classification complete!
+  Hard constraints: 13
+  Soft constraints: 6
+  Output saved to: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+    [LOGIFY] Completed in 76.03s
+#################### 
+FUNCTION: translate_query : Alice attends a university.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice attends a university., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Loading NLI Model (cross-encoder/nli-deberta-v3-large)...
+    Filtered out (neutral): P_1 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_9 - E:0.02 C:0.00 N:0.98
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+ Total of 8 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-8 SBERT propositions (from 8 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_16
+    -> Verbal: Alice is a high school student...
+    -> Score: -1.00 (Ent: 0.00, Con: 1.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7470 (NLI score: -0.9994)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_16'
+  [x] hyp 1 (test-31): pred=UNCERTAIN (uncertain) gt=entailment
+      formula: P_16
+      nli_confidence: -1.00
+      sbert_confidence: 0.75
+#################### 
+FUNCTION: translate_query : Alice's field of study is computer science.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice's field of study is computer science., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_2 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 9 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_18
+    -> Verbal: Alice studies mathematics...
+    -> Score: -1.00 (Ent: 0.00, Con: 1.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7050 (NLI score: -0.9996)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_18'
+  [x] hyp 2 (test-32): pred=UNCERTAIN (uncertain) gt=entailment
+      formula: P_18
+      nli_confidence: -1.00
+      sbert_confidence: 0.70
+#################### 
+FUNCTION: translate_query : Alice has a part-time job.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice has a part-time job., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_9 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 9 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_22
+    -> Verbal: it is not the case that Alice works full-time...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7800 (NLI score: 0.0012)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: '¬P_22'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [+] hyp 3 (test-33): pred=TRUE (entailment) gt=entailment
+      formula: ¬P_22
+      nli_confidence: 0.00
+      sbert_confidence: 0.78
+#################### 
+FUNCTION: translate_query : Alice studies a subject other than computer science.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice studies a subject other than computer science., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_19 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_18 - E:0.02 C:0.00 N:0.98
+    Filtered out (neutral): P_20 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_17 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 6 after filtering (4 neutral removed)
+
+ Total of 6 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-6 SBERT propositions (from 6 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_2
+    -> Verbal: it is not the case that Alice studies computer science...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.8986 (NLI score: 0.0012)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: '¬P_2'
+  [x] hyp 4 (test-34): pred=UNCERTAIN (uncertain) gt=contradiction
+      formula: ¬P_2
+      nli_confidence: 0.00
+      sbert_confidence: 0.90
+#################### 
+FUNCTION: translate_query : Alice is never distracted while studying.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice is never distracted while studying., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_8
+    -> Verbal: it is not the case that Alice gets distracted by social medi...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.5320 (NLI score: 0.9997)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: '¬P_8'
+  [x] hyp 5 (test-35): pred=UNCERTAIN (uncertain) gt=not_mentioned
+      formula: ¬P_8
+      nli_confidence: 1.00
+      sbert_confidence: 0.53
+#################### 
+FUNCTION: translate_query : Alice frequently studies late at night.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice frequently studies late at night., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9673 (NLI score: 0.0019)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_11'
+  [x] hyp 6 (test-36): pred=UNCERTAIN (uncertain) gt=contradiction
+      formula: P_11
+      nli_confidence: 0.00
+      sbert_confidence: 0.97
+#################### 
+FUNCTION: translate_query : Alice enjoys working at the library.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice enjoys working at the library., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_9
+    -> Verbal: Alice works part-time at the campus library...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7851 (NLI score: 0.9995)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_9'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [x] hyp 7 (test-37): pred=TRUE (entailment) gt=not_mentioned
+      formula: P_9
+      nli_confidence: 1.00
+      sbert_confidence: 0.79
+#################### 
+FUNCTION: translate_query : Alice plans to graduate next year.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice plans to graduate next year., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_1
+    -> Verbal: Alice is a university student...
+    -> Score: 0.10 (Ent: 0.10, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7769 (NLI score: 0.1019)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_1'
+  [x] hyp 8 (test-38): pred=UNCERTAIN (uncertain) gt=not_mentioned
+      formula: P_1
+      nli_confidence: 0.10
+      sbert_confidence: 0.78
+#################### 
+FUNCTION: translate_query : Alice passes all of her exams.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice passes all of her exams., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_4 - E:0.41 C:0.00 N:0.59
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 9 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_5
+    -> Verbal: Alice studies hard before exams...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7780 (NLI score: 0.9999)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_5'
+  [+] hyp 9 (test-39): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: P_5
+      nli_confidence: 1.00
+      sbert_confidence: 0.78
+#################### 
+FUNCTION: translate_query : Alice completes her assignments on time.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice completes her assignments on time., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_7 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_4 - E:0.02 C:0.00 N:0.98
+  Stage 2 (NLI): 8 after filtering (2 neutral removed)
+
+ Total of 8 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-8 SBERT propositions (from 8 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_21
+    -> Verbal: it is not the case that Alice completes assignments late...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.8096 (NLI score: 0.0030)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: '¬P_21'
+  [+] hyp 10 (test-40): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: ¬P_21
+      nli_confidence: 0.00
+      sbert_confidence: 0.81
+#################### 
+FUNCTION: translate_query : Alice likes to play volleybal in her free time.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice likes to play volleybal in her free time., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball with her friends...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.8162 (NLI score: 0.9971)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_12'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [+] hyp 11 (test-41): pred=TRUE (entailment) gt=entailment
+      formula: P_12
+      nli_confidence: 1.00
+      sbert_confidence: 0.82
+#################### 
+FUNCTION: translate_query : Alice's volleyball league happens on Sundays.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice's volleyball league happens on Sundays., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 4 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_15 - E:0.00 C:0.00 N:1.00
+  Stage 2 (NLI): 3 after filtering (1 neutral removed)
+
+ Total of 3 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-3 SBERT propositions (from 3 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball with her friends...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7297 (NLI score: 0.9988)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_12'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [+] hyp 12 (test-42): pred=TRUE (entailment) gt=entailment
+      formula: P_12
+      nli_confidence: 1.00
+      sbert_confidence: 0.73
+#################### 
+FUNCTION: translate_query : There may be times where Alice plays board games.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = There may be times where Alice plays board games., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_13 - E:0.03 C:0.00 N:0.97
+  Stage 2 (NLI): 9 after filtering (1 neutral removed)
+
+ Total of 9 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-9 SBERT propositions (from 9 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_12
+    -> Verbal: Alice likes to play volleyball with her friends...
+    -> Score: -1.00 (Ent: 0.00, Con: 1.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.6638 (NLI score: -0.9953)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_12'
+[DEBUG] KB ∧ ¬Q is UNSAT; Q entailed by hard constraints.
+  [+] hyp 13 (test-43): pred=TRUE (entailment) gt=entailment
+      formula: P_12
+      nli_confidence: -1.00
+      sbert_confidence: 0.66
+#################### 
+FUNCTION: translate_query : Alice can be on her free time but not enjoying playing board games.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice can be on her free time but not enjoying playing board games., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_13
+    -> Verbal: it is not the case that Alice likes to play board games with...
+    -> Score: 0.99 (Ent: 0.99, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.8465 (NLI score: 0.9926)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: '¬P_13'
+  [+] hyp 14 (test-44): pred=FALSE (contradiction) gt=contradiction
+      formula: ¬P_13
+      nli_confidence: 0.99
+      sbert_confidence: 0.85
+#################### 
+FUNCTION: translate_query : Alice hates playing volleyball on her free time.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice hates playing volleyball on her free time., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 7 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 7 after filtering (0 neutral removed)
+
+ Total of 7 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-7 SBERT propositions (from 7 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_12
+    -> Verbal: it is not the case that Alice likes to play volleyball with ...
+    -> Score: 0.99 (Ent: 0.99, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.7849 (NLI score: 0.9861)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: '¬P_12'
+  [+] hyp 15 (test-45): pred=FALSE (contradiction) gt=contradiction
+      formula: ¬P_12
+      nli_confidence: 0.99
+      sbert_confidence: 0.78
+#################### 
+FUNCTION: translate_query : Alice is usually competitive.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice is usually competitive., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_14
+    -> Verbal: Alice is competitive...
+    -> Score: 0.01 (Ent: 0.01, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9414 (NLI score: 0.0079)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_14'
+  [+] hyp 16 (test-46): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: P_14
+      nli_confidence: 0.01
+      sbert_confidence: 0.94
+#################### 
+FUNCTION: translate_query : Alice does not have free time.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice does not have free time., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+    Filtered out (neutral): P_22 - E:0.00 C:0.00 N:1.00
+    Filtered out (neutral): P_7 - E:0.50 C:0.48 N:0.02
+    Filtered out (neutral): P_14 - E:0.05 C:0.00 N:0.95
+    Filtered out (neutral): P_18 - E:0.12 C:0.00 N:0.88
+  Stage 2 (NLI): 6 after filtering (4 neutral removed)
+
+ Total of 6 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-6 SBERT propositions (from 6 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 1.00 (Ent: 1.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.6026 (NLI score: 0.9989)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_11'
+  [x] hyp 17 (test-47): pred=UNCERTAIN (uncertain) gt=not_mentioned
+      formula: P_11
+      nli_confidence: 1.00
+      sbert_confidence: 0.60
+#################### 
+FUNCTION: translate_query : Alice has a dog.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice has a dog., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+  [+] hyp 18 (test-48): pred=NOT MENTIONED (not_mentioned) gt=not_mentioned
+      formula: NONE
+      nli_confidence: 0.50
+#################### 
+FUNCTION: translate_query : Alice is not competitive.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice is not competitive., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: ¬P_14
+    -> Verbal: it is not the case that Alice is competitive...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9345 (NLI score: 0.0011)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: '¬P_14'
+  [+] hyp 19 (test-49): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: ¬P_14
+      nli_confidence: 0.00
+      sbert_confidence: 0.93
+#################### 
+FUNCTION: translate_query : Alice usually studies late at night.
+Multi-sentence hypothesis not detected
+
+
+          
+#FUNCTION: translate_query_single
+          
+PARAMETERS: query = Alice usually studies late at night., 
+    json_path: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json,
+    model: str = openai/gpt-5-nano,
+    temperature =0.1 
+    k = 10
+    sbert_model_name = all-MiniLM-L6-v2,
+    verbose = True
+          
+
+ Using Yes/No question. Checking...
+is_yes_no_question routine not used
+
+ 
+ Starting retrieval. Loading propositions from: /home/logify/article_logic_ai_2026/experiments/test/cache/premise_1_weighted.json
+
+              
+#FUNCTION: retrieve_with_expanded_query. 
+              
+PARAMETERS: 22 chunks
+              
+
+              
+#FUNCTION: retrieve_top_k_propositions
+              
+PARAMETERS: k=10, minimal_similarity=0.5, 
+              enable_nli_filtering=True, num_chunks=22
+              
+  Stage 1 (SBERT): 10 candidates
+  Stage 2 (NLI): Filtering neutral propositions...
+  Stage 2 (NLI): 10 after filtering (0 neutral removed)
+
+ Total of 10 retrievals
+Within translate_query_single, we finished retrieved with 22 chunks
+Shortcuts disabled, skipping to candidate generation.
+
+Generating candidates via direct top-K retrieval...
+
+ #FUNCTION: generate_candidates_via_direct_retrieval
+  Using top-10 SBERT propositions (from 10 retrieved)
+Step B & C: Verbalizing and Verifying with NLI...
+  Cand 0: P_11
+    -> Verbal: Alice studies late at night...
+    -> Score: 0.00 (Ent: 0.00, Con: 0.00)
+
+#FUNCTION: compute_sbert_confidence
+  SBERT confidence: 0.9509 (NLI score: 0.0026)
+[DEBUG] Hard constraints passed to encoder: ['P_3 ⟹ P_4', 'P_6 ⟹ P_7', 'P_9', 'P_10', 'P_12', 'P_13', 'P_1 ⟹ ¬P_16', 'P_2 ⟹ ¬P_17', 'P_2 ⟹ ¬P_18', 'P_2 ⟹ ¬P_19', 'P_2 ⟹ ¬P_20', 'P_7 ⟹ ¬P_21', 'P_9 ⟹ ¬P_22']
+[DEBUG] Parsing formula: 'P_11'
+  [+] hyp 20 (test-50): pred=UNCERTAIN (uncertain) gt=uncertain
+      formula: P_11
+      nli_confidence: 0.00
+      sbert_confidence: 0.95
+  Premise accuracy: 12/20 = 60.00%
+  Logify: 76.03s (cached: False)
+
+============================================================
+EXPERIMENT COMPLETE (4-way classification)
+============================================================
+Premises processed: 1
+Hypotheses evaluated: 20
+Correct predictions: 12
+Overall accuracy: 60.00%
+
+Per-label accuracy:
+  - entailment: 4/6 = 66.67%
+  - contradiction: 2/4 = 50.00%
+  - uncertain: 5/5 = 100.00%
+  - not_mentioned: 1/5 = 20.00%
+
+Total errors: 0
+Results saved to: /home/logify/article_logic_ai_2026/experiments/test/results/config_run5_openAI_20260401_0630_alice-20samples.json_.json
